@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
 const hashtagSchema = mongoose.Schema({
   content: {
@@ -10,7 +10,7 @@ const hashtagSchema = mongoose.Schema({
     type: String,
     // required: true,
   },
-})
+});
 
 const contentSchema = mongoose.Schema({
   user: {
@@ -35,8 +35,8 @@ const contentSchema = mongoose.Schema({
     required: true,
   },
   hashtags: [hashtagSchema],
-})
+});
 
-const Content = mongoose.model('Content', contentSchema)
+const Content = mongoose.model('Content', contentSchema);
 
-export default Content
+export default Content;
