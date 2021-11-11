@@ -42,5 +42,6 @@ const contentSchema = mongoose.Schema(
 );
 
 const Content = mongoose.model('Content', contentSchema);
+const Hashtag = mongoose.model('Hashtag', hashtagSchema)
 
-export default Content;
+export { Content, Hashtag }
