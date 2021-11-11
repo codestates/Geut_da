@@ -17,4 +17,5 @@ const errHandler = (err, req, res, next) => {
 // err인데 200 코드가 난다면 500으로 바꾸기
 // 개발 환경일 경우에만 스텍 보여주기
 
-module.exports = { notFound, errHandler };
+export { notFound, errHandler };
+
