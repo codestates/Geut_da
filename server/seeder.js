@@ -19,11 +19,11 @@ const importData = async () => {
 
     const adminUser = createUsers[0]._id;
 
-    const samplecontents = contents.map((content) => {
+    const sampleContents = contents.map((content) => {
       return { ...content, user: adminUser };
     });
 
-    await Content.insertMany(samplecontents);
+    await Content.insertMany(sampleContents);
     console.log('Data imported!'.green.inverse);
     process.exit();
   } catch (error) {
