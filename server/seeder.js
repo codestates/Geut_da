@@ -1,11 +1,11 @@
 import dotenv from 'dotenv';
 import colors from 'colors';
 import mongoose from 'mongoose';
-import connectDB from './config/db';
-import contents from './data/contents';
-import users from './data/users';
-import Content from './models/content';
-import User from './models/user';
+import connectDB from './config/db.js';
+import contents from './data/contents.js';
+import users from './data/users.js';
+import Content from './models/content.js';
+import User from './models/user.js';
 
 dotenv.config();
 connectDB();
@@ -24,7 +24,7 @@ const importData = async () => {
     });
 
     await Content.insertMany(samplecontents);
-    console.log("Data imported!".green.inverse);
+    console.log('Data imported!'.green.inverse);
     process.exit();
   } catch (error) {
     console.error(`${error}`.red.inverse);
@@ -37,7 +37,7 @@ const destroyData = async () => {
     await Content.deleteMany();
     await User.deleteMany();
 
-    console.log("Data Destroyed!".red.inverse);
+    console.log('Data Destroyed!'.red.inverse);
     process.exit();
   } catch (error) {
     console.error(`${error}`.red.inverse);
@@ -45,7 +45,7 @@ const destroyData = async () => {
   }
 };
 
-if (process.argv[2] === "-d") {
+if (process.argv[2] === '-d') {
   destroyData();
 } else {
   importData();
