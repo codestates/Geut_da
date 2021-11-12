@@ -1,8 +1,9 @@
+import ProfileUpload from '../ProfileUpload';
 
 const ProfileImgModal = () => {
   return (
     <>
-      ProfileImgModal
+      <ProfileUpload/>
     </>
   )
 }
