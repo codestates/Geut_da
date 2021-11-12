@@ -56,6 +56,12 @@ const diarys = [
     createdAt: '2021.11.12',
   },
 ];
+const userInfo = {
+  _id: 1,
+  name: 'User',
+  email: 'test@test.com',
+  image: 'image',
+};
 
 const Calender = styled.div`
   height: 5vh;
@@ -114,7 +120,7 @@ const Main = () => {
 
   return (
     <>
-      <Header />
+      <Header userInfo={userInfo} />
       {/* dialog 라이브러리 연결하기, 월별 필터링 구현하기 */}
       <Calender>2021년 11월</Calender>
       <AddBtn>
