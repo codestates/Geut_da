@@ -9,7 +9,7 @@ const LoginModalWrap = styled.div`
   display: flex;
   width: 70%;
   height: 70vh;
-  margin: 0 auto;
+  margin: 15em auto;
   border: 1px solid black;
 `;
 
@@ -80,7 +80,7 @@ const LoginModal = ({ LoginModalHandler, SignupModalHandler }) => {
           LoginStateHandler(true);
           setLoginMessage(false);
           setLoginInputInfo({ email: '', password: '' });
-          history.push('/main');
+          history('/main');
         })
         .catch((err) => {
           console.log(err);
@@ -96,8 +96,8 @@ const LoginModal = ({ LoginModalHandler, SignupModalHandler }) => {
   };
 
   return (
-    <LoginModalWrap>
-      <LoginModalImg />
+    <LoginModalWrap onClick={(e) => e.stopPropagation()}>
+      <LoginModalImg>이미지</LoginModalImg>
       <LoginModalContentWrap>
         <button onClick={LoginModalCloseHandler}>&times;</button>
         <div>로고</div>
