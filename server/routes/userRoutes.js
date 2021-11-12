@@ -3,6 +3,7 @@ import {
   authUser,
   registerUser,
   // getUserProfile,
+  checkUserPwd,
   updateUserImage,
   updateUserProfile,
   deleteUserInfo,
