@@ -16,20 +16,21 @@ const ProfileUpload = () => {
       secretAccessKey: process.env.REACT_APP_ACCESS_KEY
     }
     const ReactS3Client = new S3(config)
-    console.log(file.type)
-    if (file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg') {
-      ReactS3Client.uploadFile(file, newFileName).then(data => {
-        console.log(data)
-        if (data.status === 204) {
-          console.log("success")
-        } else {
-          console.log("fail")
-        }
-      })
-    }
-    else {
-        alert("Jpeg,Png 파일만 업로드 가능합니다.")
+    if(file) {
+      if (file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg') {
+        ReactS3Client.uploadFile(file, newFileName).then(data => {
+          console.log(data)
+          if (data.status === 204) {
+            console.log("success")
+          } else {
+            console.log("fail")
+          }
+        })
       }
+      else {
+          alert("JPEG, PNG, JPG 파일만 업로드 가능합니다.")
+        }
+    }
   }
     
     
