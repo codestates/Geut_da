@@ -14,7 +14,7 @@ const getContentsByMonth = asyncHandler(async (req, res) => {
   let year = req.body.year || now.getFullYear();
   let month = req.body.month || now.getMonth() + 1;
   const contents = await Content.find({
-    updatedAt: {
+    createdAt: {
       $gte: moment(`${year}/${month}`, 'YYYY/MM').startOf('month').format(),
       $lte: moment(`${year}/${month}`, 'YYYY/MM').endOf('month').format(),
     },
