@@ -75,6 +75,7 @@ const LoginModal = ({ LoginModalHandler, SignupModalHandler }) => {
           password: loginInputInfo.password,
         })
         .then((res) => {
+          console.log(res);
           const userInfo = res.data;
           localStorage.setItem('userInfo', JSON.stringify(userInfo));
           LoginStateHandler(true);

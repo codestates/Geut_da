@@ -43,7 +43,7 @@ const Landing = () => {
         </ModalBackDrop>
       ) : null}
       {clickSignup ? (
-        <ModalBackDrop>
+        <ModalBackDrop onClick={SignupModalHandler}>
           <SignupModal SignupModalHandler={SignupModalHandler} />
         </ModalBackDrop>
       ) : null}
