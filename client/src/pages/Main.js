@@ -137,9 +137,9 @@ const Main = () => {
         <DiaryList>
           {diarys.map((diary) => {
             return (
-              <li>
+              <li key={diary._id}>
                 <Link to='/main/diaryview'>
-                  <Diary key={diary._id} diary={diary} />
+                  <Diary diary={diary} />
                 </Link>
               </li>
             );

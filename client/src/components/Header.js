@@ -130,7 +130,7 @@ const Header = ({ LoginModalHandler, SignupModalHandler }) => {
       <Logo>긋다</Logo>
       <NavWrap>
         <input type='checkbox' id='menuicon' />
-        <label for='menuicon'>
+        <label htmlFor='menuicon'>
           <span></span>
           <span></span>
           <span></span>

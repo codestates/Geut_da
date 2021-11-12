@@ -9,8 +9,8 @@ const HashTages = ({ tages }) => {
   return (
     <TagWrap>
       <ul>
-        {tages.map((tag) => {
-          return <li>#{tag}</li>;
+        {tages.map((tag, index) => {
+          return <li key={index}>#{tag}</li>;
         })}
       </ul>
     </TagWrap>
