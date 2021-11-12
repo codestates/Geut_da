@@ -29,8 +29,9 @@ const contentSchema = mongoose.Schema(
       required: true,
     },
     weather: {
-      type: String,
+      type: Number,
       required: true,
+      default: 0,
     },
     drawing: {
       type: String,
