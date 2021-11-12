@@ -4,7 +4,6 @@ import mongoose from 'mongoose';
 import connectDB from './config/db.js';
 import contents from './data/contents.js';
 import users from './data/users.js';
-import hashtags from './data/hashtags.js';
 import { Content, Hashtag } from './models/content.js';
 import User from './models/user.js';
 
@@ -23,14 +22,15 @@ const importData = async () => {
       return { ...content, user: adminUser };
     });
 
-    const createContents = await Content.insertMany(sampleContents);
-
-    const adminContent = createContents[0]._id;
-    const sampleHashtags = hashtags.map((hashtag) => {
-      return { ...hashtag, content: adminContent };
-    });
-    await Hashtag.insertMany(sampleHashtags);
-
+    const createContents = await Content.insertMany(sampleContents); // 콘텐츠 생성
+    // 각 콘텐츠의 _id를 연결
+    for (let newContent of createContents) {
+      const adminContent = newContent._id;
+      const sampleHashtags = newContent.hashtags.map((hashtag) => {
+        return { tag: hashtag, content: adminContent };
+      });
+      await Hashtag.insertMany(sampleHashtags);
+    }
     console.log('Data imported!'.green.inverse);
     process.exit();
   } catch (error) {
@@ -41,6 +41,7 @@ const importData = async () => {
 
 const destroyData = async () => {
   try {
+    await Hashtag.deleteMany();
     await Content.deleteMany();
     await User.deleteMany();
 
