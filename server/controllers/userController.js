@@ -3,6 +3,37 @@ import User from '../models/user.js';
 import { Content } from '../models/content.js';
 import generateToken from './utils/generateToken.js';
 
+// @desc   Check a email address
+// @route  POST /api/users/email
+// @access Public
+const checkEmail = asyncHandler(async (req, res) => {
+  // 이메일 중복 확인
+  const { email } = req.body;
+
+  const emailExists = await User.findOne({ email });
+
+  if (emailExists) {
+    res.status(401).json({ message: 'Email already exists' });
+  }
+  res.status(200).send({ message: 'ok' });
+});
+
+// @desc   Check a nickname
+// @route  POST /api/users/nickname
+// @access Public
+const checkNickname = asyncHandler(async (req, res) => {
+  // 닉네임 중복 확인
+
+  const { nickname } = req.body;
+
+  const nameExists = await User.findOne({ nickname });
+
+  if (nameExists) {
+    res.status(401).json({ message: 'Nickname already exists' });
+  }
+  res.status(200).send({ message: 'ok' });
+});
+
 // @desc   Register a new user
 // @route  POST /api/users
 // @access Public
@@ -76,25 +107,6 @@ const updateUserImage = asyncHandler(async (req, res) => {
   res.status(200).json({ image: updatedUser.image });
 });
 
-// @desc   Get user profile
-// @route  GET /api/users/profile
-// @access Private
-// const getUserProfile = asyncHandler(async (req, res) => {
-//   const user = await User.findById(req.user._id);
-
-//   if (user) {
-//     res.json({
-//       _id: user._id,
-//       nickname: user.nickname,
-//       email: user.email,
-//       image: user.image,
-//     });
-//   } else {
-//     res.status(404);
-//     throw new Error('User not found');
-//   }
-// });
-
 // @desc   Update user profile
 // @route  PATCH /api/users/profile
 // @access Private
@@ -120,9 +132,10 @@ const deleteUserInfo = asyncHandler(async (req, res) => {
 });
 
 export {
+  checkEmail,
+  checkNickname,
   registerUser,
   authUser,
-  // getUserProfile,
   checkUserPwd,
   updateUserProfile,
   updateUserImage,
