@@ -123,7 +123,6 @@ const Header = ({ LoginModalHandler, SignupModalHandler }) => {
   //로그인 상태라면 닉네임이 나와야하고
   //비 로그인 상태라면 Login, Signup이 나와야함.
   const [isLogin, setIsLogin] = useState(true);
-  // const [showNav, setShowNav] = useState(true);
 
   return (
     <HeaderWrap>

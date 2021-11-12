@@ -1,7 +1,7 @@
 const contents = [
   {
     title: '바다 간 날',
-    text: '회는 추울 때 먹어야 제 맛',
+    text: '회는 추울때 먹어야 제 맛',
     weather: 1,
     drawing: 'https://picsum.photos/200',
     hashtags: ['바다', '회'],

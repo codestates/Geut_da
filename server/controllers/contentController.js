@@ -23,7 +23,11 @@ const getContentsByMonth = asyncHandler(async (req, res) => {
     .exec();
 
   if (contents) {
-    res.json(contents);
+    res.json(
+      contents.map((el) => {
+        return { ...el._doc, createdAt: moment(el.createdAt).format('YYYY년 MM월 DD일') };
+      })
+    );
   } else {
     res.status(404).json({ message: 'Contents not found' });
   }
@@ -62,12 +66,11 @@ const getHashtags = asyncHandler(async (req, res) => {
 //  @access  Private
 const getContentDetail = asyncHandler(async (req, res) => {
   // 해당 그림일기 정보
-  const content = await Content.findById(req.body._id);
-
+  const content = await Content.findById({ _id: req.headers.data });
   if (content) {
     res.status(201).json(
-      content.map((el) => {
-        return { ...el._doc, createdAt: moment(el.createdAt) };
+      [content].map((el) => {
+        return { ...el._doc, createdAt: moment(el.createdAt).format('YYYY년 MM월 DD일  HH시mm분ss초') };
       })
     );
   } else {
@@ -94,13 +97,9 @@ const deleteMyContent = asyncHandler(async (req, res) => {
 const updateMyContent = asyncHandler(async (req, res) => {
   // 해당 그림일기 수정
   // 수정 후 해시태그 또한 수정
-  const updatedContent = await Content.findByIdAndUpdate(
-    req.body._id,
-    req.body,
-    {
-      new: true,
-    }
-  ); // 콘텐츠 수정 후 고유 아이디 바뀌는 지 확인할 것! 바뀌면 낭패
+  const updatedContent = await Content.findByIdAndUpdate(req.body._id, req.body, {
+    new: true,
+  }); // 콘텐츠 수정 후 고유 아이디 바뀌는 지 확인할 것! 바뀌면 낭패
   const { hashtags } = req.body;
   if (hashtags.length) {
     await Hashtag.deleteMany({ content: req.body._id }); // 해당 그림일기의 해시태그 싹 지우고
@@ -159,13 +158,4 @@ const getCount = asyncHandler(async (req, res) => {
   ]);
 });
 
-export {
-  getContentsByMonth,
-  getContentsByHashtag,
-  getHashtags,
-  getContentDetail,
-  addContent,
-  updateMyContent,
-  deleteMyContent,
-  getCount,
-};
+export { getContentsByMonth, getContentsByHashtag, getHashtags, getContentDetail, addContent, updateMyContent, deleteMyContent, getCount };

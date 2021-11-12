@@ -26,6 +26,7 @@ const DiaryWrap = styled.div`
 `;
 
 const Diary = ({ diary }) => {
+  
   return (
     <DiaryWrap>
       <div className='img'></div>

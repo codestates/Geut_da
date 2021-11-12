@@ -2,10 +2,10 @@ import { atom } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
 
 const { persistAtom } = recoilPersist();
-const IsLoginState = atom({
-  key: 'LoginState',
-  default: false,
+const ClickedDiary = atom({
+  key: 'DiaryState',
+  default: '',
   effects_UNSTABLE: [persistAtom],
 });
 
-export default IsLoginState;
+export default ClickedDiary;
