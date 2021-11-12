@@ -2,7 +2,7 @@
 
 const notFound = (req, res, next) => {
   const err = new Error(`Not Found - ${req.originalUrl}`);
-  res.status(404);
+  res.status(404).json({ message: `Not Found - ${req.originalUrl}` });
   next(err);
 };
 
@@ -18,4 +18,3 @@ const errHandler = (err, req, res, next) => {
 // 개발 환경일 경우에만 스텍 보여주기
 
 export { notFound, errHandler };
-
