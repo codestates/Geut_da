@@ -36,12 +36,12 @@ const contentSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    hashtags: [hashtagSchema],
+    hashtags: [{ type: String }],
   },
   { timestamps: true }
 );
 
 const Content = mongoose.model('Content', contentSchema);
-const Hashtag = mongoose.model('Hashtag', hashtagSchema)
+const Hashtag = mongoose.model('Hashtag', hashtagSchema);
 
-export { Content, Hashtag }
+export { Content, Hashtag };

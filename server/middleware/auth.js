@@ -1,10 +1,6 @@
-// import jwt from 'jsonwebtoken';
-// import asyncHandler from 'express-async-handler';
-// import User from '../models/user.js';
-
-const jwt = require("jsonwebtoken");
-const asyncHandler = require("express-async-handler");
-const User = require("../models/user");
+import jwt from 'jsonwebtoken';
+import asyncHandler from 'express-async-handler';
+import User from '../models/user.js';
 
 // 로그인 유저만 private route 접근을 허락해주는 함수
 // 토큰 정보를 받아서 해독하고 검증한다.
@@ -33,4 +29,4 @@ const protect = asyncHandler(async (req, res, next) => {
   }
 });
 
-export { protect }
+export { protect };

@@ -1,149 +1,171 @@
 import asyncHandler from 'express-async-handler';
 import moment from 'moment';
 import moment2 from 'moment-timezone';
-import Content from '../models/content.js';
-import Hashtag from '../models/content.js';
+import { Content, Hashtag } from '../models/content.js';
 
 moment2.tz.setDefault('Asia/Seoul');
 
-//  @desc    GET    user contents
-//  @route   GET    /api/contents
+//  @desc    GET    user contents by month
+//  @route   GET    /api/contents/by-month
 //  @access  Private
-const getMyContents = asyncHandler(async (req, res) => {
-  //본인의 전체 컨텐츠 요청
-  const contents = await Content.find({ user: req.user._id})
-      .populate('user', ['nickname', 'image'])
-      .sort({ createdAt: 1 })
-      .exec();
-    if(contents) {
-      res.status(201).json(contents.map(el => {
-        return {...el._doc, createdAt : moment(el.createdAt)}
-      }));
-    } else {
-      res.status(404);
-      throw new Error('Contents not found');
-    }
+const getContentsByMonth = asyncHandler(async (req, res) => {
+  // 월별 그림일기 목록
+  const now = new Date();
+  let year = req.body.year || now.getFullYear();
+  let month = req.body.month || now.getMonth() + 1;
+  const contents = await Content.find({
+    updatedAt: {
+      $gte: moment(`${year}/${month}`, 'YYYY/MM').startOf('month').format(),
+      $lte: moment(`${year}/${month}`, 'YYYY/MM').endOf('month').format(),
+    },
+  })
+    .sort({ createdAt: 1 })
+    .exec();
+
+  if (contents) {
+    res.json(contents);
+  } else {
+    res.status(404).json({ message: 'Contents not found' });
+  }
 });
 
-//  @desc    Delete    user post
-//  @route   Delete    /api/content/delete
+//  @desc    GET    user contents by hashtag
+//  @route   GET    /api/contents/by-hashtag
+//  @access  Private
+const getContentsByHashtag = asyncHandler(async (req, res) => {
+  // 해시태그별 그림일기 목록
+  const contents = await Content.find({ hashtags: req.body.hashtag });
+
+  if (contents) {
+    res.json(contents);
+  } else {
+    res.status(404).json({ message: 'Contents not found' });
+  }
+});
+
+//  @desc    GET    all hashtags
+//  @route   GET    /api/contents/hashtags
+//  @access  Private
+const getHashtags = asyncHandler(async (req, res) => {
+  // 해시태그 전체 목록
+  const hashtags = await Hashtag.find({});
+
+  if (hashtags) {
+    res.json(hashtags);
+  } else {
+    res.status(404).json({ message: 'hashtags not found' });
+  }
+});
+
+//  @desc    GET    content detail
+//  @route   GET    /api/contents/detail
+//  @access  Private
+const getContentDetail = asyncHandler(async (req, res) => {
+  // 해당 그림일기 정보
+  const content = await Content.findById(req.body._id);
+
+  if (content) {
+    res.status(201).json(
+      content.map((el) => {
+        return { ...el._doc, createdAt: moment(el.createdAt) };
+      })
+    );
+  } else {
+    res.status(404).json({ message: 'Contents not found' });
+  }
+});
+
+//  @desc    Delete    user content
+//  @route   Delete    /api/contents/delete
 //  @access  Private
 const deleteMyContent = asyncHandler(async (req, res) => {
-  // 본인 게시물 삭제 요청
-  await Content.deleteOne({ _id: req.body._id });
+  // 해당 그림일기 삭제
+  // 그림일기 삭제 전 연결된 해시태그 지운다.
+  await Hashtag.deleteMany({ content: req.body._id });
+  await Content.findByIdAndDelete(req.body._id);
   res.status(200).json({
     message: 'Delete success',
   });
 });
 
-//  @desc   update own content
-//  @route  PATCH /api/content/edit
+//  @desc   update   user content
+//  @route  PATCH   /api/contents/edit
 //  @access Private
 const updateMyContent = asyncHandler(async (req, res) => {
-  // 본인 게시물 수정 요청
-  const updatedContent = await Content.findByIdAndUpdate(req.body._id, req.body, {
-    new: true,
-  });
-  res.status(200).json(updatedContent)
-  // if (content) {
-  //   content.title = req.body.title || content.title;
-  //   content.text = req.body.text || content.text;
-  //   content.weather = req.body.weather || content.weather;
-  //   content.drawing = req.body.drawing || content.drawing;
-  //   content.hashtag = req.body.hashtag || content.hashtag;
-
-  //   const updatedContent = await content.save();
-
-  //   res.json({
-  //     _id : updatedContent._id,
-  //     user: updatedContent.user,
-  //     title: updatedContent.title,
-  //     text: updatedContent.text,
-  //     weather: updatedContent.weather,
-  //     drawing: updatedContent.drawing,
-  //     hashtag: updatedContent.hashtag,
-  //     updatedAt: moment(updatedContent.updatedAt).format(),
-  //   });
-  // } else {
-  //   res.status(404);
-  //   throw new Error('Content not found');
-  // }
+  // 해당 그림일기 수정
+  // 수정 후 해시태그 또한 수정
+  const updatedContent = await Content.findByIdAndUpdate(
+    req.body._id,
+    req.body,
+    {
+      new: true,
+    }
+  ); // 콘텐츠 수정 후 고유 아이디 바뀌는 지 확인할 것! 바뀌면 낭패
+  const { hashtags } = req.body;
+  if (hashtags.length) {
+    await Hashtag.deleteMany({ content: req.body._id }); // 해당 그림일기의 해시태그 싹 지우고
+    for (let tag of hashtags) {
+      await Hashtag.create({ content: updatedContent._id, tag });
+    } // 다시 생성한다.
+  }
+  res.status(200).json(updatedContent);
 });
 
-
-//  @desc Create new Content
-//  @route  Post  /api/content/new
+//  @desc   Create new Content
+//  @route  Post  /api/contents/new
 //  @access Private
 const addContent = asyncHandler(async (req, res) => {
-  // 컨텐츠 추가를 요청
+  // 그림일기 추가 요청
   // req.body로 들어온 회원정보 이용.
-  const { title, text, weather, drawing, hashtag } = req.body;
+  const { title, text, weather, drawing } = req.body;
 
   if (!(title && text && weather && drawing)) {
-    res.status(400);
-    throw new Error('There is no content');
+    res.status(400).json({ message: 'Contents should be fulfilled' });
   } else {
     const content = new Content({
       user: req.user._id,
       ...req.body,
-    })
-
+    });
     const createdContent = await content.save();
+    // 그림일기를 생성 후 해당 그림일기의 고유번호로 해시태그 생성
+    // 중복되는 태그들이 있겠지만, 해시태그 고유번호로 구분한다.
+    const { hashtags } = req.body;
+    if (hashtags.length) {
+      for (let tag of hashtags) {
+        await Hashtag.create({ content: createdContent._id, tag });
+      }
+    }
     res.status(201).json(createdContent);
   }
 });
 
-//  @desc    GET    select hashtag
-//  @route   GET    /api/content/hashtag
-//  @access  Public
-const getHashtag = asyncHandler(async (req, res) => {
-  // 선택한 해쉬태그 요청
-  const hashtag = await Hashtag.find({ content: req.content._id })
-      .populate('tag')
-      .sort({ tag: 1 })
-      .exec();
-    if(hashtag) {
-      res.status(201).json(hashtag.map(el => {
-        return {...el._doc, createdAt : moment(el.createdAt)}
-      }));
-    } else {
-      res.status(404);
-      throw new Error('Contents not found');
-    }
+//  @desc    GET    total count
+//  @route   GET    /api/contents/total
+//  @access  Private
+const getCount = asyncHandler(async (req, res) => {
+  // 유저가 작성한 그림일기 총 개수
+  await Content.find({}).aggregate([
+    {
+      $match: {
+        user: req.user._id,
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        count: { $sum: 1 },
+      },
+    },
+  ]);
 });
 
-//  @desc Create new Hashtag
-//  @route  Post  /api/hashtag/new
-//  @access Public
-const addHashtag = asyncHandler(async (req, res) => {
-  // 해쉬태그 추가
-  // req.body로 들어온게 tag 밖에 없을 거임
-
-  if (!req.body.tag) {
-    res.status(400);
-    throw new Error('There is no Hashtag');
-  } else {
-    const hashtag = new Hashtag({
-      tag: req.body.tag
-    })
-
-    const createdHashtag = await hashtag.save();
-    res.status(201).json(createdHashtag);
-  }
-});
-
-//  @desc    Delete    hashtag
-//  @route   Delete    /api/hashtag/delete
-//  @access  Public
-const deleteHashtag = asyncHandler(async (req, res) => {
-  // 해쉬태그 삭제 요청
-  const hashtag = await Hashtag.find({ tag: req.body.tag })
-  if (!hashtag)
-  await Hashtag.deleteOne({ _id: req.body._id });
-  res.status(200).json({
-    message: 'Delete success',
-  });
-});
-
-
-export { addContent, updateMyContent, deleteMyContent, getMyContents, getHashtag, addHashtag, deleteHashtag }
+export {
+  getContentsByMonth,
+  getContentsByHashtag,
+  getHashtags,
+  getContentDetail,
+  addContent,
+  updateMyContent,
+  deleteMyContent,
+  getCount,
+};
