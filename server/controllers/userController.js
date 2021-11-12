@@ -12,8 +12,7 @@ const registerUser = asyncHandler(async (req, res) => {
   const userExists = await User.findOne({ email });
 
   if (userExists) {
-    res.status(401);
-    throw new Error(`User already exists`);
+    res.status(401).json({ message: 'User already exists' });
   }
 
   const user = await User.create({
@@ -28,8 +27,7 @@ const registerUser = asyncHandler(async (req, res) => {
       message: 'ok',
     });
   } else {
-    res.status(400);
-    throw new Error('required element should be fullfilled');
+    res.status(400).json({ message: 'required element should be fullfilled' });
   }
 });
 
@@ -50,8 +48,7 @@ const authUser = asyncHandler(async (req, res) => {
       token: generateToken(user._id),
     });
   } else {
-    res.status(401);
-    throw new Error('Invalid email or password');
+    res.status(401).json({ message: 'Invalid email or password' });
   }
 });
 
@@ -65,8 +62,7 @@ const checkUserPwd = asyncHandler(async (req, res) => {
   if (await user.matchPassword(password)) {
     res.json({ message: 'ok' });
   } else {
-    res.status(401);
-    throw new Error('Invalid password');
+    res.status(401).json({ message: 'Invalid password' });
   }
 });
 

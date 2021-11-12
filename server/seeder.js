@@ -4,7 +4,8 @@ import mongoose from 'mongoose';
 import connectDB from './config/db.js';
 import contents from './data/contents.js';
 import users from './data/users.js';
-import Content from './models/content.js';
+import hashtags from './data/hashtags.js';
+import { Content, Hashtag } from './models/content.js';
 import User from './models/user.js';
 
 dotenv.config();
@@ -12,18 +13,24 @@ connectDB();
 
 const importData = async () => {
   try {
+    await Hashtag.deleteMany();
     await Content.deleteMany();
     await User.deleteMany();
 
     const createUsers = await User.insertMany(users);
-
     const adminUser = createUsers[0]._id;
-
     const sampleContents = contents.map((content) => {
       return { ...content, user: adminUser };
     });
 
-    await Content.insertMany(sampleContents);
+    const createContents = await Content.insertMany(sampleContents);
+
+    const adminContent = createContents[0]._id;
+    const sampleHashtags = hashtags.map((hashtag) => {
+      return { ...hashtag, content: adminContent };
+    });
+    await Hashtag.insertMany(sampleHashtags);
+
     console.log('Data imported!'.green.inverse);
     process.exit();
   } catch (error) {
