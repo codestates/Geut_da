@@ -48,8 +48,7 @@ const LoginModal = ({ LoginModalHandler, SignupModalHandler }) => {
 
   //ID, Password 유효성 검사 정규표현식
   let idExp = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]+$/;
-  let pwdExp =
-    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,20}$/;
+  let pwdExp = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,20}$/;
 
   const InputValueChangeHandler = (event) => {
     if (event.target.type === 'email') {
@@ -65,15 +64,22 @@ const LoginModal = ({ LoginModalHandler, SignupModalHandler }) => {
   };
 
   const LogInReqHandler = async (event) => {
-    if (
-      idExp.test(loginInputInfo.email) &&
-      pwdExp.test(loginInputInfo.password)
-    ) {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    if (idExp.test(loginInputInfo.email) && pwdExp.test(loginInputInfo.password)) {
       axios
-        .post('/api/users/login', {
-          email: loginInputInfo.email,
-          password: loginInputInfo.password,
-        })
+        .post(
+          '/api/users/login',
+          {
+            email: loginInputInfo.email,
+            password: loginInputInfo.password,
+          },
+          config
+        )
         .then((res) => {
           console.log(res);
           const userInfo = res.data;
@@ -89,6 +95,7 @@ const LoginModal = ({ LoginModalHandler, SignupModalHandler }) => {
         });
     } else {
       setLoginMessage(true);
+      LoginStateHandler(false);
     }
   };
 
@@ -104,18 +111,8 @@ const LoginModal = ({ LoginModalHandler, SignupModalHandler }) => {
         <div>로고</div>
         <LoginModalInputWrap>
           <div>Login</div>
-          <input
-            type='email'
-            placeholder='Email'
-            value={loginInputInfo.email}
-            onChange={InputValueChangeHandler}
-          />
-          <input
-            type='password'
-            placeholder='password'
-            value={loginInputInfo.password}
-            onChange={InputValueChangeHandler}
-          />
+          <input type='email' placeholder='Email' value={loginInputInfo.email} onChange={InputValueChangeHandler} />
+          <input type='password' placeholder='password' value={loginInputInfo.password} onChange={InputValueChangeHandler} />
           {loginMessage ? (
             <span>
               &#42;아이디 또는 비밀번호가 잘못 입력 되었습니다.

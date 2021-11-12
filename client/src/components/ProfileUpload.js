@@ -31,6 +31,7 @@ const ProfileUpload = () => {
           });
         } else {
           alert('JPEG, PNG, JPG 파일만 업로드 가능합니다.');
+          event.target.value = null;
         }
       }
     }
@@ -38,7 +39,7 @@ const ProfileUpload = () => {
 
   return (
     <>
-      <input type='file' onChange={handleClick} />
+      <input type='file' accept="image/*" onChange={handleClick} />
     </>
   );
 };

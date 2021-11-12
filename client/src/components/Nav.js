@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import IsLoginState from '../states/IsLoginState';
+import { useRecoilValue } from 'recoil';
 
 //! userInfo 더미데이터
 const userInfo = {
@@ -23,13 +25,15 @@ const NavModal = styled.nav`
   div.img {
     width: 10vh;
     height: 10vh;
-    margin-bottom: 0.6rem;
+    /* margin-bottom: 0.6rem; */
     border-radius: 50%;
     background-color: #eee;
   }
+  div.nickname {
+    padding: 0.6rem 0 0.2rem;
+  }
   div.email {
     width: 100%;
-    margin-top: 0.2rem;
     padding-bottom: 0.4rem;
     font-size: 0.9em;
     color: #ccc;
@@ -59,25 +63,39 @@ const NavModal = styled.nav`
 `;
 
 const Nav = () => {
+  const IsLogin = useRecoilValue(IsLoginState);
+
   return (
-    <NavModal>
-      <div className='img'></div>
-      <div>{userInfo.name}</div>
-      <div className='email'>{userInfo.email}</div>
-      <ul>
-        <li>
-          <Link to='/main'>Main</Link>
-        </li>
-        <li>
-          <Link to='/Mypage'>Mypage</Link>
-        </li>
-        <li>
-          <Link to='/' className='logout'>
-            Logout
-          </Link>
-        </li>
-      </ul>
-    </NavModal>
+    <>
+      {/* {IsLogin ? ( */}
+      <NavModal>
+        <div className='img'></div>
+        <div className='nickname'>{userInfo.name}</div>
+        <div className='email'>{userInfo.email}</div>
+        <ul>
+          <li>
+            <Link to='/main'>Main</Link>
+          </li>
+          <li>
+            <Link to='/mypage'>Mypage</Link>
+          </li>
+          <li>
+            <Link to='/' className='logout'>
+              Logout
+            </Link>
+          </li>
+        </ul>
+      </NavModal>
+      {/* ) : (
+        <NavModal>
+          <ul>
+            <li>
+              <Link to='/'>Landing</Link>
+            </li>
+          </ul>
+        </NavModal>
+      )} */}
+    </>
   );
 };
 

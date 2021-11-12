@@ -1,4 +1,8 @@
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
+import IsLoginState from '../states/IsLoginState';
+import axios from 'axios';
 import styled from 'styled-components';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -8,45 +12,6 @@ import HashTags from '../components/HashTags';
 
 //! dummy data
 const tags = ['회', '바다', '노을', '맑음', '백신', '모더나', '강아지', '산책'];
-const diaries = [
-  {
-    _id: 1,
-    title: '바다 가서 회 한사발',
-    weather: 1,
-    tags: ['회', '바다'],
-    content:
-      '오늘은 바다에 가서 맛있는 회를 먹었다. 역시 회는 추울때 먹어야 맛있다.',
-    image: 'images',
-    createdAt: '2021.11.12',
-  },
-  {
-    _id: 2,
-    title: '백신 맞은 날',
-    weather: 3,
-    tags: ['백신', '모더나'],
-    content: '아프다..',
-    image: 'images',
-    createdAt: '2021.11.12',
-  },
-  {
-    _id: 3,
-    title: '오늘은 맑음',
-    weather: 0,
-    tags: ['맑음', '노을'],
-    content: '날씨도 좋고 노을도 예뻤다.',
-    image: 'images',
-    createdAt: '2021.11.12',
-  },
-  {
-    _id: 4,
-    title: '강아지 산책',
-    weather: 1,
-    tags: ['강아지', '산책'],
-    content: '산책이 좋아진 집순이 강쥐 씐났다 ㅋㅋ',
-    image: 'images',
-    createdAt: '2021.11.12',
-  },
-];
 
 const Calender = styled.div`
   height: 5vh;
@@ -102,6 +67,43 @@ const DiaryList = styled.ul`
 
 const Main = () => {
   // recoil로 로그인 상태 관리 필수
+  const [mainIsLogin, setmainIsLogin] = useRecoilState(IsLoginState);
+  const [diaries, setDiaries] = useState([]);
+  const [tags, setTags] = useState([]);
+
+  console.log(mainIsLogin);
+  const history = useNavigate();
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}`,
+    },
+  };
+
+  useEffect(() => {
+    if (!mainIsLogin) {
+      history('/');
+    } else {
+      // 현재 년월 일기목록 요청
+      axios
+        .get('/api/contents/by-month', config)
+        .then((res) => {
+          setDiaries(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      // 전체 태그 목록 요청
+      axios
+        .get('/api/contents/hashtags', config)
+        .then((res) => {
+          setTags(res.data.map((el) => el.tag));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, []);
 
   return (
     <>
@@ -109,7 +111,7 @@ const Main = () => {
       {/* dialog 라이브러리 연결하기, 월별 필터링 구현하기 */}
       <Calender>2021년 11월</Calender>
       <AddBtn>
-        <Link to='/main/diaryview'>+</Link>
+        <Link to='/main/newdiary'>+</Link>
       </AddBtn>
       {/* 해쉬태그 리스트
           - 해쉬태그별 필터링 구현하기
@@ -122,9 +124,10 @@ const Main = () => {
         <DiaryList>
           {diaries.map((diary) => {
             return (
-              <li>
-                <Link to='/main/diaryview'>
-                  <Diary key={diary._id} diary={diary} />
+              // https://rrecoder.tistory.com/101
+              <li key={diary._id}>
+                <Link to='/main/diaryview' state={{ _id: diary._id }}>
+                  <Diary diary={diary} />
                 </Link>
               </li>
             );
