@@ -5,11 +5,11 @@ const TagWrap = styled.div`
   text-overflow: ellipsis;
 `;
 
-const HashTages = ({ tages }) => {
+const HashTags = ({ tags }) => {
   return (
     <TagWrap>
       <ul>
-        {tages.map((tag, index) => {
+        {tags.map((tag, index) => {
           return <li key={index}>#{tag}</li>;
         })}
       </ul>
@@ -17,4 +17,4 @@ const HashTages = ({ tages }) => {
   );
 };
 
-export default HashTages;
+export default HashTags;

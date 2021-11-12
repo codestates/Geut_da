@@ -3,25 +3,16 @@ import styled from 'styled-components';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Diary from '../components/Diary';
-import HashTages from '../components/HashTages';
+import HashTags from '../components/HashTags';
 // import DiaryView from './DiaryView';
 
 //! dummy data
-const tages = [
-  '회',
-  '바다',
-  '노을',
-  '맑음',
-  '백신',
-  '모더나',
-  '강아지',
-  '산책',
-];
-const diarys = [
+const tags = ['회', '바다', '노을', '맑음', '백신', '모더나', '강아지', '산책'];
+const diaries = [
   {
     _id: 1,
     title: '바다 가서 회 한사발',
-    wheather: 1,
+    weather: 1,
     tags: ['회', '바다'],
     content:
       '오늘은 바다에 가서 맛있는 회를 먹었다. 역시 회는 추울때 먹어야 맛있다.',
@@ -31,7 +22,7 @@ const diarys = [
   {
     _id: 2,
     title: '백신 맞은 날',
-    wheather: 3,
+    weather: 3,
     tags: ['백신', '모더나'],
     content: '아프다..',
     image: 'images',
@@ -40,7 +31,7 @@ const diarys = [
   {
     _id: 3,
     title: '오늘은 맑음',
-    wheather: 0,
+    weather: 0,
     tags: ['맑음', '노을'],
     content: '날씨도 좋고 노을도 예뻤다.',
     image: 'images',
@@ -49,19 +40,13 @@ const diarys = [
   {
     _id: 4,
     title: '강아지 산책',
-    wheather: 1,
+    weather: 1,
     tags: ['강아지', '산책'],
     content: '산책이 좋아진 집순이 강쥐 씐났다 ㅋㅋ',
     image: 'images',
     createdAt: '2021.11.12',
   },
 ];
-const userInfo = {
-  _id: 1,
-  name: 'User',
-  email: 'test@test.com',
-  image: 'image',
-};
 
 const Calender = styled.div`
   height: 5vh;
@@ -120,7 +105,7 @@ const Main = () => {
 
   return (
     <>
-      <Header userInfo={userInfo} />
+      <Header />
       {/* dialog 라이브러리 연결하기, 월별 필터링 구현하기 */}
       <Calender>2021년 11월</Calender>
       <AddBtn>
@@ -132,14 +117,14 @@ const Main = () => {
         */}
       <ContentWrap>
         <TagList>
-          <HashTages tages={tages} />
+          <HashTags tags={tags} />
         </TagList>
         <DiaryList>
-          {diarys.map((diary) => {
+          {diaries.map((diary) => {
             return (
-              <li key={diary._id}>
+              <li>
                 <Link to='/main/diaryview'>
-                  <Diary diary={diary} />
+                  <Diary key={diary._id} diary={diary} />
                 </Link>
               </li>
             );

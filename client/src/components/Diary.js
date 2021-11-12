@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const wheather = ['맑음', '흐림', '비', '눈'];
+const weather = ['맑음', '흐림', '비', '눈'];
 
 const DiaryWrap = styled.div`
   width: 200px;
@@ -31,7 +31,7 @@ const Diary = ({ diary }) => {
       <div className='img'></div>
       <div className='title'>
         <h3>{diary.title}</h3>
-        <span>{wheather[diary.wheather]}</span>
+        <span>{weather[diary.weather]}</span>
       </div>
       <span>{diary.createdAt}</span>
     </DiaryWrap>
