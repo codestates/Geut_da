@@ -1,13 +1,20 @@
-const HashTages = () => {
+import styled from 'styled-components';
 
+const TagWrap = styled.div`
+  padding-left: 1rem;
+  text-overflow: ellipsis;
+`;
+
+const HashTages = ({ tages }) => {
   return (
-    <>
-      <div>HashTages</div>
+    <TagWrap>
       <ul>
-        <li>#hashtag</li>
+        {tages.map((tag) => {
+          return <li>#{tag}</li>;
+        })}
       </ul>
-    </>
-  )
-}
+    </TagWrap>
+  );
+};
 
 export default HashTages;
