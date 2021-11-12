@@ -1,10 +1,5 @@
-
 const SignupModal = () => {
-  return (
-    <>
-      SignupModal
-    </>
-  )
-}
+  return <>SignupModal</>;
+};
 
 export default SignupModal;
