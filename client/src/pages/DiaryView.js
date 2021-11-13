@@ -40,31 +40,33 @@ const DiaryView = () => {
   const history = useNavigate();
   const location = useLocation();
 
-  const getConfig = {
+  const config = {
     headers: {
-      Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}`,
-      data: location.state._id,
+      Authorization: `Bearer ${
+        JSON.parse(localStorage.getItem('userInfo')).token
+      }`,
     },
   };
-  const deleteConfig = {
-    headers: {
-      Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}`,
-    },
-  };
-
   const DeleteDaiaryHandler = () => {
     if (location.state._id) {
-      axios.delete('/api/contents/delete', { ...deleteConfig, data: { _id: location.state._id } }).then((res) => {
-        console.log(res);
-        history('/main');
-      });
+      axios
+        .delete('/api/contents/delete', {
+          ...config,
+          data: { _id: location.state._id },
+        })
+        .then((res) => {
+          console.log(res);
+          history('/main');
+        });
     }
   };
   useEffect(() => {
     if (location.state._id) {
-      console.log(location.state._id);
       axios
-        .get('/api/contents/detail', getConfig)
+        .get('/api/contents/detail', {
+          ...config,
+          params: { _id: location.state._id },
+        })
         .then((res) => {
           console.log(res.data[0]);
           setDiaryInfo(res.data[0]);
@@ -96,9 +98,10 @@ const DiaryView = () => {
           {/* {diaryInfo.hashtags.map((el,index)=>{
             console.log(el)
           })} */}
-          {diaryInfo.hashtags && diaryInfo.hashtags.map((el, idx) => {
-            return <span key={idx}>#{el}</span>;
-          })}
+          {diaryInfo.hashtags &&
+            diaryInfo.hashtags.map((el, idx) => {
+              return <span key={idx}>#{el}</span>;
+            })}
           <button>{diaryInfo.weather}</button>
           <span>{diaryInfo.createdAt}</span>
           {/* <input type='text' placeholder='contents' /> */}

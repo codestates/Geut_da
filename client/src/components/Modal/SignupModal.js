@@ -27,7 +27,7 @@ const SignUpModalInputWrap = styled.div`
   flex-direction: column;
 `;
 
-const SignupModal = ({ SignupModalHandler }) => {
+const SignupModal = ({ SignupModalHandler, LoginModalHandler }) => {
   const [signUpInputInfo, setSignUpInputInfo] = useState({
     email: '',
     password: '',
@@ -41,10 +41,16 @@ const SignupModal = ({ SignupModalHandler }) => {
     nickname: false,
   });
 
+  const [allValidateCheck, setAllValidateCheck] = useState(false);
+
   const [emailValidateMessage, setEmailValidateMessage] = useState(false);
   const [emailValidText, setEmailValidText] = useState(false);
   const [nicknameValidateMessage, setNicknameValidateMessage] = useState(false);
   const [nicknameValidText, setNicknameValidText] = useState(false);
+  const [pwValidateMessage, setPwValidateMessage] = useState(false);
+  const [pwValidText, setPwValidText] = useState(false);
+  const [pwCheckValidateMessage, setPwCheckValidateMessage] = useState(false);
+  const [pwCheckValidText, setPwCheckValidText] = useState(false);
 
   const config = {
     headers: {
@@ -55,15 +61,13 @@ const SignupModal = ({ SignupModalHandler }) => {
   useEffect(() => {
     //이메일
     if (signUpValidateState.email && emailValidText === 'ok') {
-      setEmailValidateMessage('사용 가능한 닉네임 입니다');
+      setEmailValidateMessage('사용 가능한 이메일 입니다');
     } else if (!signUpValidateState.email && emailValidText === 'overlap') {
-      setEmailValidateMessage('사용중인 닉네임 입니다');
+      setEmailValidateMessage('사용중인 이메일 입니다');
     } else if (!signUpValidateState.email && emailValidText === 'nothing') {
       setEmailValidateMessage('필수 입력 사항입니다');
     } else if (!signUpValidateState.email && emailValidText === 'invalidate') {
-      setEmailValidateMessage(
-        '알파벳, 숫자, 특수문자를 포함하여 8~20글자를 입력해주세요.'
-      );
+      setEmailValidateMessage('이메일 형식으로 입력해주세요');
     }
     //닉네임
     if (signUpValidateState.nickname && nicknameValidText === 'ok') {
@@ -84,7 +88,49 @@ const SignupModal = ({ SignupModalHandler }) => {
     ) {
       setNicknameValidateMessage('두글자 이상의 닉네임을 입력해주세요');
     }
-  });
+
+    //비밀번호
+    if (signUpValidateState.password && pwValidText === 'ok') {
+      setPwValidateMessage('사용 가능한 비밀번호 입니다');
+    } else if (!signUpValidateState.password && pwValidText === 'nothing') {
+      setPwValidateMessage('필수 입력 사항입니다');
+    } else if (!signUpValidateState.password && pwValidText === 'invalidate') {
+      setPwValidateMessage(
+        '알파벳, 숫자, 특수문자를 포함하여 8~20글자를 입력해주세요.'
+      );
+    }
+
+    //비밀번호 확인
+    if (signUpValidateState.passwordCheck && pwCheckValidText === 'ok') {
+      setPwCheckValidateMessage('비밀번호 일치');
+    } else if (
+      !signUpValidateState.passwordCheck &&
+      pwCheckValidText === 'nothing'
+    ) {
+      setPwCheckValidateMessage('필수 입력 사항입니다');
+    } else if (
+      !signUpValidateState.passwordCheck &&
+      pwCheckValidText === 'invalidate'
+    ) {
+      setPwCheckValidateMessage('비밀번호와 일치하지 않습니다');
+    }
+  }, [emailValidText, nicknameValidText, pwValidText, pwCheckValidText]);
+
+  useEffect(() => {
+    //signUpValidateState 변경시 마다 실행.
+    if (
+      signUpValidateState.email === true &&
+      signUpValidateState.password === true &&
+      signUpValidateState.passwordCheck === true &&
+      signUpValidateState.nickname === true
+    ) {
+      setAllValidateCheck(true);
+    } else {
+      setAllValidateCheck(false);
+    }
+
+    console.log(signUpValidateState);
+  }, [signUpValidateState]);
 
   //유효성검사 정규표현식
   const pwdExp =
@@ -102,11 +148,26 @@ const SignupModal = ({ SignupModalHandler }) => {
     if (event.target.type === 'text') {
       setSignUpInputInfo({ ...signUpInputInfo, nickname: event.target.value });
     }
+
+    if (
+      event.target.type === 'password' &&
+      event.target.placeholder === 'password'
+    ) {
+      setSignUpInputInfo({ ...signUpInputInfo, password: event.target.value });
+    }
+    if (
+      event.target.type === 'password' &&
+      event.target.placeholder === 'password check'
+    ) {
+      setSignUpInputInfo({
+        ...signUpInputInfo,
+        passwordCheck: event.target.value,
+      });
+    }
   };
 
   const SignUpOnBlurHandler = (event) => {
     //email OnBlur
-
     if (event.target.type === 'email' && signUpInputInfo.email === '') {
       setSignUpvalidateState({ ...signUpValidateState, email: false });
       setEmailValidText('nothing');
@@ -124,15 +185,11 @@ const SignupModal = ({ SignupModalHandler }) => {
         .post('/api/users/email', { email: signUpInputInfo.email }, config)
         .then((res) => {
           //사용가능한 메일인 경우
-          console.log('메일 사용가능');
-          console.log(res);
           setSignUpvalidateState({ ...signUpValidateState, email: true });
           setEmailValidText('ok');
         })
         .catch((err) => {
           //닉네임이 중복인 경우
-          console.log('이메일 중복');
-          console.log(err);
           setSignUpvalidateState({ ...signUpValidateState, email: false });
           setEmailValidText('overlap');
         });
@@ -159,18 +216,107 @@ const SignupModal = ({ SignupModalHandler }) => {
         )
         .then((res) => {
           //사용가능한 닉네임인 경우
-          console.log('닉네임 사용가능');
-          console.log(res);
           setSignUpvalidateState({ ...signUpValidateState, nickname: true });
           setNicknameValidText('ok');
         })
         .catch((err) => {
           //닉네임이 중복인 경우
-          console.log('닉네임 중복');
-          console.log(err);
           setSignUpvalidateState({ ...signUpValidateState, nickname: false });
           setNicknameValidText('overlap');
         });
+    }
+  };
+
+  const PasswordOnBlurHandler = (event) => {
+    //password OnBlur
+    if (
+      event.target.type === 'password' &&
+      signUpInputInfo.password === '' &&
+      event.target.placeholder === 'password'
+    ) {
+      setSignUpvalidateState({ ...signUpValidateState, password: false });
+      setPwValidText('nothing');
+    } else if (
+      event.target.type === 'password' &&
+      !pwdExp.test(signUpInputInfo.password) &&
+      event.target.placeholder === 'password'
+    ) {
+      setSignUpvalidateState({ ...signUpValidateState, password: false });
+      setPwValidText('invalidate');
+    } else if (
+      event.target.type === 'password' &&
+      pwdExp.test(signUpInputInfo.password) &&
+      event.target.placeholder === 'password'
+    ) {
+      setSignUpvalidateState({ ...signUpValidateState, password: true });
+      setPwValidText('ok');
+    }
+
+    //password Check OnBlur
+    if (
+      event.target.type === 'password' &&
+      signUpInputInfo.passwordCheck === '' &&
+      event.target.placeholder === 'password check'
+    ) {
+      setSignUpvalidateState({ ...signUpValidateState, passwordCheck: false });
+      setPwCheckValidText('nothing');
+    } else if (
+      event.target.type === 'password' &&
+      signUpInputInfo.passwordCheck !== '' &&
+      event.target.placeholder === 'password check' &&
+      signUpInputInfo.password !== signUpInputInfo.passwordCheck
+    ) {
+      setSignUpvalidateState({ ...signUpValidateState, passwordCheck: false });
+      setPwCheckValidText('invalidate');
+    } else if (
+      event.target.type === 'password' &&
+      signUpInputInfo.passwordCheck !== '' &&
+      event.target.placeholder === 'password check' &&
+      signUpInputInfo.password === signUpInputInfo.passwordCheck
+    ) {
+      setSignUpvalidateState({ ...signUpValidateState, passwordCheck: true });
+      setPwCheckValidText('ok');
+    }
+  };
+
+  const SignUpHandler = (event) => {
+    //회원가입 요청
+    if (allValidateCheck) {
+      //axios 요청
+      console.log(signUpInputInfo);
+      console.log(signUpValidateState);
+      axios
+        .post(
+          '/api/users',
+          {
+            email: signUpInputInfo.email,
+            password: signUpInputInfo.password,
+            nickname: signUpInputInfo.nickname,
+          },
+          config
+        )
+        .then((res) => {
+          //회원가입 완료되면 회원가입 모달창 닫고 로그인 모달창을 띄운다
+          LoginModalHandler();
+          SignupModalHandler();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      //입력 안한것이 있으면 필수 입력이라고 문구 나와야됨.
+      if (!emailValidateMessage) {
+        setEmailValidText('nothing');
+      }
+      if (!nicknameValidateMessage) {
+        setNicknameValidText('nothing');
+      }
+      if (!pwValidateMessage) {
+        setPwValidText('nothing');
+      }
+      if (!pwCheckValidateMessage) {
+        setPwCheckValidText('nothing');
+      }
     }
   };
 
@@ -190,10 +336,26 @@ const SignupModal = ({ SignupModalHandler }) => {
             onBlur={SignUpOnBlurHandler}
           />
           {emailValidateMessage ? <span>{emailValidateMessage}</span> : <br />}
-          <input type='password' placeholder='password' />
-          <span>Wrong</span>
-          <input type='password' placeholder='password check' />
-          <span>Wrong</span>
+          <input
+            type='password'
+            placeholder='password'
+            value={signUpInputInfo.password}
+            onChange={SignUpInputValueChange}
+            onBlur={PasswordOnBlurHandler}
+          />
+          {pwValidateMessage ? <span>{pwValidateMessage}</span> : <br />}
+          <input
+            type='password'
+            placeholder='password check'
+            value={signUpInputInfo.passwordCheck}
+            onChange={SignUpInputValueChange}
+            onBlur={PasswordOnBlurHandler}
+          />
+          {pwCheckValidateMessage ? (
+            <span>{pwCheckValidateMessage}</span>
+          ) : (
+            <br />
+          )}
           <input
             type='text'
             placeholder='nickname'
@@ -207,7 +369,7 @@ const SignupModal = ({ SignupModalHandler }) => {
             <br />
           )}
         </SignUpModalInputWrap>
-        <button>Sign Up</button>
+        <button onClick={SignUpHandler}>Sign Up</button>
       </SignUpModalContentWrap>
     </SignUpModalWrap>
   );
