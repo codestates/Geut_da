@@ -1,15 +1,8 @@
+/* eslint-disable jsx-a11y/img-redundant-alt */
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import IsLoginState from '../states/IsLoginState';
 import { useRecoilValue } from 'recoil';
-
-//! userInfo 더미데이터
-const userInfo = {
-  _id: 1,
-  name: 'User',
-  email: 'test@test.com',
-  image: 'image',
-};
 
 const NavModal = styled.nav`
   width: 60vh;
@@ -22,12 +15,19 @@ const NavModal = styled.nav`
   flex-direction: column;
   align-items: center;
 
-  div.img {
+  div.img_box {
     width: 10vh;
     height: 10vh;
     /* margin-bottom: 0.6rem; */
     border-radius: 50%;
     background-color: #eee;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+  }
+  img {
+    flex: 1;
+    /* object-fit: contain; */
   }
   div.nickname {
     padding: 0.6rem 0 0.2rem;
@@ -41,7 +41,9 @@ const NavModal = styled.nav`
   }
   ul {
     width: 100%;
+    flex: 1;
     margin-top: 0.5rem;
+    position: relative;
   }
   a {
     width: 100%;
@@ -53,7 +55,10 @@ const NavModal = styled.nav`
     background-color: rgba(255, 255, 255, 0.2);
   }
   a.logout {
-    margin-top: 7rem;
+    position: absolute;
+    bottom: 2vh;
+    left: 50%;
+    transform: translateX(-50%);
     color: tomato;
   }
   a.logout:hover {
@@ -62,31 +67,33 @@ const NavModal = styled.nav`
   }
 `;
 
-const Nav = () => {
+const Nav = ({ userInfo }) => {
   const IsLogin = useRecoilValue(IsLoginState);
 
   return (
     <>
-      {/* {IsLogin ? ( */}
-      <NavModal>
-        <div className='img'></div>
-        <div className='nickname'>{userInfo.name}</div>
-        <div className='email'>{userInfo.email}</div>
-        <ul>
-          <li>
-            <Link to='/main'>Main</Link>
-          </li>
-          <li>
-            <Link to='/mypage'>Mypage</Link>
-          </li>
-          <li>
-            <Link to='/' className='logout'>
-              Logout
-            </Link>
-          </li>
-        </ul>
-      </NavModal>
-      {/* ) : (
+      {IsLogin ? (
+        <NavModal>
+          <div className='img_box'>
+            <img src={userInfo.image} alt='profile image' />
+          </div>
+          <div className='nickname'>{userInfo.nickname}</div>
+          <div className='email'>{userInfo.email}</div>
+          <ul>
+            <li>
+              <Link to='/main'>Main</Link>
+            </li>
+            <li>
+              <Link to='/mypage'>Mypage</Link>
+            </li>
+            <li>
+              <Link to='/' className='logout'>
+                Logout
+              </Link>
+            </li>
+          </ul>
+        </NavModal>
+      ) : (
         <NavModal>
           <ul>
             <li>
@@ -94,7 +101,7 @@ const Nav = () => {
             </li>
           </ul>
         </NavModal>
-      )} */}
+      )}
     </>
   );
 };

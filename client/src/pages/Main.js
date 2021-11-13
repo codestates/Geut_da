@@ -10,9 +10,6 @@ import Diary from '../components/Diary';
 import HashTags from '../components/HashTags';
 // import DiaryView from './DiaryView';
 
-//! dummy data
-const tags = ['회', '바다', '노을', '맑음', '백신', '모더나', '강아지', '산책'];
-
 const Calender = styled.div`
   height: 5vh;
   line-height: 5vh;
@@ -67,7 +64,7 @@ const DiaryList = styled.ul`
 
 const Main = () => {
   // recoil로 로그인 상태 관리 필수
-  const [mainIsLogin, setmainIsLogin] = useRecoilState(IsLoginState);
+  const [mainIsLogin, setMainIsLogin] = useRecoilState(IsLoginState);
   const [diaries, setDiaries] = useState([]);
   const [tags, setTags] = useState([]);
 
@@ -76,7 +73,9 @@ const Main = () => {
 
   const config = {
     headers: {
-      Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}`,
+      Authorization: `Bearer ${
+        JSON.parse(localStorage.getItem('userInfo')).token
+      }`,
     },
   };
 
@@ -97,7 +96,7 @@ const Main = () => {
       axios
         .get('/api/contents/hashtags', config)
         .then((res) => {
-          setTags(res.data.map((el) => el.tag));
+          setTags(res.data);
         })
         .catch((err) => {
           console.log(err);
