@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import styled from 'styled-components';
+import IsLoginState from '../states/IsLoginState';
+import { useRecoilValue } from 'recoil';
 import Nav from './Nav';
 
 const HeaderWrap = styled.header`
@@ -23,7 +25,7 @@ const NavWrap = styled.div`
   position: relative;
   flex: 1;
 
-  // menu 버튼 클릭 전 ui
+  //! menu 버튼 클릭 전 ui
   input[id='menuicon'] {
     display: none;
   }
@@ -84,7 +86,7 @@ const NavWrap = styled.div`
     transition: all 0.5s;
     z-index: 3;
   }
-  // menu 버튼 클릭 애니메이션 & nav 띄우기
+  //! menu 버튼 클릭 애니메이션 & nav 띄우기
   input[id='menuicon']:checked + label span:nth-child(1) {
     background-color: #fff;
     top: 50%;
@@ -122,7 +124,7 @@ const InfoWrap = styled.div`
 const Header = ({ LoginModalHandler, SignupModalHandler }) => {
   //로그인 상태라면 닉네임이 나와야하고
   //비 로그인 상태라면 Login, Signup이 나와야함.
-  const [isLogin, setIsLogin] = useState(true);
+  const IsLogin = useRecoilValue(IsLoginState);
 
   return (
     <HeaderWrap>
@@ -136,13 +138,11 @@ const Header = ({ LoginModalHandler, SignupModalHandler }) => {
           <p>menu</p>
           <div className='backdrop'></div>
         </label>
-        <Nav />
-        {/* <label for='menuicon'>
-        </label> */}
+        <Nav userInfo={JSON.parse(localStorage.getItem('userInfo'))} />
       </NavWrap>
       <InfoWrap>
-        {isLogin ? (
-          <div>Nickname</div>
+        {IsLogin ? (
+          <div>{JSON.parse(localStorage.getItem('userInfo')).nickname}</div>
         ) : (
           <div>
             <button onClick={LoginModalHandler}>Login</button>
