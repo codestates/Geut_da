@@ -13,6 +13,12 @@ const users = [
     password: bcrypt.hashSync('asdf1234!', 10),
     image: '/images/user.jpeg',
   },
+  {
+    nickname: 'ADMIN',
+    email: '1',
+    password: bcrypt.hashSync('1',1),
+    image: '/images/user.jpeg'
+  }
 ];
 
 export default users;
