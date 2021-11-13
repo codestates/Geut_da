@@ -5,16 +5,32 @@ import DrawingModal from '../components/Modal/DrawingModal';
 
 const NewDiary = () => {
   const [clickDrawing, setClickDrawing] = useState(false);
+  const [drawingImg, setDrawingImg] = useState('');
 
   const DrawingHandler = () => {
     setClickDrawing(!clickDrawing);
   };
+  const SaveDrawingHandler = (url) => {
+    setDrawingImg(url);
+  };
+
   return (
     <>
       <Header />
-      <div>DiaryView</div>
-      <div onClick={DrawingHandler}>img</div>
-      {clickDrawing ? <DrawingModal /> : null}
+      <h3>DiaryView</h3>
+      <div onClick={DrawingHandler}>
+        {drawingImg !== '' ? (
+          <img src={drawingImg} alt='drawingImg' />
+        ) : (
+          'click me!'
+        )}
+      </div>
+      {clickDrawing ? (
+        <DrawingModal
+          DrawingHandler={DrawingHandler}
+          SaveDrawingHandler={SaveDrawingHandler}
+        />
+      ) : null}
       <input type='text' placeholder='Title' />
       <Link to='/main'>Delete</Link>
       <button>Edit</button>
