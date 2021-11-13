@@ -71,19 +71,16 @@ const Main = () => {
   console.log(mainIsLogin);
   const history = useNavigate();
 
-  const config = {
-    headers: {
-      Authorization: `Bearer ${
-        JSON.parse(localStorage.getItem('userInfo')).token
-      }`,
-    },
-  };
-
   useEffect(() => {
     if (!mainIsLogin) {
       history('/');
     } else {
       // 현재 년월 일기목록 요청
+      const config = {
+        headers: {
+          Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}`,
+        },
+      };
       axios
         .get('/api/contents/by-month', config)
         .then((res) => {
@@ -102,7 +99,7 @@ const Main = () => {
           console.log(err);
         });
     }
-  }, []);
+  }, [mainIsLogin]);
 
   return (
     <>
