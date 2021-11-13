@@ -41,7 +41,7 @@ const getContentsByMonth = asyncHandler(async (req, res) => {
 //  @access  Private
 const getContentsByHashtag = asyncHandler(async (req, res) => {
   // 해시태그별 그림일기 목록
-  const contents = await Content.find({ hashtags: req.body.hashtag });
+  const contents = await Content.find({ hashtags: req.query.hashtag });
 
   if (contents) {
     res.json(contents);
@@ -69,7 +69,8 @@ const getHashtags = asyncHandler(async (req, res) => {
 //  @access  Private
 const getContentDetail = asyncHandler(async (req, res) => {
   // 해당 그림일기 정보
-  const content = await Content.findById({ _id: req.headers.data });
+  // console.log('Content_id', req.query._id);
+  const content = await Content.findById(req.query._id);
   if (content) {
     res.status(201).json(
       [content].map((el) => {
@@ -155,7 +156,7 @@ const addContent = asyncHandler(async (req, res) => {
 //  @access  Private
 const getCount = asyncHandler(async (req, res) => {
   // 유저가 작성한 그림일기 총 개수
-  await Content.find({}).aggregate([
+  const total = await Content.find({}).aggregate([
     {
       $match: {
         user: req.user._id,
@@ -163,11 +164,16 @@ const getCount = asyncHandler(async (req, res) => {
     },
     {
       $group: {
-        _id: null,
+        _id: '$user',
         count: { $sum: 1 },
       },
     },
-  ]);
+  ]); // 유저 별 콘텐츠 합계
+  if (total.count > 0) {
+    res.json(total.count);
+  } else {
+    res.json({ message: 'total count 0' });
+  }
 });
 
 export {

@@ -103,7 +103,7 @@ const checkUserPwd = asyncHandler(async (req, res) => {
 const updateUserImage = asyncHandler(async (req, res) => {
   const updatedUser = await User.findByIdAndUpdate(req.user._id, req.body, {
     new: true,
-  });
+  }); // Update를 실행한 뒤의 정보를 받고 싶다면 new 옵션을 사용해야 한다.
   res.status(200).json({ image: updatedUser.image });
 });
 
