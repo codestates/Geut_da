@@ -2,7 +2,7 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import IsLoginState from '../states/IsLoginState';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 
 const NavModal = styled.nav`
   width: 60vh;
@@ -53,6 +53,7 @@ const NavModal = styled.nav`
   }
   a:hover {
     background-color: rgba(255, 255, 255, 0.2);
+    cursor: pointer;
   }
   a.logout {
     position: absolute;
@@ -68,8 +69,15 @@ const NavModal = styled.nav`
 `;
 
 const Nav = ({ userInfo }) => {
-  const IsLogin = useRecoilValue(IsLoginState);
-
+  const [IsLogin, setIsLogin] = useRecoilState(IsLoginState);
+  const logOutHandler = () => {
+    localStorage.removeItem('userInfo');
+    setIsLogin(false);
+    alert('로그아웃이 완료되었습니다.');
+  };
+  const mypageReload = () => {
+    if (window.location.pathname === '/main') window.location.reload();
+  };
   return (
     <>
       {IsLogin ? (
@@ -81,15 +89,17 @@ const Nav = ({ userInfo }) => {
           <div className='email'>{userInfo.email}</div>
           <ul>
             <li>
-              <Link to='/main'>Main</Link>
+              <Link to='/main' onClick={mypageReload}>
+                Main
+              </Link>
             </li>
             <li>
               <Link to='/mypage'>Mypage</Link>
             </li>
             <li>
-              <Link to='/' className='logout'>
+              <a className='logout' onClick={logOutHandler}>
                 Logout
-              </Link>
+              </a>
             </li>
           </ul>
         </NavModal>
