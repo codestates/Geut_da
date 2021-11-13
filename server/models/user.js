@@ -6,8 +6,8 @@ const userSchema = mongoose.Schema(
   {
     nickname: {
       type: String,
-      minlength: [2, '닉네임은 2글자 이상 입력해주세요.'],
-      maxlength: [10, '닉네임은 11글자 미만이여야 합니다.'],
+      minlength: [2, '닉네임은 2글자 이상 입력해주세요'],
+      maxlength: [10, '닉네임은 10글자 이하로 입력해주세요'],
       trim: true,
       unique: true,
       required: true,
@@ -22,13 +22,11 @@ const userSchema = mongoose.Schema(
     },
     password: {
       type: String,
-      minlength: [8, '비밀번호를 8자 이상 입력해주세요.'],
-      matches: {
-        options: [
-          /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,20}$/,
-          '비밀번호 형식에 맞지않습니다.',
-        ],
-      },
+      minlength: [8, '비밀번호를 8자 이상 입력해주세요'],
+      match: [
+        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,20}$/,
+        '비밀번호 형식에 맞지않습니다',
+      ],
       trim: true,
       required: true,
     },

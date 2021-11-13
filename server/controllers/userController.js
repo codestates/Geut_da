@@ -1,13 +1,13 @@
 import asyncHandler from 'express-async-handler';
+import bcrypt from 'bcrypt';
 import User from '../models/user.js';
-import { Content } from '../models/content.js';
+import Content from '../models/content.js';
 import generateToken from './utils/generateToken.js';
 
 // @desc   Check a email address
 // @route  POST /api/users/email
 // @access Public
 const checkEmail = asyncHandler(async (req, res) => {
-  // 이메일 중복 확인
   const { email } = req.body;
 
   const emailExists = await User.findOne({ email });
@@ -22,8 +22,6 @@ const checkEmail = asyncHandler(async (req, res) => {
 // @route  POST /api/users/nickname
 // @access Public
 const checkNickname = asyncHandler(async (req, res) => {
-  // 닉네임 중복 확인
-
   const { nickname } = req.body;
 
   const nameExists = await User.findOne({ nickname });
@@ -39,9 +37,6 @@ const checkNickname = asyncHandler(async (req, res) => {
 // @access Public
 const registerUser = asyncHandler(async (req, res) => {
   const { email, password, nickname } = req.body;
-  console.log(email);
-  console.log(password);
-  console.log(nickname);
 
   const userExists = await User.findOne({ email });
 
@@ -90,9 +85,10 @@ const authUser = asyncHandler(async (req, res) => {
 // @route  POST /api/users/check
 // @access Private
 const checkUserPwd = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id);
   const { password } = req.body;
-  console.log('checkUserPwd 비밀번호가 노출된다!!', password);
+
+  const user = await User.findById(req.user._id);
+
   if (await user.matchPassword(password)) {
     res.json({ message: 'ok' });
   } else {
@@ -114,10 +110,19 @@ const updateUserImage = asyncHandler(async (req, res) => {
 // @route  PATCH /api/users/profile
 // @access Private
 const updateUserProfile = asyncHandler(async (req, res) => {
+  // 닉네임과 비밀번호 변경
+  if (req.body.password) {
+    req.body.password = await bcrypt.hash(req.body.password, 10);
+  } // 비밀번호 들어오면 해시해주고 넣기
+
   const updatedUser = await User.findByIdAndUpdate(req.user._id, req.body, {
     new: true,
   });
-  res.status(200).json(updatedUser);
+
+  res.status(200).json({
+    nickname: updatedUser.nickname,
+    token: generateToken(updatedUser._id),
+  });
 });
 
 // @desc   Delete user profile
@@ -126,7 +131,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 const deleteUserInfo = asyncHandler(async (req, res) => {
   // 회원 탈퇴 요청
 
-  await Content.deleteMany({ user: req.user._id }).populate('hashtag').exec();
+  await Content.deleteMany({ user: req.user._id });
   await User.findByIdAndDelete(req.user._id);
 
   res.status(200).json({
@@ -134,4 +139,13 @@ const deleteUserInfo = asyncHandler(async (req, res) => {
   });
 });
 
-export { checkEmail, checkNickname, registerUser, authUser, checkUserPwd, updateUserProfile, updateUserImage, deleteUserInfo };
+export {
+  checkEmail,
+  checkNickname,
+  registerUser,
+  authUser,
+  checkUserPwd,
+  updateUserProfile,
+  updateUserImage,
+  deleteUserInfo,
+};
