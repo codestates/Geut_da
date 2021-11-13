@@ -4,7 +4,7 @@ import LoginModal from '../components/Modal/LoginModal';
 import SignupModal from '../components/Modal/SignupModal';
 import styled from 'styled-components';
 import IsLoginState from '../states/IsLoginState';
-import {useRecoilValue} from 'recoil'
+import { useRecoilValue } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 
 const ModalBackDrop = styled.div`
@@ -20,7 +20,7 @@ const ModalBackDrop = styled.div`
 const Landing = () => {
   const [clickLogin, setClickLogin] = useState(false);
   const [clickSignup, setClickSignup] = useState(false);
-  const loginCheck = useRecoilValue(IsLoginState)
+  const loginCheck = useRecoilValue(IsLoginState);
   const history = useNavigate();
 
   const LoginModalHandler = () => {
@@ -31,11 +31,11 @@ const Landing = () => {
     setClickSignup(!clickSignup);
   };
 
-  useEffect(()=>{
-    if(loginCheck){
-      history('/main')
+  useEffect(() => {
+    if (loginCheck) {
+      history('/main');
     }
-  })
+  });
 
   return (
     <>
@@ -55,7 +55,10 @@ const Landing = () => {
       ) : null}
       {clickSignup ? (
         <ModalBackDrop onClick={SignupModalHandler}>
-          <SignupModal SignupModalHandler={SignupModalHandler} />
+          <SignupModal
+            SignupModalHandler={SignupModalHandler}
+            LoginModalHandler={LoginModalHandler}
+          />
         </ModalBackDrop>
       ) : null}
     </>

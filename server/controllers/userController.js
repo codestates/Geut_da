@@ -39,20 +39,24 @@ const checkNickname = asyncHandler(async (req, res) => {
 // @access Public
 const registerUser = asyncHandler(async (req, res) => {
   const { email, password, nickname } = req.body;
+  console.log(email);
+  console.log(password);
+  console.log(nickname);
 
   const userExists = await User.findOne({ email });
 
   if (userExists) {
     res.status(401).json({ message: 'User already exists' });
   }
-
+  console.log(2);
   const user = await User.create({
     email,
     password,
     nickname,
-    image: `/images/user.jpeg`,
+    image: '../../client/public/images/user.jpeg',
   });
-
+  console.log(1);
+  console.log(user);
   if (user) {
     res.status(201).json({
       message: 'ok',
