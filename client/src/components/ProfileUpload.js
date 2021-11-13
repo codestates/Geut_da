@@ -39,14 +39,16 @@ const ProfileUpload = () => {
                     ReactS3Client.deleteFile(JSON.parse(localStorage.getItem('userInfo')).image.split('/')[3])
                       .then((res) => {
                         localStorage.setItem('userInfo', JSON.stringify({ ...JSON.parse(localStorage.userInfo), image: data.location }));
+                        window.location.reload();
                         console.log(res, '삭제');
                       })
                       .catch((err) => {
                         console.log(err, '삭제안됨');
-                        console.log(JSON.parse(localStorage.getItem('userInfo')).image,'tet');
+                        console.log(JSON.parse(localStorage.getItem('userInfo')).image, 'tet');
                       });
                   } else {
                     localStorage.setItem('userInfo', JSON.stringify({ ...JSON.parse(localStorage.userInfo), image: data.location }));
+                    window.location.reload();
                   }
                 })
                 .catch((err) => {
