@@ -47,8 +47,10 @@ const LoginModal = ({ LoginModalHandler, SignupModalHandler }) => {
   const history = useNavigate();
 
   //ID, Password 유효성 검사 정규표현식
-  let idExp = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]+$/;
-  let pwdExp = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,20}$/;
+  const emailExp =
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  let pwdExp =
+    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,20}$/;
 
   const InputValueChangeHandler = (event) => {
     if (event.target.type === 'email') {
@@ -70,7 +72,10 @@ const LoginModal = ({ LoginModalHandler, SignupModalHandler }) => {
       },
     };
 
-    if (idExp.test(loginInputInfo.email) && pwdExp.test(loginInputInfo.password)) {
+    if (
+      emailExp.test(loginInputInfo.email) &&
+      pwdExp.test(loginInputInfo.password)
+    ) {
       axios
         .post(
           '/api/users/login',
@@ -111,8 +116,18 @@ const LoginModal = ({ LoginModalHandler, SignupModalHandler }) => {
         <div>로고</div>
         <LoginModalInputWrap>
           <div>Login</div>
-          <input type='email' placeholder='Email' value={loginInputInfo.email} onChange={InputValueChangeHandler} />
-          <input type='password' placeholder='password' value={loginInputInfo.password} onChange={InputValueChangeHandler} />
+          <input
+            type='email'
+            placeholder='Email'
+            value={loginInputInfo.email}
+            onChange={InputValueChangeHandler}
+          />
+          <input
+            type='password'
+            placeholder='password'
+            value={loginInputInfo.password}
+            onChange={InputValueChangeHandler}
+          />
           {loginMessage ? (
             <span>
               &#42;아이디 또는 비밀번호가 잘못 입력 되었습니다.
