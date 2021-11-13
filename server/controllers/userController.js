@@ -48,15 +48,14 @@ const registerUser = asyncHandler(async (req, res) => {
   if (userExists) {
     res.status(401).json({ message: 'User already exists' });
   }
-  console.log(2);
+
   const user = await User.create({
     email,
     password,
     nickname,
-    image: '../../client/public/images/user.jpeg',
+    image: '/images/user.jpeg',
   });
-  console.log(1);
-  console.log(user);
+
   if (user) {
     res.status(201).json({
       message: 'ok',
@@ -135,13 +134,4 @@ const deleteUserInfo = asyncHandler(async (req, res) => {
   });
 });
 
-export {
-  checkEmail,
-  checkNickname,
-  registerUser,
-  authUser,
-  checkUserPwd,
-  updateUserProfile,
-  updateUserImage,
-  deleteUserInfo,
-};
+export { checkEmail, checkNickname, registerUser, authUser, checkUserPwd, updateUserProfile, updateUserImage, deleteUserInfo };
