@@ -1,18 +1,5 @@
 import mongoose from 'mongoose';
 
-const hashtagSchema = mongoose.Schema({
-  content: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-    ref: 'Content',
-  },
-  tag: {
-    type: String,
-    trim: true,
-    // required: true,
-  },
-});
-
 const contentSchema = mongoose.Schema(
   {
     user: {
@@ -43,6 +30,5 @@ const contentSchema = mongoose.Schema(
 );
 
 const Content = mongoose.model('Content', contentSchema);
-const Hashtag = mongoose.model('Hashtag', hashtagSchema);
 
-export { Content, Hashtag };
+export default Content;

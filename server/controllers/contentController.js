@@ -1,7 +1,7 @@
 import asyncHandler from 'express-async-handler';
 import moment from 'moment';
 import moment2 from 'moment-timezone';
-import { Content, Hashtag } from '../models/content.js';
+import Content from '../models/content.js';
 
 moment2.tz.setDefault('Asia/Seoul');
 const now = new Date();
@@ -115,20 +115,11 @@ const getContentDetail = asyncHandler(async (req, res) => {
 //  @access  Private
 const deleteMyContent = asyncHandler(async (req, res) => {
   // 해당 그림일기 삭제
-  // 그림일기 삭제 전 연결된 해시태그 지운다.
-  const { _id } = req.body;
 
-  if (_id) {
-    await Hashtag.deleteMany({ content: req.body._id });
-    await Content.findByIdAndDelete(req.body._id);
-    res.status(200).json({
-      message: 'Delete success',
-    });
-  } else {
-    res.status(404).json({
-      message: 'Content ID not found',
-    });
-  }
+  await Content.findByIdAndDelete(req.body._id);
+  res.status(200).json({
+    message: 'Delete success',
+  });
 });
 
 //  @desc   update   user content
@@ -143,14 +134,6 @@ const updateMyContent = asyncHandler(async (req, res) => {
     { projection: { user: 0, __v: 0, updatedAt: 0 }, new: true }
   );
 
-  const { hashtags } = req.body;
-
-  if (hashtags.length) {
-    await Hashtag.deleteMany({ content: req.body._id }); // 해당 그림일기의 해시태그 싹 지우고
-    for (let tag of hashtags) {
-      await Hashtag.create({ content: updatedContent._id, tag });
-    } // 다시 생성한다.
-  }
   res.status(200).json(
     [updatedContent].map((el) => {
       return {
@@ -177,15 +160,7 @@ const addContent = asyncHandler(async (req, res) => {
       ...req.body,
     });
     const createdContent = await content.save();
-    // 그림일기를 생성 후 해당 그림일기의 고유번호로 해시태그 생성
-    // 중복되는 태그들이 있겠지만, 해시태그 고유번호로 구분한다.
-    const { hashtags } = req.body;
 
-    if (hashtags.length) {
-      for (let tag of hashtags) {
-        await Hashtag.create({ content: createdContent._id, tag });
-      }
-    }
     res.status(201).json({ message: 'created', _id: createdContent._id });
   }
 });
