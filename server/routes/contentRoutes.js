@@ -21,6 +21,6 @@ router.route('/detail').get(protect, getContentDetail); // 해당 그림일기 �
 router.route('/edit').patch(protect, updateMyContent); // 해당 그림일기 수정 요청
 router.route('/delete').delete(protect, deleteMyContent); // 해당 그림일기 삭제 요청
 router.route('/new').post(protect, addContent); // 새 그림일기 저장 요청
-router.route('/total').post(protect, getCount); // 유저의 그림일기 총 수
+router.route('/total').get(protect, getCount); // 유저의 그림일기 총 수
 
 export default router;
