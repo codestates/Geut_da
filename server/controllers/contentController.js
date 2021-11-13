@@ -4,21 +4,27 @@ import moment2 from 'moment-timezone';
 import { Content, Hashtag } from '../models/content.js';
 
 moment2.tz.setDefault('Asia/Seoul');
+const now = new Date();
 
 //  @desc    GET    user contents by month
 //  @route   GET    /api/contents/by-month
 //  @access  Private
 const getContentsByMonth = asyncHandler(async (req, res) => {
-  // 월별 그림일기 목록
-  const now = new Date();
-  let year = req.body.year || now.getFullYear();
-  let month = req.body.month || now.getMonth() + 1;
-  const contents = await Content.find({
-    createdAt: {
-      $gte: moment(`${year}/${month}`, 'YYYY/MM').startOf('month').format(),
-      $lte: moment(`${year}/${month}`, 'YYYY/MM').endOf('month').format(),
+  // 해당 유저의 년월별 그림일기 목록
+
+  const year = req.query.year || now.getFullYear();
+  const month = req.query.month || now.getMonth() + 1;
+
+  const contents = await Content.find(
+    {
+      user: req.user._id, // 특정 유저의
+      createdAt: {
+        $gte: moment(`${year}/${month}`, 'YYYY/MM').startOf('month').format(),
+        $lte: moment(`${year}/${month}`, 'YYYY/MM').endOf('month').format(),
+      }, // 원하는 기간
     },
-  })
+    { title: 1, weather: 1, drawing: 1, createdAt: 1 } // 필요한 필드 선택(가공)
+  )
     .sort({ createdAt: 1 })
     .exec();
 
@@ -41,10 +47,23 @@ const getContentsByMonth = asyncHandler(async (req, res) => {
 //  @access  Private
 const getContentsByHashtag = asyncHandler(async (req, res) => {
   // 해시태그별 그림일기 목록
-  const contents = await Content.find({ hashtags: req.query.hashtag });
+  const contents = await Content.find(
+    {
+      user: req.user._id,
+      hashtags: req.query.hashtag,
+    },
+    { title: 1, weather: 1, drawing: 1, createdAt: 1 }
+  );
 
   if (contents) {
-    res.json(contents);
+    res.json(
+      contents.map((el) => {
+        return {
+          ...el._doc,
+          createdAt: moment(el.createdAt).format('YYYY년 MM월 DD일'),
+        };
+      })
+    );
   } else {
     res.status(404).json({ message: 'Contents not found' });
   }
@@ -55,7 +74,8 @@ const getContentsByHashtag = asyncHandler(async (req, res) => {
 //  @access  Private
 const getHashtags = asyncHandler(async (req, res) => {
   // 해시태그 전체 목록
-  const hashtags = await Hashtag.distinct('tag');
+  // 해당 유저가 컨텐츠에 사용한 해시태그
+  const hashtags = await Content.distinct('hashtags', { user: req.user._id });
 
   if (hashtags) {
     res.json(hashtags);
@@ -70,17 +90,20 @@ const getHashtags = asyncHandler(async (req, res) => {
 const getContentDetail = asyncHandler(async (req, res) => {
   // 해당 그림일기 정보
   // console.log('Content_id', req.query._id);
-  const content = await Content.findById(req.query._id);
+  const content = await Content.findById(req.query._id, {
+    user: 0,
+    __v: 0,
+    updatedAt: 0,
+  }); // 필요없는 필드 제거
+
   if (content) {
     res.status(201).json(
       [content].map((el) => {
         return {
           ...el._doc,
-          createdAt: moment(el.createdAt).format(
-            'YYYY년 MM월 DD일  HH시mm분ss초'
-          ),
+          createdAt: moment(el.createdAt).format('YYYY년 MM월 DD일 HH:mm:ss'),
         };
-      })
+      })[0]
     );
   } else {
     res.status(404).json({ message: 'Contents not found' });
@@ -93,11 +116,19 @@ const getContentDetail = asyncHandler(async (req, res) => {
 const deleteMyContent = asyncHandler(async (req, res) => {
   // 해당 그림일기 삭제
   // 그림일기 삭제 전 연결된 해시태그 지운다.
-  await Hashtag.deleteMany({ content: req.body._id });
-  await Content.findByIdAndDelete(req.body._id);
-  res.status(200).json({
-    message: 'Delete success',
-  });
+  const { _id } = req.body;
+
+  if (_id) {
+    await Hashtag.deleteMany({ content: req.body._id });
+    await Content.findByIdAndDelete(req.body._id);
+    res.status(200).json({
+      message: 'Delete success',
+    });
+  } else {
+    res.status(404).json({
+      message: 'Content ID not found',
+    });
+  }
 });
 
 //  @desc   update   user content
@@ -109,18 +140,25 @@ const updateMyContent = asyncHandler(async (req, res) => {
   const updatedContent = await Content.findByIdAndUpdate(
     req.body._id,
     req.body,
-    {
-      new: true,
-    }
-  ); // 콘텐츠 수정 후 고유 아이디 바뀌는 지 확인할 것! 바뀌면 낭패
+    { projection: { user: 0, __v: 0, updatedAt: 0 }, new: true }
+  );
+
   const { hashtags } = req.body;
+
   if (hashtags.length) {
     await Hashtag.deleteMany({ content: req.body._id }); // 해당 그림일기의 해시태그 싹 지우고
     for (let tag of hashtags) {
       await Hashtag.create({ content: updatedContent._id, tag });
     } // 다시 생성한다.
   }
-  res.status(200).json(updatedContent);
+  res.status(200).json(
+    [updatedContent].map((el) => {
+      return {
+        ...el._doc,
+        createdAt: moment(el.createdAt).format('YYYY년 MM월 DD일 HH:mm:ss'),
+      };
+    })[0]
+  );
 });
 
 //  @desc   Create new Content
@@ -142,12 +180,13 @@ const addContent = asyncHandler(async (req, res) => {
     // 그림일기를 생성 후 해당 그림일기의 고유번호로 해시태그 생성
     // 중복되는 태그들이 있겠지만, 해시태그 고유번호로 구분한다.
     const { hashtags } = req.body;
+
     if (hashtags.length) {
       for (let tag of hashtags) {
         await Hashtag.create({ content: createdContent._id, tag });
       }
     }
-    res.status(201).json(createdContent);
+    res.status(201).json({ message: 'created', _id: createdContent._id });
   }
 });
 
@@ -156,24 +195,59 @@ const addContent = asyncHandler(async (req, res) => {
 //  @access  Private
 const getCount = asyncHandler(async (req, res) => {
   // 유저가 작성한 그림일기 총 개수
-  const total = await Content.find({}).aggregate([
+  // 년,월에 일치하는 총 개수
+  // 일 -> createdAt의 일까지 포함한 정보
+
+  const total = await Content.aggregate([
     {
       $match: {
         user: req.user._id,
+      }, // 해당 유저의
+    },
+    {
+      $group: {
+        _id: 'total count',
+        count: { $sum: 1 },
+      }, // 유저 별 콘텐츠 총 합계
+    },
+  ]); // total[0].count = 13
+
+  const totalByMonth = await Content.aggregate([
+    {
+      $match: {
+        user: req.user._id,
+        createdAt: {
+          $gte: new Date(now.getFullYear(), now.getMonth()),
+        }, // 해당 월
       },
     },
     {
       $group: {
-        _id: '$user',
+        _id: 'counts per month',
         count: { $sum: 1 },
       },
     },
-  ]); // 유저 별 콘텐츠 합계
-  if (total.count > 0) {
-    res.json(total.count);
-  } else {
-    res.json({ message: 'total count 0' });
-  }
+  ]);
+
+  const untilNow = await Content.find(
+    {
+      user: req.user._id,
+      createdAt: {
+        $gte: new Date(now.getFullYear(), now.getMonth() - 3),
+      },
+    },
+    { _id: 0, createdAt: 1 }
+  ).sort({ createdAt: 1 });
+
+  console.log(untilNow);
+
+  res.json({
+    total: total[0].count,
+    totalByMonth: totalByMonth[0].count,
+    untilNow: untilNow.map((el) =>
+      Number(moment(el.createdAt).format('YYYYMMDD'))
+    ),
+  });
 });
 
 export {
