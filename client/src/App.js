@@ -23,8 +23,14 @@ const App = () => {
       <Routes>
         <Route exact path='/' element={isLogin ? <Main /> : <Landing />} />
         <Route path='/main' element={isLogin ? <Main /> : <Landing />} />
-        <Route path='/main/diaryview' element={isLogin ? <DiaryView /> : <Landing />} />
-        <Route path='/main/newdiary' element={isLogin ? <NewDiary /> : <Landing />} />
+        <Route
+          path='/main/diaryview'
+          element={isLogin ? <DiaryView /> : <Landing />}
+        />
+        <Route
+          path='/main/newdiary'
+          element={isLogin ? <NewDiary /> : <Landing />}
+        />
         <Route path='/mypage' element={isLogin ? <Mypage /> : <Landing />} />
       </Routes>
     </BrowserRouter>

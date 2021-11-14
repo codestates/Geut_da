@@ -74,23 +74,32 @@ const Main = () => {
         }`,
       },
     };
+
     axios
       .get('/api/contents/by-month', config)
       .then((res) => {
         setDiaries(res.data);
+        axios
+          .get('/api/contents/hashtags', config)
+          .then((res) => {
+            setTags(res.data);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       })
       .catch((err) => {
         console.log(err);
       });
     // 전체 태그 목록 요청
-    axios
-      .get('/api/contents/hashtags', config)
-      .then((res) => {
-        setTags(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    // axios
+    //   .get('/api/contents/hashtags', config)
+    //   .then((res) => {
+    //     setTags(res.data);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
   }, []);
 
   return (
