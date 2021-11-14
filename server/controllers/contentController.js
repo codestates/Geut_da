@@ -25,7 +25,7 @@ const getContentsByMonth = asyncHandler(async (req, res) => {
     },
     { title: 1, weather: 1, drawing: 1, createdAt: 1 } // 필요한 필드 선택(가공)
   )
-    .sort({ createdAt: 1 })
+    .sort({ createdAt: -1 })
     .exec();
 
   if (contents) {
@@ -53,7 +53,7 @@ const getContentsByHashtag = asyncHandler(async (req, res) => {
       hashtags: req.query.hashtag,
     },
     { title: 1, weather: 1, drawing: 1, createdAt: 1 }
-  );
+  ).sort({ createdAt: -1 });
 
   if (contents) {
     res.json(
@@ -75,7 +75,10 @@ const getContentsByHashtag = asyncHandler(async (req, res) => {
 const getHashtags = asyncHandler(async (req, res) => {
   // 해시태그 전체 목록
 
-  const hashtags = await Content.distinct('hashtags', { user: req.user._id });
+  const hashtags = await Content.distinct('hashtags', {
+    user: req.user._id,
+    hashtags: { $nin: ['', null] },
+  });
 
   if (hashtags) {
     res.json(hashtags);
