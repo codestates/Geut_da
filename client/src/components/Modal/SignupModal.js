@@ -128,8 +128,6 @@ const SignupModal = ({ SignupModalHandler, LoginModalHandler }) => {
     } else {
       setAllValidateCheck(false);
     }
-
-    console.log(signUpValidateState);
   }, [signUpValidateState]);
 
   //유효성검사 정규표현식
@@ -283,8 +281,6 @@ const SignupModal = ({ SignupModalHandler, LoginModalHandler }) => {
     //회원가입 요청
     if (allValidateCheck) {
       //axios 요청
-      console.log(signUpInputInfo);
-      console.log(signUpValidateState);
       axios
         .post(
           '/api/users',
@@ -301,7 +297,7 @@ const SignupModal = ({ SignupModalHandler, LoginModalHandler }) => {
           SignupModalHandler();
         })
         .catch((err) => {
-          console.log(err);
+          //회원가입 실패하면 발생하는 이벤트 적으면됨
         });
     } else {
       //입력 안한것이 있으면 필수 입력이라고 문구 나와야됨.
