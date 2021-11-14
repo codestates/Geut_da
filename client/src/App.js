@@ -1,12 +1,10 @@
 import { useEffect } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import IsLoginState from './states/IsLoginState';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
-import Landing from './pages/Landing';
-import Main from './pages/Main';
-import Mypage from './pages/Mypage';
-import DiaryView from './pages/DiaryView';
-import NewDiary from './pages/NewDiary';
+import * as ROUTES from './constants/routes';
+import { PrivateRoute } from './helpers/protect';
+import { DiaryView, Landing, Main, Mypage, NewDiary } from './pages';
+import IsLoginState from './states/IsLoginState';
 
 const App = () => {
   const [isLogin, setIsLogin] = useRecoilState(IsLoginState);
@@ -19,21 +17,23 @@ const App = () => {
   }, []);
 
   return (
-    <BrowserRouter>
+    <Router>
       <Routes>
-        <Route exact path='/' element={isLogin ? <Main /> : <Landing />} />
-        <Route path='/main' element={isLogin ? <Main /> : <Landing />} />
-        <Route
-          path='/main/diaryview'
-          element={isLogin ? <DiaryView /> : <Landing />}
-        />
-        <Route
-          path='/main/newdiary'
-          element={isLogin ? <NewDiary /> : <Landing />}
-        />
-        <Route path='/mypage' element={isLogin ? <Mypage /> : <Landing />} />
+        <Route path={ROUTES.MAIN} element={<PrivateRoute />}>
+          <Route path={ROUTES.MAIN} element={<Main />} />
+        </Route>
+        <Route path={ROUTES.DIARYVIEW} element={<PrivateRoute />}>
+          <Route path={ROUTES.DIARYVIEW} element={<DiaryView />} />
+        </Route>
+        <Route path={ROUTES.NEWDIARY} element={<PrivateRoute />}>
+          <Route path={ROUTES.NEWDIARY} element={<NewDiary />} />
+        </Route>
+        <Route path={ROUTES.MYPAGE} element={<PrivateRoute />}>
+          <Route path={ROUTES.MYPAGE} element={<Mypage />} />
+        </Route>
+        <Route path={ROUTES.LANDING} element={<Landing />} />
       </Routes>
-    </BrowserRouter>
+    </Router>
   );
 };
 
