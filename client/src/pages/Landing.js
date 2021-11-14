@@ -29,7 +29,6 @@ const Landing = () => {
     setClickSignup(!clickSignup);
   };
 
-
   return (
     <>
       <Header

@@ -86,7 +86,9 @@ const SignupModal = ({ SignupModalHandler, LoginModalHandler }) => {
       !signUpValidateState.nickname &&
       nicknameValidText === 'invalidate'
     ) {
-      setNicknameValidateMessage('두글자 이상의 닉네임을 입력해주세요');
+      setNicknameValidateMessage(
+        '두글자 이상 열 글자 이하로 닉네임을 입력해주세요'
+      );
     }
 
     //비밀번호
@@ -131,10 +133,8 @@ const SignupModal = ({ SignupModalHandler, LoginModalHandler }) => {
   }, [signUpValidateState]);
 
   //유효성검사 정규표현식
-  const pwdExp =
-    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,20}$/;
-  const emailExp =
-    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  const pwdExp = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,20}$/;
+  const emailExp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   const nicknameExp = /^([a-zA-Z0-9ㄱ-ㅎ|ㅏ-ㅣ|가-힣]).{1,10}$/;
 
   const SignUpInputValueChange = (event) => {
