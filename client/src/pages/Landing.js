@@ -5,13 +5,16 @@ import SignupModal from '../components/Modal/SignupModal';
 import styled from 'styled-components';
 
 const ModalBackDrop = styled.div`
-  position: fixed;
-  width: 100%;
+  width: 100vw;
   height: 100vh;
+  position: fixed;
   top: 0;
   left: 0;
-  background-color: rgba(0, 0, 0, 0.4);
-  z-index: 1;
+  z-index: 999;
+  background-color: rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const Landing = () => {
