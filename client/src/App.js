@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import IsLoginState from './states/IsLoginState';
 import { useRecoilState } from 'recoil';
-import axios from 'axios';
 import Landing from './pages/Landing';
 import Main from './pages/Main';
 import Mypage from './pages/Mypage';

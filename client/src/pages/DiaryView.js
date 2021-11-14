@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Header from '../components/Header';
 import DrawingModal from '../components/Modal/DrawingModal';
@@ -55,7 +55,6 @@ const DiaryView = () => {
           data: { _id: location.state._id },
         })
         .then((res) => {
-          console.log(res);
           history('/main');
         });
     }
@@ -68,7 +67,6 @@ const DiaryView = () => {
           params: { _id: location.state._id },
         })
         .then((res) => {
-          console.log(res.data);
           setDiaryInfo(res.data);
         })
         .catch((err) => {
@@ -76,31 +74,23 @@ const DiaryView = () => {
         });
     }
   }, []);
-  // 서버에서 숫자로 인덱스값 응답 옴.
-  // weather: 1
+  // 서버에서 문자열 인덱스값 응답 옴.
+  // weather ['0'(sun), '1'(cloud), '2'[rain], '3'(snow)]
   return (
     <>
       <Header />
-      <button>
-        <Link to='/main'>Go Back</Link>
-      </button>
       <DiaryWrap>
         <div className='img' onClick={DrawingHandler}>
-          img
+          <img src={diaryInfo.drawing} alt='drawing' />
         </div>
-        {clickDrawing ? <DrawingModal /> : null}
+        {clickDrawing ? <DrawingModal DrawingHandler={DrawingHandler} /> : null}
         <div>
-          {/* <input type='text' placeholder='Title' /> */}
           <div className='title'>
             {diaryInfo.title}
             <button onClick={DeleteDaiaryHandler}>Delete</button>
             <button>Edit</button>
             <button>Save</button>
           </div>
-          {console.log(diaryInfo.hashtags)}
-          {/* {diaryInfo.hashtags.map((el,index)=>{
-            console.log(el)
-          })} */}
           {diaryInfo.hashtags &&
             diaryInfo.hashtags.map((el, idx) => {
               return <span key={idx}>#{el}</span>;
