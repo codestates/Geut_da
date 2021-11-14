@@ -74,7 +74,7 @@ const getContentsByHashtag = asyncHandler(async (req, res) => {
 //  @access  Private
 const getHashtags = asyncHandler(async (req, res) => {
   // 해시태그 전체 목록
-  // 해당 유저가 컨텐츠에 사용한 해시태그
+
   const hashtags = await Content.distinct('hashtags', { user: req.user._id });
 
   if (hashtags) {
@@ -89,7 +89,7 @@ const getHashtags = asyncHandler(async (req, res) => {
 //  @access  Private
 const getContentDetail = asyncHandler(async (req, res) => {
   // 해당 그림일기 정보
-  // console.log('Content_id', req.query._id);
+
   const content = await Content.findById(req.query._id, {
     user: 0,
     __v: 0,
@@ -127,7 +127,7 @@ const deleteMyContent = asyncHandler(async (req, res) => {
 //  @access Private
 const updateMyContent = asyncHandler(async (req, res) => {
   // 해당 그림일기 수정
-  // 수정 후 해시태그 또한 수정
+
   const updatedContent = await Content.findByIdAndUpdate(
     req.body._id,
     req.body,
@@ -149,7 +149,7 @@ const updateMyContent = asyncHandler(async (req, res) => {
 //  @access Private
 const addContent = asyncHandler(async (req, res) => {
   // 그림일기 추가 요청
-  // req.body로 들어온 회원정보 이용.
+
   const { title, text, weather, drawing } = req.body;
 
   if (!(title && text && weather && drawing)) {
@@ -169,9 +169,9 @@ const addContent = asyncHandler(async (req, res) => {
 //  @route   GET    /api/contents/total
 //  @access  Private
 const getCount = asyncHandler(async (req, res) => {
-  // 유저가 작성한 그림일기 총 개수
-  // 년,월에 일치하는 총 개수
-  // 일 -> createdAt의 일까지 포함한 정보
+  // 그림일기 총 개수
+  // 월별 개수
+  // 일별 개수
 
   const total = await Content.aggregate([
     {
@@ -204,24 +204,29 @@ const getCount = asyncHandler(async (req, res) => {
     },
   ]);
 
-  const untilNow = await Content.find(
+  const totalByDay = await Content.aggregate([
     {
-      user: req.user._id,
-      createdAt: {
-        $gte: new Date(now.getFullYear(), now.getMonth() - 3),
+      $match: {
+        user: req.user._id,
       },
     },
-    { _id: 0, createdAt: 1 }
-  ).sort({ createdAt: 1 });
-
-  console.log(untilNow);
+    {
+      $project: {
+        createdOn: {
+          $dateToString: { format: '%Y-%m-%d', date: '$createdAt' },
+        },
+      },
+    },
+    {
+      $group: { _id: '$createdOn', total: { $sum: 1 } },
+    },
+    { $sort: { _id: 1 } },
+  ]);
 
   res.json({
     total: total[0].count,
     totalByMonth: totalByMonth[0].count,
-    untilNow: untilNow.map((el) =>
-      Number(moment(el.createdAt).format('YYYYMMDD'))
-    ),
+    totalByDay,
   });
 });
 
