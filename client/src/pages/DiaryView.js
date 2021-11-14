@@ -68,16 +68,16 @@ const DiaryView = () => {
           params: { _id: location.state._id },
         })
         .then((res) => {
-          console.log(res.data[0]);
-          setDiaryInfo(res.data[0]);
+          console.log(res.data);
+          setDiaryInfo(res.data);
         })
         .catch((err) => {
           console.log(err);
         });
     }
   }, []);
-  // 서버에서 문자열 인덱스값 응답 옴.
-  // weather ['0'(sun), '1'(cloud), '2'[rain], '3'(snow)]
+  // 서버에서 숫자로 인덱스값 응답 옴.
+  // weather: 1
   return (
     <>
       <Header />
