@@ -6,55 +6,84 @@ import UserEditModal from '../components/Modal/UserEditModal';
 import LeaveModal from '../components/Modal/LeaveModal';
 import ProfileUpload from '../components/ProfileUpload';
 import axios from 'axios';
+import { useRecoilState } from 'recoil';
+import IsLoginState from '../states/IsLoginState';
+import { useNavigate } from 'react-router';
 
 const Mypage = () => {
-  // const [profileImgChange, setProfileImgChange] = useState(false);
-  // const config = {
-  //   Headers : adsf
-  // }
-  // useEffect(() => {
-  //   axios.get('', config)
-  // }, [])
+  const [isLogin, setIsLogin] = useRecoilState(IsLoginState);
+  const history = useNavigate();
+  useEffect(() => {
+    if (!isLogin) {
+      history('/');
+      console.log(isLogin);
+    }
+  }, [isLogin]);
 
-  
-  const [userLeave, setUserLeave] = useState(false);
-  const [editPasswordCheck, setEditPasswordCheck] = useState(false);
-  const [userEditable, setUserEditable] = useState(false);
+  const [total, setTotal] = useState(0);
+  const [monthTotal, setMonthTotal] = useState(0);
 
-  // const ProfileChangeHandler = () => {
-  //   setProfileImgChange(!profileImgChange)
-  // }
-  const userInfo = JSON.parse(localStorage.userInfo)
-  const UserLeaveHandler = () => {
-    setUserLeave(!userLeave);
+  useEffect(() => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}`,
+      },
+    };
+    axios
+      .get('/api/contents/total', config)
+      .then((res) => {
+        console.log(res);
+        setTotal(res.data.total);
+        setMonthTotal(res.data.totalByMonth);
+      })
+      .catch((err) => {
+        setTotal(0);
+        setMonthTotal(0);
+      });
+  }, []);
+
+  const [isUserResign, setIsUserResign] = useState(false);
+  const [openPasswordModal, setOpenPasswordModal] = useState(false);
+  const [openUserEditModal, setOpenUserEditModal] = useState(false);
+  const [isPasswordCorrect, setIsPasswordCorrect] = useState(false);
+
+  const isPasswordCorrectHandler = () => {
+    setIsPasswordCorrect(!isPasswordCorrect);
   };
-
-  const EditPasswordCheckHandler = () => {
+  // const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+  const isUserResignHandler = () => {
+    setIsUserResign(!isUserResign);
+  };
+  const openPasswordModalHandler = () => {
     //아래 함수 실행시 모달 on /off
-    setEditPasswordCheck(!editPasswordCheck);
-    UserEditableHandler();
+    setOpenPasswordModal(!openPasswordModal);
   };
 
-  const UserEditableHandler = () => {
-    setUserEditable(!userEditable);
+  const openUserEditModalHandler = () => {
+    setOpenUserEditModal(!openUserEditModal);
   };
 
   return (
     <>
       <Header />
-      <div><img src={userInfo.image}/></div>
+      <div>
+        <img src={JSON.parse(localStorage.getItem('userInfo')).image} />
+      </div>
       {/* <button onClick={ProfileChangeHandler}>이미지 수정 버튼</button> */}
-      <div>{userInfo.nickname}</div>
-      <div>{userInfo.email}</div>
-      <button onClick={UserLeaveHandler}>회원탈퇴</button>
-      <button onClick={EditPasswordCheckHandler}>정보수정</button>
+      <div>{JSON.parse(localStorage.getItem('userInfo')).nickname}</div>
+      <div>{JSON.parse(localStorage.getItem('userInfo')).email}</div>
+      <button onClick={isUserResignHandler}>회원탈퇴</button>
+      <button onClick={openPasswordModalHandler}>정보수정</button>
 
-      <div>유저 그림일기 개수</div>
+      <div>{total ? `작성한 총 게시물 ${total}` : `작성한 게시물이 없습니다.`}</div>
+      <div>{monthTotal ? `이번달 작성한 게시물 수 ${monthTotal}` : `이번달에 작성한 게시물이 없습니다`}</div>
       {/* 이미지 수정 버튼 클릭시 모달창 띄우기*/}
       <ProfileUpload />
-      {userLeave ? <LeaveModal UserLeaveHandler={UserLeaveHandler} /> : null}
-      {editPasswordCheck ? <UserCheckModal /> : null}
-      {userEditable ? <UserEditModal /> : null}
+      {isUserResign ? <LeaveModal isUserResignHandler={isUserResignHandler} /> : null}
+      {openPasswordModal ? (
+        <UserCheckModal openPasswordModalHandler={openPasswordModalHandler} isPasswordCorrectHandler={isPasswordCorrectHandler} openUserEditModalHandler={openUserEditModalHandler} />
+      ) : null}
+      {openUserEditModal ? <UserEditModal openUserEditModalHandler={openUserEditModalHandler} /> : null}
       <Footer />
     </>
   );
