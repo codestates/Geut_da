@@ -152,7 +152,7 @@ const addContent = asyncHandler(async (req, res) => {
 
   const { title, text, weather, drawing } = req.body;
 
-  if (!(title && text && weather && drawing)) {
+  if (!(title && text && drawing)) {
     res.status(400).json({ message: 'Contents should be fulfilled' });
   } else {
     const content = new Content({

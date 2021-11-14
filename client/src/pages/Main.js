@@ -68,7 +68,6 @@ const Main = () => {
   const [diaries, setDiaries] = useState([]);
   const [tags, setTags] = useState([]);
 
-  console.log(mainIsLogin);
   const history = useNavigate();
 
   useEffect(() => {
@@ -78,7 +77,9 @@ const Main = () => {
       // 현재 년월 일기목록 요청
       const config = {
         headers: {
-          Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}`,
+          Authorization: `Bearer ${
+            JSON.parse(localStorage.getItem('userInfo')).token
+          }`,
         },
       };
       axios
@@ -105,7 +106,9 @@ const Main = () => {
     <>
       <Header />
       {/* dialog 라이브러리 연결하기, 월별 필터링 구현하기 */}
-      <Calender>2021년 11월</Calender>
+      <Calender>
+        {/* <input type='month' id='calender' name='calender' value='2018-05' onChagne/> */}
+      </Calender>
       <AddBtn>
         <Link to='/main/newdiary'>+</Link>
       </AddBtn>

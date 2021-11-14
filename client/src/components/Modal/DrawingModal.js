@@ -215,7 +215,9 @@ const DrawingModal = ({ DrawingHandler, SaveDrawingHandler }) => {
     //base64문자열로 받은 이미지
     const image = canvasRef.current.toDataURL();
     SaveDrawingHandler(image);
+    DrawingHandler();
   };
+
   return (
     <DrawingModalBackdrop>
       <div className='drawing_modal'>
