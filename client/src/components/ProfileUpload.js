@@ -1,6 +1,6 @@
 import S3 from 'react-aws-s3';
 import { v4 as uuidv4 } from 'uuid';
-import dotenv, { config } from 'dotenv';
+import dotenv from 'dotenv';
 import axios from 'axios';
 
 dotenv.config();
