@@ -1,17 +1,16 @@
-import { Link } from 'react-router-dom';
-
-const LeaveModal = ({ UserLeaveHandler }) => {
+const LeaveModal = ({ isUserResignHandler, isRealUserResignHandler }) => {
   return (
     <>
-      <button onClick={UserLeaveHandler}>Close</button>
+      <button onClick={isUserResignHandler}>Close</button>
       <div>
-        탈퇴시 모든 게시물이 삭제됩니다.<br />
+        탈퇴시 모든 게시물이 삭제됩니다.
+        <br />
         정말 탈퇴하시겠습니까?
       </div>
-      <Link to="/">YES</Link>
-      <button onClick={UserLeaveHandler}>NO</button>
+      <button onClick={isRealUserResignHandler}>YES</button>
+      <button onClick={isUserResignHandler}>NO</button>
     </>
-  )
-}
+  );
+};
 
 export default LeaveModal;

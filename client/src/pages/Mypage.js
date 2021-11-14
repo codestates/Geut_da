@@ -6,9 +6,9 @@ import UserEditModal from '../components/Modal/UserEditModal';
 import LeaveModal from '../components/Modal/LeaveModal';
 import ProfileUpload from '../components/ProfileUpload';
 import axios from 'axios';
+import RealLeaveModal from '../components/Modal/RealLeaveModal';
 
 const Mypage = () => {
-
   const [total, setTotal] = useState(0);
   const [monthTotal, setMonthTotal] = useState(0);
 
@@ -32,6 +32,7 @@ const Mypage = () => {
   }, []);
 
   const [isUserResign, setIsUserResign] = useState(false);
+  const [isRealUserResign, setRealIsUserResign] = useState(false);
   const [openPasswordModal, setOpenPasswordModal] = useState(false);
   const [openUserEditModal, setOpenUserEditModal] = useState(false);
   const [isPasswordCorrect, setIsPasswordCorrect] = useState(false);
@@ -42,6 +43,10 @@ const Mypage = () => {
   // const userInfo = JSON.parse(localStorage.getItem('userInfo'));
   const isUserResignHandler = () => {
     setIsUserResign(!isUserResign);
+  };
+  const isRealUserResignHandler = () => {
+    setIsUserResign(!isUserResign);
+    setRealIsUserResign(!isRealUserResign);
   };
   const openPasswordModalHandler = () => {
     //아래 함수 실행시 모달 on /off
@@ -68,11 +73,12 @@ const Mypage = () => {
       <div>{monthTotal ? `이번달 작성한 게시물 수 ${monthTotal}` : `이번달에 작성한 게시물이 없습니다`}</div>
       {/* 이미지 수정 버튼 클릭시 모달창 띄우기*/}
       <ProfileUpload />
-      {isUserResign ? <LeaveModal isUserResignHandler={isUserResignHandler} /> : null}
-      {openPasswordModal ? (
+      {isUserResign && <LeaveModal isUserResignHandler={isUserResignHandler} isRealUserResignHandler={isRealUserResignHandler} />}
+      {isRealUserResign && <RealLeaveModal isRealUserResignHandler={isRealUserResignHandler} />}
+      {openPasswordModal && (
         <UserCheckModal openPasswordModalHandler={openPasswordModalHandler} isPasswordCorrectHandler={isPasswordCorrectHandler} openUserEditModalHandler={openUserEditModalHandler} />
-      ) : null}
-      {openUserEditModal ? <UserEditModal openUserEditModalHandler={openUserEditModalHandler} /> : null}
+      )}
+      {openUserEditModal && <UserEditModal openUserEditModalHandler={openUserEditModalHandler} />}
       <Footer />
     </>
   );
