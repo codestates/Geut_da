@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Header from '../components/Header';
 import DrawingModal from '../components/Modal/DrawingModal';
+import { Tag } from '../components/Tags';
 import axios from 'axios';
 import {
   TiWeatherSunny,
@@ -33,6 +34,7 @@ const NewDiary = () => {
   const [weatherIdx, setWeatherIdx] = useState(0);
   const [inputTag, setInputTag] = useState('');
   const [inputContent, setInputContent] = useState('');
+  const [tags, setTags] = useState([]);
 
   const history = useNavigate();
 
@@ -84,7 +86,7 @@ const NewDiary = () => {
           weather: weatherIdx,
           drawing:
             'https://twitter.com/Chuwinkle_/status/1002903547761999873/photo/1',
-          hashtags: [inputTag],
+          hashtags: tags,
         },
         config
       )
@@ -98,6 +100,7 @@ const NewDiary = () => {
         console.log(err);
       });
   };
+
   return (
     <NewDiaryWrap>
       <Header />
@@ -122,12 +125,13 @@ const NewDiary = () => {
         onChange={inputHandler}
       />
       <button onClick={postDiaryHandler}>Save</button>
-      <input
+      {/* <input
         type='text'
         placeholder='HashTag'
         value={inputTag}
         onChange={inputHandler}
-      />
+      /> */}
+      <Tag tags={tags} setTags={setTags} />
       {/* 날씨 선택 */}
       <TiWeatherSunny
         onClick={weatherSelectHandler}
