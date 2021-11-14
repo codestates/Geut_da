@@ -6,19 +6,8 @@ import UserEditModal from '../components/Modal/UserEditModal';
 import LeaveModal from '../components/Modal/LeaveModal';
 import ProfileUpload from '../components/ProfileUpload';
 import axios from 'axios';
-import { useRecoilState } from 'recoil';
-import IsLoginState from '../states/IsLoginState';
-import { useNavigate } from 'react-router';
 
 const Mypage = () => {
-  const [isLogin, setIsLogin] = useRecoilState(IsLoginState);
-  const history = useNavigate();
-  useEffect(() => {
-    if (!isLogin) {
-      history('/');
-      console.log(isLogin);
-    }
-  }, [isLogin]);
 
   const [total, setTotal] = useState(0);
   const [monthTotal, setMonthTotal] = useState(0);
