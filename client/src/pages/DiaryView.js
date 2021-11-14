@@ -81,6 +81,9 @@ const DiaryView = () => {
   return (
     <>
       <Header />
+      <button>
+        <Link to='/main'>Go Back</Link>
+      </button>
       <DiaryWrap>
         <div className='img' onClick={DrawingHandler}>
           img
