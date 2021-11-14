@@ -21,11 +21,11 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route exact path='/' element={<Landing />} />
-        <Route path='/main' element={<Main />} />
-        <Route path='/main/diaryview' element={<DiaryView />} />
-        <Route path='/main/newdiary' element={<NewDiary />} />
-        <Route path='/mypage' element={<Mypage />} />
+        <Route exact path='/' element={isLogin ? <Main /> : <Landing />} />
+        <Route path='/main' element={isLogin ? <Main /> : <Landing />} />
+        <Route path='/main/diaryview' element={isLogin ? <DiaryView /> : <Landing />} />
+        <Route path='/main/newdiary' element={isLogin ? <NewDiary /> : <Landing />} />
+        <Route path='/mypage' element={isLogin ? <Mypage /> : <Landing />} />
       </Routes>
     </BrowserRouter>
   );

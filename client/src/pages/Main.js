@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
-import IsLoginState from '../states/IsLoginState';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import styled from 'styled-components';
 import Header from '../components/Header';
@@ -64,43 +62,36 @@ const DiaryList = styled.ul`
 
 const Main = () => {
   // recoil로 로그인 상태 관리 필수
-  const [mainIsLogin, setMainIsLogin] = useRecoilState(IsLoginState);
   const [diaries, setDiaries] = useState([]);
   const [tags, setTags] = useState([]);
 
-  const history = useNavigate();
-
   useEffect(() => {
-    if (!mainIsLogin) {
-      history('/');
-    } else {
-      // 현재 년월 일기목록 요청
-      const config = {
-        headers: {
-          Authorization: `Bearer ${
-            JSON.parse(localStorage.getItem('userInfo')).token
-          }`,
-        },
-      };
-      axios
-        .get('/api/contents/by-month', config)
-        .then((res) => {
-          setDiaries(res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-      // 전체 태그 목록 요청
-      axios
-        .get('/api/contents/hashtags', config)
-        .then((res) => {
-          setTags(res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-  }, [mainIsLogin]);
+    // 현재 년월 일기목록 요청
+    const config = {
+      headers: {
+        Authorization: `Bearer ${
+          JSON.parse(localStorage.getItem('userInfo')).token
+        }`,
+      },
+    };
+    axios
+      .get('/api/contents/by-month', config)
+      .then((res) => {
+        setDiaries(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    // 전체 태그 목록 요청
+    axios
+      .get('/api/contents/hashtags', config)
+      .then((res) => {
+        setTags(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   return (
     <>
