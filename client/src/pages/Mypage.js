@@ -7,15 +7,34 @@ import LeaveModal from '../components/Modal/LeaveModal';
 import ProfileUpload from '../components/ProfileUpload';
 import axios from 'axios';
 import RealLeaveModal from '../components/Modal/RealLeaveModal';
+import Loader from '../components/Loader';
+import styled from 'styled-components';
+
+const ModalBackDrop = styled.div`
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
+  background-color: rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 const Mypage = () => {
   const [total, setTotal] = useState(0);
   const [monthTotal, setMonthTotal] = useState(0);
+  const [isLoading, setIsLoadng] = useState(false);
+  const [pwCheckdValue, setPwCheckValue] = useState('');
 
   useEffect(() => {
     const config = {
       headers: {
-        Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}`,
+        Authorization: `Bearer ${
+          JSON.parse(localStorage.getItem('userInfo')).token
+        }`,
       },
     };
     axios
@@ -24,10 +43,12 @@ const Mypage = () => {
         console.log(res);
         setTotal(res.data.total);
         setMonthTotal(res.data.totalByMonth);
+        setIsLoadng(true);
       })
       .catch((err) => {
         setTotal(0);
         setMonthTotal(0);
+        setIsLoadng(true);
       });
   }, []);
 
@@ -45,8 +66,12 @@ const Mypage = () => {
     setIsUserResign(!isUserResign);
   };
   const isRealUserResignHandler = () => {
-    setIsUserResign(!isUserResign);
-    setRealIsUserResign(!isRealUserResign);
+    if (!isUserResign) {
+      setRealIsUserResign(!isRealUserResign);
+    } else {
+      setIsUserResign(!isUserResign);
+      setRealIsUserResign(!isRealUserResign);
+    }
   };
   const openPasswordModalHandler = () => {
     //아래 함수 실행시 모달 on /off
@@ -57,28 +82,72 @@ const Mypage = () => {
     setOpenUserEditModal(!openUserEditModal);
   };
 
+  const pwCheckValueHandler = (value) => {
+    setPwCheckValue(value);
+  };
+
   return (
     <>
       <Header />
-      <div>
-        <img src={JSON.parse(localStorage.getItem('userInfo')).image} />
-      </div>
-      {/* <button onClick={ProfileChangeHandler}>이미지 수정 버튼</button> */}
-      <div>{JSON.parse(localStorage.getItem('userInfo')).nickname}</div>
-      <div>{JSON.parse(localStorage.getItem('userInfo')).email}</div>
-      <button onClick={isUserResignHandler}>회원탈퇴</button>
-      <button onClick={openPasswordModalHandler}>정보수정</button>
-
-      <div>{total ? `작성한 총 게시물 ${total}` : `작성한 게시물이 없습니다.`}</div>
-      <div>{monthTotal ? `이번달 작성한 게시물 수 ${monthTotal}` : `이번달에 작성한 게시물이 없습니다`}</div>
-      {/* 이미지 수정 버튼 클릭시 모달창 띄우기*/}
-      <ProfileUpload />
-      {isUserResign && <LeaveModal isUserResignHandler={isUserResignHandler} isRealUserResignHandler={isRealUserResignHandler} />}
-      {isRealUserResign && <RealLeaveModal isRealUserResignHandler={isRealUserResignHandler} />}
-      {openPasswordModal && (
-        <UserCheckModal openPasswordModalHandler={openPasswordModalHandler} isPasswordCorrectHandler={isPasswordCorrectHandler} openUserEditModalHandler={openUserEditModalHandler} />
+      {isLoading ? (
+        <>
+          <div>
+            <img src={JSON.parse(localStorage.getItem('userInfo')).image} />
+          </div>
+          {/* <button onClick={ProfileChangeHandler}>이미지 수정 버튼</button> */}
+          <div>{JSON.parse(localStorage.getItem('userInfo')).nickname}</div>
+          <div>{JSON.parse(localStorage.getItem('userInfo')).email}</div>
+          <button onClick={isUserResignHandler}>회원탈퇴</button>
+          <button onClick={openPasswordModalHandler}>정보수정</button>
+          <div>
+            {total ? `작성한 총 게시물 ${total}` : `작성한 게시물이 없습니다.`}
+          </div>
+          <div>
+            {monthTotal
+              ? `이번달 작성한 게시물 수 ${monthTotal}`
+              : `이번달에 작성한 게시물이 없습니다`}
+          </div>
+          {/* 이미지 수정 버튼 클릭시 모달창 띄우기*/}
+          <ProfileUpload />
+          {isUserResign && (
+            <ModalBackDrop onClick={isUserResignHandler}>
+              <LeaveModal
+                isUserResignHandler={isUserResignHandler}
+                isRealUserResignHandler={isRealUserResignHandler}
+              />
+            </ModalBackDrop>
+          )}
+          {isRealUserResign && (
+            <ModalBackDrop onClick={isRealUserResignHandler}>
+              <RealLeaveModal
+                isRealUserResignHandler={isRealUserResignHandler}
+                isUserResignHandler={isUserResignHandler}
+              />
+            </ModalBackDrop>
+          )}
+          {openPasswordModal && (
+            <ModalBackDrop onClick={openPasswordModalHandler}>
+              <UserCheckModal
+                openPasswordModalHandler={openPasswordModalHandler}
+                isPasswordCorrectHandler={isPasswordCorrectHandler}
+                openUserEditModalHandler={openUserEditModalHandler}
+                pwCheckValueHandler={pwCheckValueHandler}
+              />
+            </ModalBackDrop>
+          )}
+          {openUserEditModal && (
+            <ModalBackDrop onClick={openUserEditModalHandler}>
+              <UserEditModal
+                openUserEditModalHandler={openUserEditModalHandler}
+                pwCheckdValue={pwCheckdValue}
+              />
+            </ModalBackDrop>
+          )}
+        </>
+      ) : (
+        <Loader />
       )}
-      {openUserEditModal && <UserEditModal openUserEditModalHandler={openUserEditModalHandler} />}
+
       <Footer />
     </>
   );
