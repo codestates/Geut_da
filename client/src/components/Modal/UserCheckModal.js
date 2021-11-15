@@ -1,20 +1,39 @@
 import axios from 'axios';
 import { useState } from 'react';
+import styled from 'styled-components';
 
-const UserCheckModal = ({ openPasswordModalHandler, isPasswordCorrectHandler, openUserEditModalHandler}) => {
+const UserCheckModalWrap = styled.div`
+  display: flex;
+  width: 50%;
+  height: 50vh;
+  margin: 15em auto;
+  border: 1px solid black;
+  flex-direction: column;
+`;
+
+const UserCheckModal = ({
+  openPasswordModalHandler,
+  isPasswordCorrectHandler,
+  openUserEditModalHandler,
+  pwCheckValueHandler,
+}) => {
   const [checkPassword, setCheckPassword] = useState('');
   const config = {
     headers: {
-      Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}`,
+      Authorization: `Bearer ${
+        JSON.parse(localStorage.getItem('userInfo')).token
+      }`,
     },
   };
 
   const passwordCheckHandler = () => {
+    console.log(checkPassword);
     axios
       .post('/api/users/check', { password: checkPassword }, config)
       .then((res) => {
         isPasswordCorrectHandler();
         console.log(res);
+        pwCheckValueHandler(checkPassword);
         openPasswordModalHandler();
         openUserEditModalHandler();
       })
@@ -26,23 +45,19 @@ const UserCheckModal = ({ openPasswordModalHandler, isPasswordCorrectHandler, op
   const checkPasswordHandler = (event) => {
     setCheckPassword(event.target.value);
   };
-  // const PasswordCheckHandler = () => {
-  //   // 패스워드 체크 후 정보가 일치하면 패스워드확인 모달 비활성화 & 수정모달 활성화
-  //   if(true){
-  //     //axios 요청 보냄
-  //     //만약 비밀번호를 제대로 입력했다면 현재 모달창을 찾고 Editable 모달창을 실행
-
-  //   }
-  // }
 
   return (
-    <>
-      <h2>UserCheckModal</h2>
+    <UserCheckModalWrap onClick={(e) => e.stopPropagation()}>
       <button onClick={openPasswordModalHandler}>Close</button>
+      <h2>UserCheckModal</h2>
       <div>비밀번호 확인</div>
-      <input type='password' placeholder='password' onChange={checkPasswordHandler} />
+      <input
+        type='password'
+        placeholder='password'
+        onChange={checkPasswordHandler}
+      />
       <button onClick={passwordCheckHandler}>확인</button>
-    </>
+    </UserCheckModalWrap>
   );
 };
 

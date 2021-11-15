@@ -7,11 +7,34 @@ import Footer from '../components/Footer';
 import Diary from '../components/Diary';
 import HashTags from '../components/HashTags';
 import Loader from '../components/Loader';
+import { BsPlusLg } from 'react-icons/bs';
 
+const LoaderBackDrop = styled.div`
+  height: 72vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 const Calender = styled.div`
   height: 5vh;
   line-height: 5vh;
   text-align: center;
+
+  > input[type='month'] {
+    margin: 0;
+    padding: 0 0 0.1rem;
+    font-family: sans-serif;
+    font-size: 1em;
+    text-align: right;
+    border: none;
+    border-bottom: 1px solid #ccc;
+  }
+  > input[type='month'] + span {
+    background: red;
+  }
+  > input[type='month']:focus {
+    outline: none;
+  }
 `;
 
 const AddBtn = styled.div`
@@ -19,17 +42,21 @@ const AddBtn = styled.div`
   justify-content: flex-end;
 
   a {
-    width: 3vh;
-    height: 3vh;
+    width: 2rem;
+    height: 2rem;
     margin-right: 1rem;
-    line-height: 3vh;
     text-align: center;
-    background-color: lavender;
+    color: brown;
+    border: 2px solid brown;
     border-radius: 50%;
     display: inline-block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   a:hover {
-    background-color: darksalmon;
+    color: #fff;
+    background-color: brown;
   }
 `;
 
@@ -44,6 +71,7 @@ const TagList = styled.aside`
 `;
 
 const DiaryList = styled.ul`
+  width: 100%;
   height: 100%;
   flex: 4;
   overflow-x: scroll;
@@ -51,6 +79,21 @@ const DiaryList = styled.ul`
   flex-direction: row;
   align-items: center;
 
+  &::-webkit-scrollbar {
+    background-color: #fff;
+    border: 1px solid #eee;
+    border-radius: 1rem;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: lavender;
+    border-radius: 1rem;
+  }
+
+  > div {
+    width: 100%;
+    padding-right: 20vw;
+    text-align: center;
+  }
   li {
     margin: 0.5rem;
     transition: margin 0.5s;
@@ -62,19 +105,23 @@ const DiaryList = styled.ul`
 
 const Main = () => {
   // recoil로 로그인 상태 관리 필수
+  const [isLoading, setIsLoading] = useState(true);
   const [diaries, setDiaries] = useState([]);
   const [tags, setTags] = useState([]);
+  const [searchMonth, setSearchMonth] = useState(
+    new Date().toISOString().slice(0, 7)
+  );
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${
+        JSON.parse(localStorage.getItem('userInfo')).token
+      }`,
+    },
+  };
 
   useEffect(() => {
     // 현재 년월 일기목록 요청
-    const config = {
-      headers: {
-        Authorization: `Bearer ${
-          JSON.parse(localStorage.getItem('userInfo')).token
-        }`,
-      },
-    };
-
     axios
       .get('/api/contents/by-month', config)
       .then((res) => {
@@ -83,57 +130,103 @@ const Main = () => {
           .get('/api/contents/hashtags', config)
           .then((res) => {
             setTags(res.data);
+            setIsLoading(false);
           })
           .catch((err) => {
             console.log(err);
+            setIsLoading(false);
           });
       })
       .catch((err) => {
         console.log(err);
       });
-    // 전체 태그 목록 요청
-    // axios
-    //   .get('/api/contents/hashtags', config)
-    //   .then((res) => {
-    //     setTags(res.data);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
   }, []);
 
+  const searchMonthHandler = (event) => {
+    setIsLoading(true);
+    setSearchMonth(event.target.value);
+    const [year, month] = event.target.value.split('-');
+
+    axios
+      .get('/api/contents/by-month', {
+        ...config,
+        params: { year: year, month: month },
+      })
+      .then((res) => {
+        setDiaries(res.data);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
+      });
+  };
+  const searchTagHandler = (tag) => {
+    setIsLoading(true);
+
+    axios
+      .get('/api/contents/by-hashtag', {
+        ...config,
+        params: { hashtag: tag },
+      })
+      .then((res) => {
+        setDiaries(res.data);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
+      });
+  };
   return (
     <>
       <Header />
       {/* dialog 라이브러리 연결하기, 월별 필터링 구현하기 */}
       <Calender>
-        {/* <input type='month' id='calender' name='calender' value='2018-05' onChagne/> */}
-        <Loader />
+        <input
+          type='month'
+          id='calender'
+          name='calender'
+          value={searchMonth}
+          onChange={searchMonthHandler}
+        />
       </Calender>
       <AddBtn>
-        <Link to='/main/newdiary'>+</Link>
+        <Link to='/main/newdiary'>
+          <BsPlusLg />
+        </Link>
       </AddBtn>
       {/* 해쉬태그 리스트
           - 해쉬태그별 필터링 구현하기
           - 해쉬태그 선택시 해당 해쉬태그로 타이틀 변경
         */}
-      <ContentWrap>
-        <TagList>
-          <HashTags tags={tags} />
-        </TagList>
-        <DiaryList>
-          {diaries.map((diary) => {
-            return (
-              // https://rrecoder.tistory.com/101
-              <li key={diary._id}>
-                <Link to='/main/diaryview' state={{ _id: diary._id }}>
-                  <Diary diary={diary} />
-                </Link>
-              </li>
-            );
-          })}
-        </DiaryList>
-      </ContentWrap>
+      {isLoading ? (
+        <LoaderBackDrop>
+          <Loader />
+        </LoaderBackDrop>
+      ) : (
+        <ContentWrap>
+          <TagList>
+            <HashTags tags={tags} searchTagHandler={searchTagHandler} />
+          </TagList>
+          <DiaryList>
+            {diaries.length ? (
+              diaries.map((diary) => {
+                return (
+                  // https://rrecoder.tistory.com/101
+                  <li key={diary._id}>
+                    <Link to='/main/diaryview' state={{ _id: diary._id }}>
+                      <Diary diary={diary} />
+                    </Link>
+                  </li>
+                );
+              })
+            ) : (
+              <div>목록이 비어있습니다.</div>
+            )}
+          </DiaryList>
+        </ContentWrap>
+      )}
       <Footer />
     </>
   );
