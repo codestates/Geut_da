@@ -1,21 +1,9 @@
-import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
 import * as ROUTES from './constants/routes';
 import { PrivateRoute } from './helpers/protect';
 import { DiaryView, Landing, Main, Mypage, NewDiary } from './pages';
-import IsLoginState from './states/IsLoginState';
 
 const App = () => {
-  const [isLogin, setIsLogin] = useRecoilState(IsLoginState);
-  useEffect(() => {
-    if (localStorage.getItem('userInfo')) {
-      setIsLogin(true);
-    } else {
-      setIsLogin(false);
-    }
-  }, []);
-
   return (
     <Router>
       <Routes>

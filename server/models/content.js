@@ -24,7 +24,7 @@ const contentSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    hashtags: [{ type: String }],
+    hashtags: [{ type: String, trim: true }],
   },
   { timestamps: true }
 );

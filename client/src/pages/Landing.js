@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Header from '../components/Header';
 import LoginModal from '../components/Modal/LoginModal';
 import SignupModal from '../components/Modal/SignupModal';
