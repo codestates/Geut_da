@@ -221,9 +221,16 @@ const getCount = asyncHandler(async (req, res) => {
       },
     },
     {
-      $group: { _id: '$createdOn', total: { $sum: 1 } },
+      $group: { _id: '$createdOn', count: { $sum: 1 } },
     },
-    { $sort: { _id: 1 } },
+    {
+      $project: {
+        _id: 0,
+        date: '$_id',
+        count: 1,
+      },
+    },
+    { $sort: { date: -1 } },
   ]);
 
   res.json({

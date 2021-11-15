@@ -7,27 +7,31 @@ import LeaveModal from '../components/Modal/LeaveModal';
 import ProfileUpload from '../components/ProfileUpload';
 import axios from 'axios';
 import RealLeaveModal from '../components/Modal/RealLeaveModal';
+import Heatmap from '../components/Heatmap';
 
 const Mypage = () => {
-  const [total, setTotal] = useState(0);
-  const [monthTotal, setMonthTotal] = useState(0);
+  const [counts, setCounts] = useState({
+    total: 0,
+    totalByMonth: 0,
+    totalByDay: [],
+  });
 
   useEffect(() => {
     const config = {
       headers: {
-        Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}`,
+        Authorization: `Bearer ${
+          JSON.parse(localStorage.getItem('userInfo')).token
+        }`,
       },
     };
     axios
       .get('/api/contents/total', config)
       .then((res) => {
-        console.log(res);
-        setTotal(res.data.total);
-        setMonthTotal(res.data.totalByMonth);
+        console.log(res.data);
+        setCounts({ ...counts, ...res.data });
       })
       .catch((err) => {
-        setTotal(0);
-        setMonthTotal(0);
+        setCounts({});
       });
   }, []);
 
@@ -69,16 +73,36 @@ const Mypage = () => {
       <button onClick={isUserResignHandler}>회원탈퇴</button>
       <button onClick={openPasswordModalHandler}>정보수정</button>
 
-      <div>{total ? `작성한 총 게시물 ${total}` : `작성한 게시물이 없습니다.`}</div>
-      <div>{monthTotal ? `이번달 작성한 게시물 수 ${monthTotal}` : `이번달에 작성한 게시물이 없습니다`}</div>
+      {/* <div>
+        {total ? `작성한 총 게시물 ${total}` : `작성한 게시물이 없습니다.`}
+      </div>
+      <div>
+        {monthTotal
+          ? `이번달 작성한 게시물 수 ${monthTotal}`
+          : `이번달에 작성한 게시물이 없습니다`}
+      </div> */}
       {/* 이미지 수정 버튼 클릭시 모달창 띄우기*/}
       <ProfileUpload />
-      {isUserResign && <LeaveModal isUserResignHandler={isUserResignHandler} isRealUserResignHandler={isRealUserResignHandler} />}
-      {isRealUserResign && <RealLeaveModal isRealUserResignHandler={isRealUserResignHandler} />}
-      {openPasswordModal && (
-        <UserCheckModal openPasswordModalHandler={openPasswordModalHandler} isPasswordCorrectHandler={isPasswordCorrectHandler} openUserEditModalHandler={openUserEditModalHandler} />
+      {isUserResign && (
+        <LeaveModal
+          isUserResignHandler={isUserResignHandler}
+          isRealUserResignHandler={isRealUserResignHandler}
+        />
       )}
-      {openUserEditModal && <UserEditModal openUserEditModalHandler={openUserEditModalHandler} />}
+      {isRealUserResign && (
+        <RealLeaveModal isRealUserResignHandler={isRealUserResignHandler} />
+      )}
+      {openPasswordModal && (
+        <UserCheckModal
+          openPasswordModalHandler={openPasswordModalHandler}
+          isPasswordCorrectHandler={isPasswordCorrectHandler}
+          openUserEditModalHandler={openUserEditModalHandler}
+        />
+      )}
+      {openUserEditModal && (
+        <UserEditModal openUserEditModalHandler={openUserEditModalHandler} />
+      )}
+      <Heatmap counts={counts} />
       <Footer />
     </>
   );
