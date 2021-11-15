@@ -6,7 +6,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Diary from '../components/Diary';
 import HashTags from '../components/HashTags';
-// import DiaryView from './DiaryView';
+import Loader from '../components/Loader';
 
 const Calender = styled.div`
   height: 5vh;
@@ -108,6 +108,7 @@ const Main = () => {
       {/* dialog 라이브러리 연결하기, 월별 필터링 구현하기 */}
       <Calender>
         {/* <input type='month' id='calender' name='calender' value='2018-05' onChagne/> */}
+        <Loader />
       </Calender>
       <AddBtn>
         <Link to='/main/newdiary'>+</Link>

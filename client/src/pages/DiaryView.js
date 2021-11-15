@@ -56,7 +56,7 @@ const DiaryView = () => {
   useEffect(() => {
     if (location.state._id) {
       axios
-        .get('/api/contents/detail', {
+        .get('/api/contents', {
           ...config,
           params: { _id: location.state._id },
         })
@@ -94,7 +94,7 @@ const DiaryView = () => {
   const DeleteDiaryHandler = () => {
     if (location.state._id) {
       axios
-        .delete('/api/contents/delete', {
+        .delete('/api/contents', {
           ...config,
           data: { _id: location.state._id },
         })
@@ -117,7 +117,7 @@ const DiaryView = () => {
     console.log(location.state._id);
     axios
       .patch(
-        '/api/contents/edit',
+        '/api/contents',
         {
           drawing:
             'https://twitter.com/Chuwinkle_/status/1002903547761999873/photo/1',

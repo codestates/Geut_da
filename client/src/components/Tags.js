@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import styled from 'styled-components';
 
 export const TagsInput = styled.div`
@@ -91,7 +90,9 @@ export const Tag = ({ tags, setTags }) => {
         <input
           className='tag-input'
           type='text'
-          onKeyUp={(event) => (event.key === 'Enter' ? addTags(event) : null)}
+          onKeyUp={(event) =>
+            event.key === 'Enter' || event.key === ' ' ? addTags(event) : null
+          }
           placeholder='Press enter to add tags'
         />
       </TagsInput>

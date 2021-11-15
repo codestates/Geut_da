@@ -79,7 +79,7 @@ const NewDiary = () => {
     };
     axios
       .post(
-        '/api/contents/new',
+        '/api/contents',
         {
           title: inputTitle,
           text: inputContent,

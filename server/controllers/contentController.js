@@ -88,7 +88,7 @@ const getHashtags = asyncHandler(async (req, res) => {
 });
 
 //  @desc    GET    content detail
-//  @route   GET    /api/contents/detail
+//  @route   GET    /api/contents
 //  @access  Private
 const getContentDetail = asyncHandler(async (req, res) => {
   // 해당 그림일기 정보
@@ -114,7 +114,7 @@ const getContentDetail = asyncHandler(async (req, res) => {
 });
 
 //  @desc    Delete    user content
-//  @route   Delete    /api/contents/delete
+//  @route   Delete    /api/contents
 //  @access  Private
 const deleteMyContent = asyncHandler(async (req, res) => {
   // 해당 그림일기 삭제
@@ -126,7 +126,7 @@ const deleteMyContent = asyncHandler(async (req, res) => {
 });
 
 //  @desc   update   user content
-//  @route  PATCH   /api/contents/edit
+//  @route  PATCH   /api/contents
 //  @access Private
 const updateMyContent = asyncHandler(async (req, res) => {
   // 해당 그림일기 수정
@@ -148,7 +148,7 @@ const updateMyContent = asyncHandler(async (req, res) => {
 });
 
 //  @desc   Create new Content
-//  @route  Post  /api/contents/new
+//  @route  Post  /api/contents
 //  @access Private
 const addContent = asyncHandler(async (req, res) => {
   // 그림일기 추가 요청

@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { LANDING } from '../constants/routes';
 import IsLoginState from '../states/IsLoginState';
 import { useRecoilState } from 'recoil';
 
@@ -55,14 +56,21 @@ const NavModal = styled.nav`
     background-color: rgba(255, 255, 255, 0.2);
     cursor: pointer;
   }
-  a.logout {
+  button.logout {
+    width: 100%;
+    font-size: 1em;
+    color: #fff;
+    line-height: 2rem;
+    border: none;
+    background: none;
     position: absolute;
     bottom: 2vh;
     left: 50%;
     transform: translateX(-50%);
     color: tomato;
+    display: inline-block;
   }
-  a.logout:hover {
+  button.logout:hover {
     color: #fff;
     background-color: rgba(178, 34, 34, 0.5);
   }
@@ -74,9 +82,7 @@ const Nav = ({ userInfo }) => {
     localStorage.removeItem('userInfo');
     setIsLogin(false);
     alert('로그아웃이 완료되었습니다.');
-  };
-  const mypageReload = () => {
-    if (window.location.pathname === '/main') window.location.reload();
+    window.location.replace(LANDING);
   };
   return (
     <>
@@ -89,17 +95,15 @@ const Nav = ({ userInfo }) => {
           <div className='email'>{userInfo.email}</div>
           <ul>
             <li>
-              <Link to='/main' onClick={mypageReload}>
-                Main
-              </Link>
+              <Link to='/main'>Main</Link>
             </li>
             <li>
               <Link to='/mypage'>Mypage</Link>
             </li>
             <li>
-              <a className='logout' onClick={logOutHandler}>
+              <button className='logout' onClick={logOutHandler}>
                 Logout
-              </a>
+              </button>
             </li>
           </ul>
         </NavModal>
