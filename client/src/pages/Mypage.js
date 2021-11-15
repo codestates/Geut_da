@@ -30,8 +30,7 @@ const Mypage = () => {
     totalByMonth: 0,
     totalByDay: [],
   });
-  const [monthTotal, setMonthTotal] = useState(0);
-  const [isLoading, setIsLoadng] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [pwCheckdValue, setPwCheckValue] = useState('');
 
   useEffect(() => {
@@ -46,13 +45,11 @@ const Mypage = () => {
       .get('/api/contents/total', config)
       .then((res) => {
         setCounts({ ...counts, ...res.data });
-        setMonthTotal(res.data.totalByMonth);
-        setIsLoadng(true);
+        setIsLoading(false);
       })
       .catch((err) => {
         setCounts({});
-        setMonthTotal(0);
-        setIsLoadng(true);
+        setIsLoading(true);
       });
   }, []);
 
@@ -94,6 +91,8 @@ const Mypage = () => {
     <>
       <Header />
       {isLoading ? (
+        <Loader />
+      ) : (
         <>
           <div>
             <img src={JSON.parse(localStorage.getItem('userInfo')).image} />
@@ -103,7 +102,7 @@ const Mypage = () => {
           <div>{JSON.parse(localStorage.getItem('userInfo')).email}</div>
           <button onClick={isUserResignHandler}>회원탈퇴</button>
           <button onClick={openPasswordModalHandler}>정보수정</button>
-          
+
           {/* 이미지 수정 버튼 클릭시 모달창 띄우기*/}
           <ProfileUpload />
           {isUserResign && (
@@ -142,8 +141,6 @@ const Mypage = () => {
           )}
           <Heatmap counts={counts} />
         </>
-      ) : (
-        <Loader />
       )}
       <Footer />
     </>
