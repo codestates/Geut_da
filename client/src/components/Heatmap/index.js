@@ -19,8 +19,8 @@ const Heatmap = ({ counts: { total, totalByMonth, totalByDay } }) => {
     <div>
       <h3>긋다를 통해 추억을 새겨보세요!</h3>
       <p>
-        {`나의 그림일기는 총 ${total}개, 그 중 이번 달 ${totalByMonth}개의
-        기억을 담았다`}
+        {`이번 달 ${totalByMonth}개의
+        기억을 담았다. 나의 그림일기 총 ${total}개`}
         .
       </p>
       <HeatmapSize>
