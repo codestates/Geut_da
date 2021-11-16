@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { LANDING } from '../constants/routes';
+import { LANDING, MAIN } from '../constants/routes';
 import IsLoginState from '../states/IsLoginState';
 import { useRecoilState } from 'recoil';
 
@@ -95,7 +95,9 @@ const Nav = ({ userInfo }) => {
           <div className='email'>{userInfo.email}</div>
           <ul>
             <li>
-              <Link to='/main'>Main</Link>
+              <a>
+                <div onClick={() => window.location.replace(MAIN)}>Main</div>
+              </a>
             </li>
             <li>
               <Link to='/mypage'>Mypage</Link>
