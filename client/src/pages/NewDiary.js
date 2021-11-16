@@ -35,6 +35,9 @@ const NewDiary = () => {
   const [inputTag, setInputTag] = useState('');
   const [inputContent, setInputContent] = useState('');
   const [tags, setTags] = useState([]);
+  const [isExistTitle, setIsExistTitle] = useState(false);
+  const [isExistContent, setIsExistContent] = useState(false);
+  const [blockDoubleClick, setBlockDoubleClick] = useState(false);
 
   const history = useNavigate();
 
@@ -48,10 +51,12 @@ const NewDiary = () => {
   const inputHandler = (event) => {
     if (event.target.placeholder === 'Title') {
       setInputTitle(event.target.value);
+      inputTitle && setIsExistTitle(true);
     } else if (event.target.placeholder === 'HashTag') {
       setInputTag(event.target.value);
     } else if (event.target.placeholder === '오늘의 일기') {
       setInputContent(event.target.value);
+      inputContent && setIsExistContent(true);
     }
   };
 
@@ -68,19 +73,7 @@ const NewDiary = () => {
     }
   };
 
-  const dataURLtoFile = (dataurl, filename) => {
-    let arr = dataurl.split(','),
-      mime = arr[0].match(/:(.*?);/)[1],
-      bstr = atob(arr[1]),
-      n = bstr.length,
-      u8arr = new Uint8Array(n);
-    while (n--) u8arr[n] = bstr.charCodeAt(n);
-    return new File([u8arr], filename, { type: mime });
-  };
-  // let file = dataURLtoFile('data:text/plain;base64,aGVsbG8gd29ybGQ=', 'hello.txt');
-
   const postDiaryHandler = () => {
-    const file = dataURLtoFile(drawingImg, 'hello.png');
     const newFileName = uuidv4();
     const config = {
       bucketName: process.env.REACT_APP_BUCKET_NAME,
@@ -95,8 +88,9 @@ const NewDiary = () => {
         'Content-Type': 'application/json',
       },
     };
-    ReactS3Client.uploadFile(file, newFileName).then((data) => {
-      if (data.status === 204) {
+    // console.log(isExistAllContents);
+    if (isExistContent && isExistTitle) {
+      if (!drawingImg) {
         axios
           .post(
             '/api/contents',
@@ -104,7 +98,7 @@ const NewDiary = () => {
               title: inputTitle,
               text: inputContent,
               weather: weatherIdx,
-              drawing: data.location,
+              drawing: `/images/examplePaints/${Math.floor(Math.random() * 5) + 1}.png`,
               hashtags: tags,
             },
             config2
@@ -114,12 +108,59 @@ const NewDiary = () => {
             //만약 내가쓴 일기가 잘 저장이 되면, res.data._id 에 내가 쓴 일기에 대한 고유한 id가 들어오는데
             //이 id값을 DiaryView에 전달만해주면 DiaryView에서 useEffec로 서버에 요청 해줌.
             history('/main/diaryview', { state: { _id: res.data._id } });
+            setBlockDoubleClick(false);
           })
           .catch((err) => {
             console.log(err);
           });
+      } else {
+        const dataURLtoFile = (dataurl, filename) => {
+          let arr = dataurl.split(','),
+            mime = arr[0].match(/:(.*?);/)[1],
+            bstr = atob(arr[1]),
+            n = bstr.length,
+            u8arr = new Uint8Array(n);
+          while (n--) u8arr[n] = bstr.charCodeAt(n);
+          return new File([u8arr], filename, { type: mime });
+        };
+        const file = dataURLtoFile(drawingImg, 'hello.png');
+        ReactS3Client.uploadFile(file, newFileName).then((data) => {
+          if (data.status === 204) {
+            axios
+              .post(
+                '/api/contents',
+                {
+                  title: inputTitle,
+                  text: inputContent,
+                  weather: weatherIdx,
+                  drawing: data.location,
+                  hashtags: tags,
+                },
+                config2
+              )
+              .then((res) => {
+                console.log(res);
+                //만약 내가쓴 일기가 잘 저장이 되면, res.data._id 에 내가 쓴 일기에 대한 고유한 id가 들어오는데
+                //이 id값을 DiaryView에 전달만해주면 DiaryView에서 useEffec로 서버에 요청 해줌.
+                history('/main/diaryview', { state: { _id: res.data._id } });
+                setBlockDoubleClick(false);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          }
+        });
       }
-    });
+    }
+  };
+  const handleClick = () => {
+    if (!isExistContent || !isExistTitle) {
+      setBlockDoubleClick(false);
+      return;
+    }
+    if (blockDoubleClick) return;
+    setBlockDoubleClick(true);
+    postDiaryHandler();
   };
 
   return (
@@ -129,7 +170,9 @@ const NewDiary = () => {
       <div onClick={DrawingHandler}>{drawingImg !== '' ? <img src={drawingImg} alt='drawingImg' /> : 'click me!'}</div>
       {clickDrawing ? <DrawingModal DrawingHandler={DrawingHandler} SaveDrawingHandler={SaveDrawingHandler} /> : null}
       <input type='text' placeholder='Title' value={inputTitle} onChange={inputHandler} />
-      <button onClick={postDiaryHandler}>Save</button>
+      <button onClick={handleClick} disabled={blockDoubleClick}>
+        {blockDoubleClick ? '전송중...' : 'save'}
+      </button>
       {/* <input
         type='text'
         placeholder='HashTag'
