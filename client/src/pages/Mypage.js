@@ -1,15 +1,17 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import UserCheckModal from '../components/Modal/UserCheckModal';
 import UserEditModal from '../components/Modal/UserEditModal';
 import LeaveModal from '../components/Modal/LeaveModal';
 import ProfileUpload from '../components/ProfileUpload';
-import axios from 'axios';
 import RealLeaveModal from '../components/Modal/RealLeaveModal';
 import Heatmap from '../components/Heatmap';
 import Loader from '../components/Loader';
 import styled from 'styled-components';
+import Diary from '../components/Diary';
 
 const ModalBackDrop = styled.div`
   width: 100vw;
@@ -24,23 +26,58 @@ const ModalBackDrop = styled.div`
   align-items: center;
 `;
 
+const DiaryList = styled.ul`
+  width: 100%;
+  height: 100%;
+  flex: 4;
+  overflow-x: scroll;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  &::-webkit-scrollbar {
+    background-color: #fff;
+    border: 1px solid #eee;
+    border-radius: 1rem;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: lavender;
+    border-radius: 1rem;
+  }
+
+  > div {
+    width: 100%;
+    padding-right: 20vw;
+    text-align: center;
+  }
+  li {
+    margin: 0.5rem;
+    transition: margin 0.5s;
+  }
+  li:hover {
+    margin: 0 1.5rem;
+  }
+`;
+
 const Mypage = () => {
   const [counts, setCounts] = useState({
     total: 0,
     totalByMonth: 0,
     totalByDay: [],
   });
+  const [diaries, setDiaries] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [pwCheckdValue, setPwCheckValue] = useState('');
 
+  const config = {
+    headers: {
+      Authorization: `Bearer ${
+        JSON.parse(localStorage.getItem('userInfo')).token
+      }`,
+    },
+  };
+
   useEffect(() => {
-    const config = {
-      headers: {
-        Authorization: `Bearer ${
-          JSON.parse(localStorage.getItem('userInfo')).token
-        }`,
-      },
-    };
     axios
       .get('/api/contents/total', config)
       .then((res) => {
@@ -49,9 +86,28 @@ const Mypage = () => {
       })
       .catch((err) => {
         setCounts({});
-        setIsLoading(true);
+        setIsLoading(false);
       });
   }, []);
+
+  const searchDayHandler = (value) => {
+    const [year, month, date] = value.date.split('-');
+
+    axios
+      .get('/api/contents/by-date', {
+        ...config,
+        params: { year: year, month: month, date: date },
+      })
+      .then((res) => {
+        console.log(res.data);
+        setDiaries(res.data);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
+      });
+  };
 
   const [isUserResign, setIsUserResign] = useState(false);
   const [isRealUserResign, setRealIsUserResign] = useState(false);
@@ -139,7 +195,23 @@ const Mypage = () => {
               />
             </ModalBackDrop>
           )}
-          <Heatmap counts={counts} />
+          <Heatmap counts={counts} searchDayHandler={searchDayHandler} />
+          <DiaryList>
+            {diaries.length ? (
+              diaries.map((diary) => {
+                return (
+                  // https://rrecoder.tistory.com/101
+                  <li key={diary._id}>
+                    <Link to='/main/diaryview' state={{ _id: diary._id }}>
+                      <Diary diary={diary} />
+                    </Link>
+                  </li>
+                );
+              })
+            ) : (
+              <div>일자를 클릭하여 그 날을 소환하세요</div>
+            )}
+          </DiaryList>
         </>
       )}
       <Footer />

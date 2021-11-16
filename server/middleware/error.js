@@ -14,7 +14,6 @@ const errHandler = (err, req, res, next) => {
     stack: process.env.NODE_ENV === 'production' ? null : err.stack,
   });
 };
-// err인데 200 코드가 난다면 500으로 바꾸기
 // 개발 환경일 경우에만 스텍 보여주기
 
 export { notFound, errHandler };
