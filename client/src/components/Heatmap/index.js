@@ -14,7 +14,10 @@ const HeatmapSize = styled.div`
 `;
 
 // 데이터에 해당일자 정보가 없으면
-const Heatmap = ({ counts: { total, totalByMonth, totalByDay }, searchDayHandler }) => {
+const Heatmap = ({
+  counts: { total, totalByMonth, totalByDay },
+  searchDayHandler,
+}) => {
   return (
     <div>
       <h3>긋다를 통해 추억을 새겨보세요!</h3>
@@ -32,7 +35,9 @@ const Heatmap = ({ counts: { total, totalByMonth, totalByDay }, searchDayHandler
             if (!value) {
               return 'color-empty';
             }
-            return value.count < 5 ? `color-github-${value.count}` : `color-github-4`;
+            return value.count < 5
+              ? `color-github-${value.count}`
+              : `color-github-4`;
           }}
           tooltipDataAttrs={(value) => {
             if (value.date && value.count) {

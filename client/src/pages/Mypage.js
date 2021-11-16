@@ -14,10 +14,22 @@ import Loader from '../components/Loader';
 import styled from 'styled-components';
 import Diary from '../components/Diary';
 
-const MypageWrap = styled.div`
+const ProfileInfo = styled.div`
+  width: 80vw;
+  margin: auto;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid #d2b69e;
+
+  div.user_info {
+    margin-right: 2rem;
+  }
+
   div.img_box {
-    /* margin-bottom: 0.6rem; */
     width: 10vh;
+    margin: 0 auto 0.5rem;
     position: relative;
   }
   div.img_box img {
@@ -26,7 +38,27 @@ const MypageWrap = styled.div`
     border-radius: 50%;
     background-color: #eee;
     flex: 1;
-    /* object-fit: contain; */
+  }
+
+  h3,
+  p {
+    margin: 0;
+    padding: 0;
+    color: #333;
+    line-height: 2;
+  }
+  button {
+    margin: 0.4rem;
+    padding: 0.2rem 0.4rem;
+    font-size: 0.8em;
+    color: brown;
+    background: none;
+    border: none;
+    border-radius: 0.2rem;
+  }
+  button:hover {
+    color: #fff;
+    background-color: brown;
   }
 `;
 
@@ -44,17 +76,17 @@ const ModalBackDrop = styled.div`
 `;
 
 const DiaryList = styled.ul`
-  width: 100%;
-  height: 50vh;
-  padding-bottom: 5vh;
-  flex: 4;
+  width: 80vw;
+  height: 60vh;
+  margin: auto;
+  padding: 1rem 0 5vh;
   overflow-x: scroll;
   display: flex;
   flex-direction: row;
   align-items: center;
 
   &::-webkit-scrollbar {
-    background-color: #fff;
+    background-color: rgba(255, 255, 255, 0.2);
     border: 1px solid #eee;
     border-radius: 1rem;
   }
@@ -64,12 +96,13 @@ const DiaryList = styled.ul`
   }
 
   > div {
-    width: 100%;
-    padding-right: 20vw;
+    flex: 1;
+    height: 49vh;
     text-align: center;
+    line-height: 49vh;
   }
   li {
-    margin: 0.5rem;
+    margin: 0.2rem 0.5rem;
     transition: margin 0.5s;
   }
   li:hover {
@@ -107,21 +140,27 @@ const Mypage = () => {
         setIsLoading(false);
       });
   }, []);
+
   const searchDayHandler = (value) => {
+    if (!value) {
+      setDiaries([]);
+      return;
+    }
+
     const [year, month, date] = value.date.split('-');
 
     axios
       .get('/api/contents/by-date', {
         ...config,
-        params: { year: year, month: month, date: date },
+        params: { year, month, date },
       })
       .then((res) => {
-        console.log(res.data);
         setDiaries(res.data);
         setIsLoading(false);
       })
       .catch((err) => {
         console.log(err);
+
         setIsLoading(false);
       });
   };
@@ -161,26 +200,50 @@ const Mypage = () => {
   };
 
   return (
-    <MypageWrap>
+    <>
       <Header />
       {isLoading ? (
         <Loader />
       ) : (
         <>
-          <div className='img_box'>
-            <img
-              src={JSON.parse(localStorage.getItem('userInfo')).image}
-              alt='profile image'
-            />
-            {/* 이미지 수정 버튼 클릭시 모달창 띄우기*/}
-            <ProfileUpload />
-          </div>
-          {/* <button onClick={ProfileChangeHandler}>이미지 수정 버튼</button> */}
-          <div>{JSON.parse(localStorage.getItem('userInfo')).nickname}</div>
-          <div>{JSON.parse(localStorage.getItem('userInfo')).email}</div>
-          <button onClick={isUserResignHandler}>회원탈퇴</button>
-          <button onClick={openPasswordModalHandler}>정보수정</button>
+          <ProfileInfo>
+            <div className='user_info'>
+              <div className='img_box'>
+                <img
+                  src={JSON.parse(localStorage.getItem('userInfo')).image}
+                  alt='profile image'
+                />
+                {/* 이미지 수정 버튼 클릭시 바로 파일 업로드창 표출(input[type='file']) */}
+                <ProfileUpload />
+              </div>
+              {/* <button onClick={ProfileChangeHandler}>이미지 수정 버튼</button> */}
+              <div>{JSON.parse(localStorage.getItem('userInfo')).nickname}</div>
+              <div>{JSON.parse(localStorage.getItem('userInfo')).email}</div>
+              <button onClick={isUserResignHandler}>회원탈퇴</button>
+              <button onClick={openPasswordModalHandler}>정보수정</button>
+            </div>
+            {/* 일기 잔디 */}
+            <Heatmap counts={counts} searchDayHandler={searchDayHandler} />
+          </ProfileInfo>
+          {/* 잔디 클릭시 리스트 업데이트 */}
+          <DiaryList>
+            {diaries.length ? (
+              diaries.map((diary) => {
+                return (
+                  // https://rrecoder.tistory.com/101
+                  <li key={diary._id}>
+                    <Link to='/main/diaryview' state={{ _id: diary._id }}>
+                      <Diary diary={diary} />
+                    </Link>
+                  </li>
+                );
+              })
+            ) : (
+              <div>일자를 클릭하여 그 날을 소환하세요</div>
+            )}
+          </DiaryList>
 
+          {/* Modal */}
           {isUserResign && (
             <ModalBackDrop onClick={isUserResignHandler}>
               <LeaveModal
@@ -215,27 +278,10 @@ const Mypage = () => {
               />
             </ModalBackDrop>
           )}
-          <Heatmap counts={counts} searchDayHandler={searchDayHandler} />
-          <DiaryList>
-            {diaries.length ? (
-              diaries.map((diary) => {
-                return (
-                  // https://rrecoder.tistory.com/101
-                  <li key={diary._id}>
-                    <Link to='/main/diaryview' state={{ _id: diary._id }}>
-                      <Diary diary={diary} />
-                    </Link>
-                  </li>
-                );
-              })
-            ) : (
-              <div>일자를 클릭하여 그 날을 소환하세요</div>
-            )}
-          </DiaryList>
         </>
       )}
       <Footer />
-    </MypageWrap>
+    </>
   );
 };
 

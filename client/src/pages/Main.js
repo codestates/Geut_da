@@ -85,7 +85,7 @@ const DiaryList = styled.ul`
   align-items: center;
 
   &::-webkit-scrollbar {
-    background-color: #fff;
+    background-color: rgba(255, 255, 255, 0.2);
     border: 1px solid #eee;
     border-radius: 1rem;
   }

@@ -158,6 +158,7 @@ const InfoWrap = styled.div`
     position: relative;
     z-index: 30;
     transition: 0.5s;
+    cursor: pointer;
   }
   .btn::before,
   .btn::after {

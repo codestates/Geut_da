@@ -3,16 +3,17 @@ import { v4 as uuidv4 } from 'uuid';
 import dotenv from 'dotenv';
 import axios from 'axios';
 import styled from 'styled-components';
-import { FaPenFancy } from 'react-icons/fa';
+import { FiPenTool } from 'react-icons/fi';
 
 const ProfileUploadWrap = styled.div`
   input[id='editicon'] {
     display: none;
   }
   input[id='editicon'] + label {
-    width: 2rem;
-    height: 2rem;
-    padding: 0.5rem 0;
+    width: 1.9rem;
+    height: 1.9rem;
+    padding: 0.5rem;
+    font-size: 0.9em;
     text-align: center;
     color: #333;
     border-radius: 50%;
@@ -135,7 +136,7 @@ const ProfileUpload = () => {
         onChange={handleClick}
       />
       <label htmlFor='editicon'>
-        <FaPenFancy />
+        <FiPenTool />
       </label>
     </ProfileUploadWrap>
   );
