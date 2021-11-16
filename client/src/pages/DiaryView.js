@@ -146,7 +146,7 @@ const DiaryView = () => {
           )
           .then((res) => {
             //수정이 잘되었을 경우 새로 전달받은 정보를 다시 DiaryViwe에 띄워줌
-            window.location.replace('/main/diaryview');``
+            window.location.replace('/main/diaryview');
           })
           .catch((err) => {
             console.log(err);
