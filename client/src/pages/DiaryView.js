@@ -1,12 +1,17 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
+import axios from 'axios';
 import styled from 'styled-components';
 import Header from '../components/Header';
 import DrawingModal from '../components/Modal/DrawingModal';
+import { MAIN } from '../constants/routes';
 import { Tag } from '../components/Tags';
-import { useLocation } from 'react-router-dom';
-import axios from 'axios';
-import { TiWeatherSunny, TiWeatherPartlySunny, TiWeatherDownpour, TiWeatherSnow } from 'react-icons/ti';
+import {
+  TiWeatherSunny,
+  TiWeatherPartlySunny,
+  TiWeatherDownpour,
+  TiWeatherSnow,
+} from 'react-icons/ti';
 import S3 from 'react-aws-s3';
 import { v4 as uuidv4 } from 'uuid';
 import dotenv from 'dotenv';
@@ -78,13 +83,17 @@ const DiaryView = () => {
 
   const config = {
     headers: {
-      Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}`,
+      Authorization: `Bearer ${
+        JSON.parse(localStorage.getItem('userInfo')).token
+      }`,
     },
   };
 
   const config2 = {
     headers: {
-      Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}`,
+      Authorization: `Bearer ${
+        JSON.parse(localStorage.getItem('userInfo')).token
+      }`,
       'Content-Type': 'application/json',
     },
   };
@@ -170,21 +179,39 @@ const DiaryView = () => {
   return (
     <>
       <Header />
+      <button>
+        <Link to={MAIN}>Go Back</Link>
+      </button>
       {isEdit ? (
         <DiaryWrap>
           <div className='img' onClick={DrawingHandler}>
             <img src={drawingImg} alt='drawing' />
           </div>
-          {clickDrawing && <DrawingModal DrawingHandler={DrawingHandler} SaveDrawingHandler={SaveDrawingHandler} />}
+          {clickDrawing && (
+            <DrawingModal
+              DrawingHandler={DrawingHandler}
+              SaveDrawingHandler={SaveDrawingHandler}
+            />
+          )}
           <div>
             <div className='title'>
-              <input type='text' placeholder='Title' value={inputTitle} onChange={inputHandler} />
+              <input
+                type='text'
+                placeholder='Title'
+                value={inputTitle}
+                onChange={inputHandler}
+              />
               <button onClick={diaryUpdateHandler}>Save</button>
             </div>
             <Tag tags={tags} setTags={setTags} />
             <button>{diaryInfo.weather}</button>
             <span>{diaryInfo.createdAt}</span>
-            <input type='text' placeholder='오늘의 일기' value={inputContent} onChange={inputHandler} />
+            <input
+              type='text'
+              placeholder='오늘의 일기'
+              value={inputContent}
+              onChange={inputHandler}
+            />
           </div>
         </DiaryWrap>
       ) : (
