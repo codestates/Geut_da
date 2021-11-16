@@ -4,11 +4,69 @@ import styled from 'styled-components';
 
 const UserCheckModalWrap = styled.div`
   display: flex;
-  width: 50%;
-  height: 50vh;
-  margin: 15em auto;
-  border: 1px solid black;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 30%;
+  height: 30vh;
+  background-color: #ffffff;
+  padding: 5em auto;
+  border-radius: 10px;
+
+  .closeButton {
+    position: absolute;
+    top: 1%;
+    right: 1%;
+    border: none;
+    color: #646464;
+    background-color: #ffffff;
+    font-weight: 700;
+    font-size: 1.5em;
+  }
+  .closeButton:hover {
+    cursor: pointer;
+  }
+
+  div.pwCeckText {
+    margin-bottom: 1.5em;
+    font-weight: 700;
+  }
+
+  span {
+    color: red;
+    margin-bottom: 2em;
+  }
+
+  input {
+    width: 80%;
+    border: none;
+    height: 1.2em;
+    border-bottom: 1px solid #c4c4c4;
+    text-align: center;
+    font-size: 1.4em;
+    margin: 0.3em 3em;
+  }
+
+  input:focus {
+    outline: none;
+  }
+  .userCheckButton {
+    width: 18em;
+    height: 3em;
+    border: none;
+    border-radius: 10px;
+    background-color: #9e9e9e;
+    color: #ffffff;
+    font-weight: 700;
+  }
+
+  .userCheckButton:focus,
+  .userCheckButton:hover {
+    cursor: pointer;
+    outline: none;
+    transform: scale(1.05);
+  }
 `;
 
 const UserCheckModal = ({
@@ -18,6 +76,8 @@ const UserCheckModal = ({
   pwCheckValueHandler,
 }) => {
   const [checkPassword, setCheckPassword] = useState('');
+  const [isPwCheck, setIsPwCheck] = useState(false);
+  const [pwCheckMessage, setPwCheckMessage] = useState('');
   const config = {
     headers: {
       Authorization: `Bearer ${
@@ -27,7 +87,10 @@ const UserCheckModal = ({
   };
 
   const passwordCheckHandler = () => {
-    console.log(checkPassword);
+    if (checkPassword === '') {
+      setIsPwCheck(true);
+      setPwCheckMessage('필수 입력 사항입니다');
+    }
     axios
       .post('/api/users/check', { password: checkPassword }, config)
       .then((res) => {
@@ -38,25 +101,55 @@ const UserCheckModal = ({
         openUserEditModalHandler();
       })
       .catch((err) => {
-        isPasswordCorrectHandler();
-        alert('비밀번호가 틀립니다.');
+        if (checkPassword === '') {
+          setIsPwCheck(true);
+          setPwCheckMessage('필수 입력 사항입니다');
+        } else {
+          setIsPwCheck(true);
+          setPwCheckMessage('비밀번호를 다시 확인 해주세요');
+        }
       });
   };
   const checkPasswordHandler = (event) => {
     setCheckPassword(event.target.value);
   };
 
+  const checkPasswordBlur = () => {
+    if (checkPassword === '') {
+      setIsPwCheck(true);
+      setPwCheckMessage('필수 입력 사항입니다');
+    }
+  };
+
+  const checkPasswordEnter = (event) => {
+    if (event.key === 'Enter') {
+      passwordCheckHandler(checkPassword);
+    }
+  };
+
   return (
     <UserCheckModalWrap onClick={(e) => e.stopPropagation()}>
-      <button onClick={openPasswordModalHandler}>Close</button>
-      <h2>UserCheckModal</h2>
-      <div>비밀번호 확인</div>
+      <button onClick={openPasswordModalHandler} className={'closeButton'}>
+        &times;
+      </button>
+      <div className={'pwCeckText'}>비밀번호 확인</div>
       <input
         type='password'
         placeholder='password'
         onChange={checkPasswordHandler}
+        onBlur={checkPasswordBlur}
+        onKeyUp={checkPasswordEnter}
       />
-      <button onClick={passwordCheckHandler}>확인</button>
+      {isPwCheck ? (
+        <span>{pwCheckMessage}</span>
+      ) : (
+        <span>
+          <br />
+        </span>
+      )}
+      <button onClick={passwordCheckHandler} className={'userCheckButton'}>
+        확인
+      </button>
     </UserCheckModalWrap>
   );
 };

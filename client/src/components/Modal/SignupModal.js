@@ -47,13 +47,16 @@ const SignUpModalContentWrap = styled.div`
     font-weight: 700;
   }
 
-  .signUp:hover {
+  .signUp:hover,
+  .signUp:focus {
     cursor: pointer;
+    outline: none;
+    transform: scale(1.05);
   }
 `;
 
 const SignUpModalSubContentWrap = styled.div`
-  width: 70%;
+  width: 80%;
   height: 85%;
   border-radius: 10px;
   box-shadow: 22px 22px 44px #d9d6d6, -22px -22px 44px #ffffff;
