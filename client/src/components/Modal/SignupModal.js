@@ -26,12 +26,14 @@ const SignUpModalWrap = styled.div`
 const SignUpModalImg = styled.div`
   width: 50%;
   height: 100%;
+  background-color: lavender;
 `;
 
 const SignUpModalContentWrap = styled.div`
   width: 50%;
   height: 100%;
   text-align: center;
+  background-color: yellow;
 `;
 
 const SignUpModalSubContentWrap = styled.div`
@@ -41,7 +43,6 @@ const SignUpModalSubContentWrap = styled.div`
   width: 80%;
   height: 85%;
   border-radius: 10px;
-  box-shadow: 22px 22px 44px #d9d6d6, -22px -22px 44px #ffffff;
 `;
 
 const SignUpModalLogoWrap = styled.div`
@@ -419,7 +420,9 @@ const SignupModal = ({ SignupModalHandler, LoginModalHandler }) => {
 
   return (
     <SignUpModalWrap onClick={(e) => e.stopPropagation()}>
-      <SignUpModalImg>이미지</SignUpModalImg>
+      <SignUpModalImg>
+        <img src='/images/bg.jpeg' alt='일러스트 이미지' />
+      </SignUpModalImg>
       <button onClick={SignupModalHandler} className={'closeButton'}>
         &times;
       </button>
