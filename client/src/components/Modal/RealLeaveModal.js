@@ -38,20 +38,22 @@ const RealLeaveModal = ({ isRealUserResignHandler }) => {
       .then((res) => {
         res.data.map((el) => ReactS3Client.deleteFile(el.split('/')[3]));
       })
-      .catch((err) => console.log(err));
-    axios
-      .delete('/api/users/profile', config)
       .then((res) => {
-        ReactS3Client.deleteFile(JSON.parse(localStorage.getItem('userInfo')).image.split('/')[3]).then((res) => {
-          alert('탈퇴되었습니다. 이용해주셔서 감사합니다.');
-          setIsLogin(false);
-          localStorage.removeItem('userInfo');
-          window.location.replace(LANDING);
-        });
+        axios
+          .delete('/api/users/profile', config)
+          .then((res) => {
+            ReactS3Client.deleteFile(JSON.parse(localStorage.getItem('userInfo')).image.split('/')[3]).then((res) => {
+              alert('탈퇴되었습니다. 이용해주셔서 감사합니다.');
+              setIsLogin(false);
+              localStorage.removeItem('userInfo');
+              window.location.replace(LANDING);
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => console.log(err));
   };
   return (
     <RealLeavModalWrap onClick={(e) => e.stopPropagation()}>
