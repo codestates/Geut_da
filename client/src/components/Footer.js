@@ -57,7 +57,7 @@ const Footer = () => {
       <div>
         <h3>DEVELOPER</h3>
         <ul>
-          <li>JUNHUN</li>
+          <li>JUNGHUN</li>
           <li>GARAM</li>
           <li>JINHYUN</li>
           <li>SOHUN</li>

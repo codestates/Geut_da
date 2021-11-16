@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/img-redundant-alt */
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
@@ -12,6 +13,22 @@ import Heatmap from '../components/Heatmap';
 import Loader from '../components/Loader';
 import styled from 'styled-components';
 import Diary from '../components/Diary';
+
+const MypageWrap = styled.div`
+  div.img_box {
+    /* margin-bottom: 0.6rem; */
+    width: 10vh;
+    position: relative;
+  }
+  div.img_box img {
+    width: 10vh;
+    height: 10vh;
+    border-radius: 50%;
+    background-color: #eee;
+    flex: 1;
+    /* object-fit: contain; */
+  }
+`;
 
 const ModalBackDrop = styled.div`
   width: 100vw;
@@ -28,7 +45,8 @@ const ModalBackDrop = styled.div`
 
 const DiaryList = styled.ul`
   width: 100%;
-  height: 100%;
+  height: 50vh;
+  padding-bottom: 5vh;
   flex: 4;
   overflow-x: scroll;
   display: flex;
@@ -71,7 +89,9 @@ const Mypage = () => {
 
   const config = {
     headers: {
-      Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}`,
+      Authorization: `Bearer ${
+        JSON.parse(localStorage.getItem('userInfo')).token
+      }`,
     },
   };
 
@@ -141,14 +161,19 @@ const Mypage = () => {
   };
 
   return (
-    <>
+    <MypageWrap>
       <Header />
       {isLoading ? (
         <Loader />
       ) : (
         <>
-          <div>
-            <img src={JSON.parse(localStorage.getItem('userInfo')).image} />
+          <div className='img_box'>
+            <img
+              src={JSON.parse(localStorage.getItem('userInfo')).image}
+              alt='profile image'
+            />
+            {/* 이미지 수정 버튼 클릭시 모달창 띄우기*/}
+            <ProfileUpload />
           </div>
           {/* <button onClick={ProfileChangeHandler}>이미지 수정 버튼</button> */}
           <div>{JSON.parse(localStorage.getItem('userInfo')).nickname}</div>
@@ -156,16 +181,20 @@ const Mypage = () => {
           <button onClick={isUserResignHandler}>회원탈퇴</button>
           <button onClick={openPasswordModalHandler}>정보수정</button>
 
-          {/* 이미지 수정 버튼 클릭시 모달창 띄우기*/}
-          <ProfileUpload />
           {isUserResign && (
             <ModalBackDrop onClick={isUserResignHandler}>
-              <LeaveModal isUserResignHandler={isUserResignHandler} isRealUserResignHandler={isRealUserResignHandler} />
+              <LeaveModal
+                isUserResignHandler={isUserResignHandler}
+                isRealUserResignHandler={isRealUserResignHandler}
+              />
             </ModalBackDrop>
           )}
           {isRealUserResign && (
             <ModalBackDrop onClick={isRealUserResignHandler}>
-              <RealLeaveModal isRealUserResignHandler={isRealUserResignHandler} isUserResignHandler={isUserResignHandler} />
+              <RealLeaveModal
+                isRealUserResignHandler={isRealUserResignHandler}
+                isUserResignHandler={isUserResignHandler}
+              />
             </ModalBackDrop>
           )}
           {openPasswordModal && (
@@ -180,7 +209,10 @@ const Mypage = () => {
           )}
           {openUserEditModal && (
             <ModalBackDrop onClick={openUserEditModalHandler}>
-              <UserEditModal openUserEditModalHandler={openUserEditModalHandler} pwCheckdValue={pwCheckdValue} />
+              <UserEditModal
+                openUserEditModalHandler={openUserEditModalHandler}
+                pwCheckdValue={pwCheckdValue}
+              />
             </ModalBackDrop>
           )}
           <Heatmap counts={counts} searchDayHandler={searchDayHandler} />
@@ -203,7 +235,7 @@ const Mypage = () => {
         </>
       )}
       <Footer />
-    </>
+    </MypageWrap>
   );
 };
 
