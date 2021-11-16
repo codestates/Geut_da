@@ -15,17 +15,21 @@ const LoaderBackDrop = styled.div`
   justify-content: center;
   align-items: center;
 `;
-const Calender = styled.div`
+const Search = styled.div`
   height: 5vh;
   line-height: 5vh;
   text-align: center;
 
+  > div {
+    font-weight: bold;
+  }
   > input[type='month'] {
     margin: 0;
     padding: 0 0 0.1rem;
     font-family: sans-serif;
     font-size: 1em;
     text-align: right;
+    background: none;
     border: none;
     border-bottom: 1px solid #ccc;
   }
@@ -67,6 +71,7 @@ const ContentWrap = styled.div`
 `;
 
 const TagList = styled.aside`
+  padding-top: 1rem;
   flex: 1;
 `;
 
@@ -108,6 +113,7 @@ const Main = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [diaries, setDiaries] = useState([]);
   const [tags, setTags] = useState([]);
+  const [searchTag, setSearchTag] = useState(null);
   const [searchMonth, setSearchMonth] = useState(
     new Date().toISOString().slice(0, 7)
   );
@@ -145,6 +151,7 @@ const Main = () => {
   const searchMonthHandler = (event) => {
     setIsLoading(true);
     setSearchMonth(event.target.value);
+    setSearchTag(null);
     const [year, month] = event.target.value.split('-');
 
     axios
@@ -163,6 +170,8 @@ const Main = () => {
   };
   const searchTagHandler = (tag) => {
     setIsLoading(true);
+    setSearchTag(tag);
+    setSearchMonth(new Date().toISOString().slice(0, 7));
 
     axios
       .get('/api/contents/by-hashtag', {
@@ -182,7 +191,7 @@ const Main = () => {
     <>
       <Header />
       {/* dialog 라이브러리 연결하기, 월별 필터링 구현하기 */}
-      <Calender>
+      <Search>
         <input
           type='month'
           id='calender'
@@ -190,7 +199,8 @@ const Main = () => {
           value={searchMonth}
           onChange={searchMonthHandler}
         />
-      </Calender>
+        <div>{searchTag}</div>
+      </Search>
       <AddBtn>
         <Link to='/main/newdiary'>
           <BsPlusLg />
