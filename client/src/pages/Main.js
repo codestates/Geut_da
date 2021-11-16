@@ -39,6 +39,11 @@ const Search = styled.div`
   > input[type='month']:focus {
     outline: none;
   }
+  span {
+    padding-left: 0.5rem;
+    cursor: pointer;
+    color: brown;
+  }
 `;
 
 const AddBtn = styled.div`
@@ -150,9 +155,10 @@ const Main = () => {
 
   const searchMonthHandler = (event) => {
     setIsLoading(true);
-    setSearchMonth(event.target.value);
+    const data = event ? event.target.value : searchMonth;
+    setSearchMonth(data);
     setSearchTag(null);
-    const [year, month] = event.target.value.split('-');
+    const [year, month] = data.split('-');
 
     axios
       .get('/api/contents/by-month', {
@@ -187,6 +193,11 @@ const Main = () => {
         setIsLoading(false);
       });
   };
+  const searchTagResetHandler = () => {
+    setSearchTag(null);
+    searchMonthHandler();
+  };
+
   return (
     <>
       <Header />
@@ -199,7 +210,10 @@ const Main = () => {
           value={searchMonth}
           onChange={searchMonthHandler}
         />
-        <div>{searchTag}</div>
+        <div>
+          {searchTag}
+          {searchTag && <span onClick={searchTagResetHandler}>&times;</span>}
+        </div>
       </Search>
       <AddBtn>
         <Link to='/main/newdiary'>
