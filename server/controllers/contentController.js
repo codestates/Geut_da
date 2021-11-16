@@ -1,10 +1,23 @@
 import asyncHandler from 'express-async-handler';
 import moment from 'moment';
-import moment2 from 'moment-timezone';
 import Content from '../models/content.js';
 
-moment2.tz.setDefault('Asia/Seoul');
 const now = new Date();
+
+//  @desc    GET    user All Contetns
+//  @route   GET    /api/contents/all
+//  @access  Private
+const getAllContents = asyncHandler(async (req, res) => {
+  const contents = await Content.find({
+    user: req.user._id,
+  }).exec();
+  // console.log(contents);
+  if (contents) {
+    res.json(contents.map((el) => el.drawing));
+  } else {
+    res.status(404).json({ message: 'Contents not found' });
+  }
+});
 
 //  @desc    GET    user contents by month
 //  @route   GET    /api/contents/by-month
@@ -19,8 +32,12 @@ const getContentsByMonth = asyncHandler(async (req, res) => {
     {
       user: req.user._id, // 특정 유저의
       createdAt: {
-        $gte: moment(`${year}/${month}`, 'YYYY/MM').startOf('month').format(),
-        $lte: moment(`${year}/${month}`, 'YYYY/MM').endOf('month').format(),
+        $gte: moment(`${year}/${month}`, 'YYYY/MM')
+          .startOf('month')
+          .toISOString(),
+        $lte: moment(`${year}/${month}`, 'YYYY/MM')
+          .endOf('month')
+          .toISOString(),
       }, // 원하는 기간
     },
     { title: 1, weather: 1, drawing: 1, createdAt: 1 } // 필요한 필드 선택(가공)
@@ -42,31 +59,31 @@ const getContentsByMonth = asyncHandler(async (req, res) => {
   }
 });
 
-//  @desc    GET    user contents by day
-//  @route   GET    /api/contents/by-day
+//  @desc    GET    user contents by date
+//  @route   GET    /api/contents/by-date
 //  @access  Private
 const getContentsByDate = asyncHandler(async (req, res) => {
   // 해당 유저의 일별 그림일기 목록
-
-  const year = req.query.year;
-  const month = req.query.month;
-  const date = req.query.date;
+  const { year, month, date } = req.query;
 
   const contents = await Content.find(
     {
       user: req.user._id,
       createdAt: {
-        $gte: moment(`${year}/${month}/${date}`, 'YYYY/MM/DD')
-          .startOf('day')
-          .format(),
+        $gte: new Date(`${year}, ${month}, ${date}`),
         $lte: moment(`${year}/${month}/${date}`, 'YYYY/MM/DD')
           .endOf('day')
-          .format(),
+          .toISOString(),
       },
     },
-    { title: 1, weather: 1, drawing: 1, createdAt: 1 }
+    {
+      title: 1,
+      weather: 1,
+      drawing: 1,
+      createdAt: 1,
+    }
   ).exec();
-  console.log(contents);
+
   if (contents) {
     res.json(
       contents.map((el) => {
@@ -91,7 +108,12 @@ const getContentsByHashtag = asyncHandler(async (req, res) => {
       user: req.user._id,
       hashtags: req.query.hashtag,
     },
-    { title: 1, weather: 1, drawing: 1, createdAt: 1 }
+    {
+      title: 1,
+      weather: 1,
+      drawing: 1,
+      createdAt: 1,
+    }
   ).sort({ createdAt: -1 });
 
   if (contents) {
@@ -170,11 +192,7 @@ const deleteMyContent = asyncHandler(async (req, res) => {
 const updateMyContent = asyncHandler(async (req, res) => {
   // 해당 그림일기 수정
 
-  const updatedContent = await Content.findByIdAndUpdate(
-    req.body._id,
-    req.body,
-    { projection: { user: 0, __v: 0, updatedAt: 0 }, new: true }
-  );
+  const updatedContent = await Content.findByIdAndUpdate(req.body._id, req.body, { projection: { user: 0, __v: 0, updatedAt: 0 }, new: true });
 
   res.status(200).json(
     [updatedContent].map((el) => {
@@ -192,7 +210,7 @@ const updateMyContent = asyncHandler(async (req, res) => {
 const addContent = asyncHandler(async (req, res) => {
   // 그림일기 추가 요청
 
-  const { title, text, weather, drawing } = req.body;
+  const { title, text, drawing } = req.body;
 
   if (!(title && text && drawing)) {
     res.status(400).json({ message: 'Contents should be fulfilled' });
@@ -211,10 +229,13 @@ const addContent = asyncHandler(async (req, res) => {
 //  @route   GET    /api/contents/total
 //  @access  Private
 const getCount = asyncHandler(async (req, res) => {
-  // 그림일기 총 개수
-  // 월별 개수
-  // 일별 개수
+  // 그림일기 총/월별/일별 개수
 
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  const date = now.getDate();
+  console.log(new Date(year, month));
+  console.log(new Date(year - 1, month - 1, date - 1));
   const total = await Content.aggregate([
     {
       $match: {
@@ -227,15 +248,15 @@ const getCount = asyncHandler(async (req, res) => {
         count: { $sum: 1 },
       }, // 유저 별 콘텐츠 총 합계
     },
-  ]); // total[0].count = 13
+  ]);
 
   const totalByMonth = await Content.aggregate([
     {
       $match: {
         user: req.user._id,
         createdAt: {
-          $gte: new Date(now.getFullYear(), now.getMonth()),
-        }, // 해당 월
+          $gte: new Date(year, month),
+        },
       },
     },
     {
@@ -250,12 +271,19 @@ const getCount = asyncHandler(async (req, res) => {
     {
       $match: {
         user: req.user._id,
+        createdAt: {
+          $gte: new Date(year - 1, month, date),
+        },
       },
     },
     {
       $project: {
         createdOn: {
-          $dateToString: { format: '%Y-%m-%d', date: '$createdAt' },
+          $dateToString: {
+            format: '%Y-%m-%d',
+            date: '$createdAt',
+            timezone: 'Asia/Seoul', // 한국 시간으로
+          },
         },
       },
     },
@@ -279,14 +307,4 @@ const getCount = asyncHandler(async (req, res) => {
   });
 });
 
-export {
-  getContentsByMonth,
-  getContentsByDate,
-  getContentsByHashtag,
-  getHashtags,
-  getContentDetail,
-  addContent,
-  updateMyContent,
-  deleteMyContent,
-  getCount,
-};
+export { getAllContents, getContentsByMonth, getContentsByDate, getContentsByHashtag, getHashtags, getContentDetail, addContent, updateMyContent, deleteMyContent, getCount };

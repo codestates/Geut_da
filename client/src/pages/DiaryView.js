@@ -1,12 +1,17 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
+import axios from 'axios';
 import styled from 'styled-components';
 import Header from '../components/Header';
 import DrawingModal from '../components/Modal/DrawingModal';
+import { MAIN } from '../constants/routes';
 import { Tag } from '../components/Tags';
-import { useLocation } from 'react-router-dom';
-import axios from 'axios';
-import { TiWeatherSunny, TiWeatherPartlySunny, TiWeatherDownpour, TiWeatherSnow } from 'react-icons/ti';
+import {
+  TiWeatherSunny,
+  TiWeatherPartlySunny,
+  TiWeatherDownpour,
+  TiWeatherSnow,
+} from 'react-icons/ti';
 import S3 from 'react-aws-s3';
 import { v4 as uuidv4 } from 'uuid';
 import dotenv from 'dotenv';
@@ -47,9 +52,16 @@ const DiaryView = () => {
   const [inputContent, setInputContent] = useState('');
   const [tags, setTags] = useState([]);
   const [originImg, setOriginImg] = useState('');
-
   const history = useNavigate();
   const location = useLocation();
+  const s3config = {
+    bucketName: process.env.REACT_APP_BUCKET_NAME,
+    region: process.env.REACT_APP_REGION,
+    accessKeyId: process.env.REACT_APP_ACCESS_ID,
+    secretAccessKey: process.env.REACT_APP_ACCESS_KEY,
+  };
+  const ReactS3Client = new S3(s3config);
+
   const DrawingHandler = () => {
     setClickDrawing(!clickDrawing);
   };
@@ -78,13 +90,17 @@ const DiaryView = () => {
 
   const config = {
     headers: {
-      Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}`,
+      Authorization: `Bearer ${
+        JSON.parse(localStorage.getItem('userInfo')).token
+      }`,
     },
   };
 
   const config2 = {
     headers: {
-      Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}`,
+      Authorization: `Bearer ${
+        JSON.parse(localStorage.getItem('userInfo')).token
+      }`,
       'Content-Type': 'application/json',
     },
   };
@@ -97,6 +113,7 @@ const DiaryView = () => {
           data: { _id: location.state._id },
         })
         .then((res) => {
+          ReactS3Client.deleteFile(originImg.split('/')[3]);
           history('/main');
         });
     }
@@ -121,13 +138,6 @@ const DiaryView = () => {
     //수정완료하여 save버튼 클릭시 axios 요청 / 수정 완료되면 isEditHander 실행
     const file = dataURLtoFile(drawingImg, 'hello.png');
     const newFileName = uuidv4();
-    const config = {
-      bucketName: process.env.REACT_APP_BUCKET_NAME,
-      region: process.env.REACT_APP_REGION,
-      accessKeyId: process.env.REACT_APP_ACCESS_ID,
-      secretAccessKey: process.env.REACT_APP_ACCESS_KEY,
-    };
-    const ReactS3Client = new S3(config);
     console.log(originImg);
     ReactS3Client.deleteFile(originImg.split('/')[3]);
     ReactS3Client.uploadFile(file, newFileName).then((data) => {
@@ -170,21 +180,39 @@ const DiaryView = () => {
   return (
     <>
       <Header />
+      <button>
+        <Link to={MAIN}>Go Back</Link>
+      </button>
       {isEdit ? (
         <DiaryWrap>
           <div className='img' onClick={DrawingHandler}>
             <img src={drawingImg} alt='drawing' />
           </div>
-          {clickDrawing && <DrawingModal DrawingHandler={DrawingHandler} SaveDrawingHandler={SaveDrawingHandler} />}
+          {clickDrawing && (
+            <DrawingModal
+              DrawingHandler={DrawingHandler}
+              SaveDrawingHandler={SaveDrawingHandler}
+            />
+          )}
           <div>
             <div className='title'>
-              <input type='text' placeholder='Title' value={inputTitle} onChange={inputHandler} />
+              <input
+                type='text'
+                placeholder='Title'
+                value={inputTitle}
+                onChange={inputHandler}
+              />
               <button onClick={diaryUpdateHandler}>Save</button>
             </div>
             <Tag tags={tags} setTags={setTags} />
             <button>{diaryInfo.weather}</button>
             <span>{diaryInfo.createdAt}</span>
-            <input type='text' placeholder='오늘의 일기' value={inputContent} onChange={inputHandler} />
+            <input
+              type='text'
+              placeholder='오늘의 일기'
+              value={inputContent}
+              onChange={inputHandler}
+            />
           </div>
         </DiaryWrap>
       ) : (
