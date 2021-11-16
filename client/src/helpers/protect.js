@@ -10,3 +10,9 @@ export function PrivateRoute() {
 
   return isLogin ? <Outlet /> : <Navigate to={ROUTES.LANDING} />;
 }
+
+export function IsUserRedirect() {
+  const isLogin = JSON.parse(localStorage.getItem('recoil-persist')).LoginState;
+
+  return !isLogin ? <Outlet /> : <Navigate to={ROUTES.MAIN} />;
+}

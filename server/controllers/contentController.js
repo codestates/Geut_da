@@ -42,6 +42,45 @@ const getContentsByMonth = asyncHandler(async (req, res) => {
   }
 });
 
+//  @desc    GET    user contents by day
+//  @route   GET    /api/contents/by-day
+//  @access  Private
+const getContentsByDate = asyncHandler(async (req, res) => {
+  // 해당 유저의 일별 그림일기 목록
+
+  const year = req.query.year;
+  const month = req.query.month;
+  const date = req.query.date;
+
+  const contents = await Content.find(
+    {
+      user: req.user._id,
+      createdAt: {
+        $gte: moment(`${year}/${month}/${date}`, 'YYYY/MM/DD')
+          .startOf('day')
+          .format(),
+        $lte: moment(`${year}/${month}/${date}`, 'YYYY/MM/DD')
+          .endOf('day')
+          .format(),
+      },
+    },
+    { title: 1, weather: 1, drawing: 1, createdAt: 1 }
+  ).exec();
+  console.log(contents);
+  if (contents) {
+    res.json(
+      contents.map((el) => {
+        return {
+          ...el._doc,
+          createdAt: moment(el.createdAt).format('YYYY년 MM월 DD일'),
+        };
+      })
+    );
+  } else {
+    res.status(404).json({ message: 'Contents not found' });
+  }
+});
+
 //  @desc    GET    user contents by hashtag
 //  @route   GET    /api/contents/by-hashtag
 //  @access  Private
@@ -242,6 +281,7 @@ const getCount = asyncHandler(async (req, res) => {
 
 export {
   getContentsByMonth,
+  getContentsByDate,
   getContentsByHashtag,
   getHashtags,
   getContentDetail,

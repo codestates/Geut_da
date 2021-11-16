@@ -14,7 +14,10 @@ const HeatmapSize = styled.div`
 `;
 
 // 데이터에 해당일자 정보가 없으면
-const Heatmap = ({ counts: { total, totalByMonth, totalByDay } }) => {
+const Heatmap = ({
+  counts: { total, totalByMonth, totalByDay },
+  searchDayHandler,
+}) => {
   return (
     <div>
       <h3>긋다를 통해 추억을 새겨보세요!</h3>
@@ -50,8 +53,7 @@ const Heatmap = ({ counts: { total, totalByMonth, totalByDay } }) => {
           disabled={(value) => !value.count}
           onClick={(value) => {
             if (!value) return;
-            alert(`Clicked on value with count: ${value.count}`);
-            // 해당 일의 다이어리 목록 보여주기
+            searchDayHandler(value);
           }}
         />
         <ReactTooltip />

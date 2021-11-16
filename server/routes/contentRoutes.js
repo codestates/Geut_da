@@ -1,6 +1,7 @@
 import express from 'express';
 import {
   getContentsByMonth,
+  getContentsByDate,
   getContentsByHashtag,
   getHashtags,
   getContentDetail,
@@ -21,6 +22,7 @@ router
   .patch(protect, updateMyContent)
   .delete(protect, deleteMyContent);
 router.route('/by-month').get(protect, getContentsByMonth); // 월별 그림일기 목록
+router.route('/by-date').get(protect, getContentsByDate); // 일별 그림일기 목록
 router.route('/by-hashtag').get(protect, getContentsByHashtag); // 해시태그별 그림일기 목록
 router.route('/hashtags').get(protect, getHashtags); // 해시태그 전체 목록
 router.route('/total').get(protect, getCount); // 유저의 그림일기 총 수

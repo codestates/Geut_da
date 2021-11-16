@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import * as ROUTES from './constants/routes';
-import { PrivateRoute } from './helpers/protect';
+import { IsUserRedirect, PrivateRoute } from './helpers/protect';
 import { DiaryView, Landing, Main, Mypage, NewDiary } from './pages';
 
 const App = () => {
@@ -19,7 +19,9 @@ const App = () => {
         <Route path={ROUTES.MYPAGE} element={<PrivateRoute />}>
           <Route path={ROUTES.MYPAGE} element={<Mypage />} />
         </Route>
-        <Route path={ROUTES.LANDING} element={<Landing />} />
+        <Route path={ROUTES.LANDING} element={<IsUserRedirect />}>
+          <Route path={ROUTES.LANDING} element={<Landing />} />
+        </Route>
       </Routes>
     </Router>
   );
