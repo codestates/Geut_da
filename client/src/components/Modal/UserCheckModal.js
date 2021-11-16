@@ -52,13 +52,14 @@ const UserCheckModalWrap = styled.div`
     outline: none;
   }
   .userCheckButton {
-    width: 18em;
+    width: 60%;
     height: 3em;
     border: none;
     border-radius: 10px;
     background-color: #9e9e9e;
     color: #ffffff;
     font-weight: 700;
+    font-size: 1.2em;
   }
 
   .userCheckButton:focus,
@@ -95,7 +96,6 @@ const UserCheckModal = ({
       .post('/api/users/check', { password: checkPassword }, config)
       .then((res) => {
         isPasswordCorrectHandler();
-        console.log(res);
         pwCheckValueHandler(checkPassword);
         openPasswordModalHandler();
         openUserEditModalHandler();
