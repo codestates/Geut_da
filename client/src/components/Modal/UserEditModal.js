@@ -29,8 +29,11 @@ const UserEditModalWrap = styled.div`
   }
 
   div.userEditText {
-    margin-bottom: 1.5em;
     font-weight: 700;
+  }
+
+  div.userEditText.userEditMargin {
+    margin-bottom: 0.5rem;
   }
 
   input {
@@ -124,7 +127,9 @@ const UserEditModal = ({ openUserEditModalHandler, pwCheckdValue }) => {
       !editValidateState.nickname &&
       nicknameValidText === 'invalidate'
     ) {
-      setNicknameValidateMessage('두글자 이상의 닉네임을 입력해주세요');
+      setNicknameValidateMessage(
+        '두글자 이상 열 글자 이하로 닉네임을 입력해주세요'
+      );
     }
 
     //비밀번호
@@ -302,7 +307,6 @@ const UserEditModal = ({ openUserEditModalHandler, pwCheckdValue }) => {
     const existingNickname = JSON.parse(localStorage.getItem('userInfo'))
       .nickname;
     const existingPw = pwCheckdValue;
-
     if (userInputInfo.nickname === '' && userInputInfo.password === '') {
       setNicknameValidText('nothing');
       setPwValidText('nothing');
@@ -338,7 +342,7 @@ const UserEditModal = ({ openUserEditModalHandler, pwCheckdValue }) => {
               nickname: userInputInfo.nickname,
             })
           );
-          alert('회원정보 수정이 완료되었습니다.');
+          alert(`회원정보 수정 완료되었습니다`);
           openUserEditModalHandler();
         })
         .catch((err) => {
@@ -353,6 +357,9 @@ const UserEditModal = ({ openUserEditModalHandler, pwCheckdValue }) => {
         &times;
       </button>
       <div className={'userEditText'}>회원 정보 수정</div>
+      <div className={'userEditText userEditMargin'}>
+        &#42;닉네임 혹은 비밀번호만 수정도 가능합니다
+      </div>
       <input
         type='text'
         placeholder='Nickname'
