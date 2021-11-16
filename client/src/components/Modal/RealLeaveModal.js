@@ -18,6 +18,7 @@ const RealLeavModalWrap = styled.div`
 `;
 
 const RealLeaveModal = ({ isRealUserResignHandler }) => {
+  const [isLogin, setIsLogin] = useRecoilState(IsLoginState);
   const config = {
     bucketName: process.env.REACT_APP_BUCKET_NAME,
     region: process.env.REACT_APP_REGION,
@@ -25,7 +26,7 @@ const RealLeaveModal = ({ isRealUserResignHandler }) => {
     secretAccessKey: process.env.REACT_APP_ACCESS_KEY,
   };
   const ReactS3Client = new S3(config);
-  const [isLogin, setIsLogin] = useRecoilState(IsLoginState);
+
   const realResignHandler = () => {
     const config = {
       headers: {
@@ -33,18 +34,26 @@ const RealLeaveModal = ({ isRealUserResignHandler }) => {
       },
     };
     axios
-      .delete('/api/users/profile', config)
+      .get('/api/contents/all', config)
       .then((res) => {
-        ReactS3Client.deleteFile(JSON.parse(localStorage.getItem('userInfo')).image.split('/')[3]).then((res) => {
-          alert('탈퇴되었습니다. 이용해주셔서 감사합니다.');
-          setIsLogin(false);
-          localStorage.removeItem('userInfo');
-          window.location.replace(LANDING);
-        });
+        res.data.map((el) => ReactS3Client.deleteFile(el.split('/')[3]));
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .then((res) => {
+        axios
+          .delete('/api/users/profile', config)
+          .then((res) => {
+            ReactS3Client.deleteFile(JSON.parse(localStorage.getItem('userInfo')).image.split('/')[3]).then((res) => {
+              alert('탈퇴되었습니다. 이용해주셔서 감사합니다.');
+              setIsLogin(false);
+              localStorage.removeItem('userInfo');
+              window.location.replace(LANDING);
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      })
+      .catch((err) => console.log(err));
   };
   return (
     <RealLeavModalWrap onClick={(e) => e.stopPropagation()}>

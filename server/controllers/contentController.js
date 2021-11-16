@@ -4,6 +4,21 @@ import Content from '../models/content.js';
 
 const now = new Date();
 
+//  @desc    GET    user All Contetns
+//  @route   GET    /api/contents/all
+//  @access  Private
+const getAllContents = asyncHandler(async (req, res) => {
+  const contents = await Content.find({
+    user: req.user._id,
+  }).exec();
+  // console.log(contents);
+  if (contents) {
+    res.json(contents.map((el) => el.drawing));
+  } else {
+    res.status(404).json({ message: 'Contents not found' });
+  }
+});
+
 //  @desc    GET    user contents by month
 //  @route   GET    /api/contents/by-month
 //  @access  Private
@@ -177,11 +192,7 @@ const deleteMyContent = asyncHandler(async (req, res) => {
 const updateMyContent = asyncHandler(async (req, res) => {
   // 해당 그림일기 수정
 
-  const updatedContent = await Content.findByIdAndUpdate(
-    req.body._id,
-    req.body,
-    { projection: { user: 0, __v: 0, updatedAt: 0 }, new: true }
-  );
+  const updatedContent = await Content.findByIdAndUpdate(req.body._id, req.body, { projection: { user: 0, __v: 0, updatedAt: 0 }, new: true });
 
   res.status(200).json(
     [updatedContent].map((el) => {
@@ -296,14 +307,4 @@ const getCount = asyncHandler(async (req, res) => {
   });
 });
 
-export {
-  getContentsByMonth,
-  getContentsByDate,
-  getContentsByHashtag,
-  getHashtags,
-  getContentDetail,
-  addContent,
-  updateMyContent,
-  deleteMyContent,
-  getCount,
-};
+export { getAllContents, getContentsByMonth, getContentsByDate, getContentsByHashtag, getHashtags, getContentDetail, addContent, updateMyContent, deleteMyContent, getCount };
