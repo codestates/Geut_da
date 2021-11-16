@@ -47,9 +47,16 @@ const DiaryView = () => {
   const [inputContent, setInputContent] = useState('');
   const [tags, setTags] = useState([]);
   const [originImg, setOriginImg] = useState('');
-
   const history = useNavigate();
   const location = useLocation();
+  const s3config = {
+    bucketName: process.env.REACT_APP_BUCKET_NAME,
+    region: process.env.REACT_APP_REGION,
+    accessKeyId: process.env.REACT_APP_ACCESS_ID,
+    secretAccessKey: process.env.REACT_APP_ACCESS_KEY,
+  };
+  const ReactS3Client = new S3(s3config);
+
   const DrawingHandler = () => {
     setClickDrawing(!clickDrawing);
   };
@@ -97,6 +104,7 @@ const DiaryView = () => {
           data: { _id: location.state._id },
         })
         .then((res) => {
+          ReactS3Client.deleteFile(originImg.split('/')[3]);
           history('/main');
         });
     }
@@ -121,13 +129,6 @@ const DiaryView = () => {
     //수정완료하여 save버튼 클릭시 axios 요청 / 수정 완료되면 isEditHander 실행
     const file = dataURLtoFile(drawingImg, 'hello.png');
     const newFileName = uuidv4();
-    const config = {
-      bucketName: process.env.REACT_APP_BUCKET_NAME,
-      region: process.env.REACT_APP_REGION,
-      accessKeyId: process.env.REACT_APP_ACCESS_ID,
-      secretAccessKey: process.env.REACT_APP_ACCESS_KEY,
-    };
-    const ReactS3Client = new S3(config);
     console.log(originImg);
     ReactS3Client.deleteFile(originImg.split('/')[3]);
     ReactS3Client.uploadFile(file, newFileName).then((data) => {
