@@ -124,29 +124,35 @@ const DiaryView = () => {
     setIsEdit(!isEdit);
   };
 
-  const dataURLtoFile = (dataurl, filename) => {
-    let arr = dataurl.split(','),
-      mime = arr[0].match(/:(.*?);/)[1],
-      bstr = atob(arr[1]),
-      n = bstr.length,
-      u8arr = new Uint8Array(n);
-    while (n--) u8arr[n] = bstr.charCodeAt(n);
-    return new File([u8arr], filename, { type: mime });
-  };
-
   const diaryUpdateHandler = () => {
     //수정완료하여 save버튼 클릭시 axios 요청 / 수정 완료되면 isEditHander 실행
-    const file = dataURLtoFile(drawingImg, 'hello.png');
-    const newFileName = uuidv4();
-    console.log(originImg);
-    ReactS3Client.deleteFile(originImg.split('/')[3]);
-    ReactS3Client.uploadFile(file, newFileName).then((data) => {
-      if (data.status === 204) {
+    if (drawingImg.split('/')[1] === 'images') {
+      axios
+        .patch(
+          '/api/contents',
+          {
+            drawing: drawingImg,
+            title: inputTitle,
+            text: inputContent,
+            hashtags: tags,
+            _id: location.state._id,
+          },
+          config2
+        )
+        .then((res) => {
+          //수정이 잘되었을 경우 새로 전달받은 정보를 다시 DiaryViwe에 띄워줌
+          window.location.replace('/main/diaryview');
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      if (drawingImg === originImg) {
         axios
           .patch(
             '/api/contents',
             {
-              drawing: data.location,
+              drawing: originImg,
               title: inputTitle,
               text: inputContent,
               hashtags: tags,
@@ -161,8 +167,45 @@ const DiaryView = () => {
           .catch((err) => {
             console.log(err);
           });
+      } else {
+        const dataURLtoFile = (dataurl, filename) => {
+          let arr = dataurl.split(','),
+            mime = arr[0].match(/:(.*?);/)[1],
+            bstr = atob(arr[1]),
+            n = bstr.length,
+            u8arr = new Uint8Array(n);
+          while (n--) u8arr[n] = bstr.charCodeAt(n);
+          return new File([u8arr], filename, { type: mime });
+        };
+
+        const file = dataURLtoFile(drawingImg, 'hello.png');
+        const newFileName = uuidv4();
+        ReactS3Client.deleteFile(originImg.split('/')[3]);
+        ReactS3Client.uploadFile(file, newFileName).then((data) => {
+          if (data.status === 204) {
+            axios
+              .patch(
+                '/api/contents',
+                {
+                  drawing: data.location,
+                  title: inputTitle,
+                  text: inputContent,
+                  hashtags: tags,
+                  _id: location.state._id,
+                },
+                config2
+              )
+              .then((res) => {
+                //수정이 잘되었을 경우 새로 전달받은 정보를 다시 DiaryViwe에 띄워줌
+                window.location.replace('/main/diaryview');
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          }
+        });
       }
-    });
+    }
   };
 
   const inputHandler = (event) => {
