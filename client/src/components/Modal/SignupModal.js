@@ -26,45 +26,44 @@ const SignUpModalWrap = styled.div`
 const SignUpModalImg = styled.div`
   width: 50%;
   height: 100%;
-  border-right: 1px solid black;
 `;
 
 const SignUpModalContentWrap = styled.div`
   width: 50%;
   height: 100%;
   text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  .signUp {
-    width: 18em;
-    height: 3em;
-    border: none;
-    border-radius: 10px;
-    background-color: #9e9e9e;
-    color: #ffffff;
-    font-weight: 700;
-  }
-
-  .signUp:hover,
-  .signUp:focus {
-    cursor: pointer;
-    outline: none;
-    transform: scale(1.05);
-  }
 `;
 
 const SignUpModalSubContentWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: 3em auto;
   width: 80%;
   height: 85%;
   border-radius: 10px;
   box-shadow: 22px 22px 44px #d9d6d6, -22px -22px 44px #ffffff;
 `;
 
+const SignUpModalLogoWrap = styled.div`
+  flex: 1;
+
+  img {
+    height: 5em;
+    margin: 2em;
+  }
+`;
+
 const SignUpModalInputWrap = styled.div`
+  flex: 2;
+  width: 100%;
   display: flex;
   flex-direction: column;
+
+  div.SignUpTitle {
+    font-size: 2em;
+    font-weight: 700;
+    margin-bottom: 1em;
+  }
 
   input {
     border: none;
@@ -72,7 +71,7 @@ const SignUpModalInputWrap = styled.div`
     border-bottom: 1px solid #c4c4c4;
     text-align: center;
     font-size: 1.4em;
-    margin: 0.3em 3em;
+    margin: 0 3em;
   }
 
   input:focus {
@@ -84,6 +83,29 @@ const SignUpModalInputWrap = styled.div`
   }
   span.validatepass {
     color: green;
+  }
+`;
+
+const SignUpModalButtonWrap = styled.div`
+  flex: 1;
+  margin-top: 1em;
+
+  .signUp {
+    width: 70%;
+    height: 3.5em;
+    border: none;
+    border-radius: 10px;
+    background-color: #9e9e9e;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 1.1em;
+  }
+
+  .signUp:hover,
+  .signUp:focus {
+    cursor: pointer;
+    outline: none;
+    transform: scale(1.05);
   }
 `;
 
@@ -403,9 +425,11 @@ const SignupModal = ({ SignupModalHandler, LoginModalHandler }) => {
       </button>
       <SignUpModalContentWrap>
         <SignUpModalSubContentWrap>
-          <div>로고</div>
+          <SignUpModalLogoWrap>
+            <img src='/images/geutda_logo.svg' alt='Logo' />
+          </SignUpModalLogoWrap>
           <SignUpModalInputWrap>
-            <div>Sign Up</div>
+            <div className={'SignUpTitle'}>Sign Up</div>
             <input
               type='email'
               placeholder='Email'
@@ -473,9 +497,11 @@ const SignupModal = ({ SignupModalHandler, LoginModalHandler }) => {
               </span>
             )}
           </SignUpModalInputWrap>
-          <button onClick={SignUpHandler} className={'signUp'}>
-            Sign Up
-          </button>
+          <SignUpModalButtonWrap>
+            <button onClick={SignUpHandler} className={'signUp'}>
+              Sign Up
+            </button>
+          </SignUpModalButtonWrap>
         </SignUpModalSubContentWrap>
       </SignUpModalContentWrap>
     </SignUpModalWrap>

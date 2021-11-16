@@ -1,14 +1,20 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Header from '../components/Header';
 import DrawingModal from '../components/Modal/DrawingModal';
 import { Tag } from '../components/Tags';
 import axios from 'axios';
-import { TiWeatherSunny, TiWeatherPartlySunny, TiWeatherDownpour, TiWeatherSnow } from 'react-icons/ti';
+import {
+  TiWeatherSunny,
+  TiWeatherPartlySunny,
+  TiWeatherDownpour,
+  TiWeatherSnow,
+} from 'react-icons/ti';
 import S3 from 'react-aws-s3';
 import { v4 as uuidv4 } from 'uuid';
 import dotenv from 'dotenv';
+import { MAIN } from '../constants/routes';
 
 dotenv.config();
 
@@ -84,7 +90,9 @@ const NewDiary = () => {
     const ReactS3Client = new S3(config);
     const config2 = {
       headers: {
-        Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}`,
+        Authorization: `Bearer ${
+          JSON.parse(localStorage.getItem('userInfo')).token
+        }`,
         'Content-Type': 'application/json',
       },
     };
@@ -166,6 +174,9 @@ const NewDiary = () => {
   return (
     <NewDiaryWrap>
       <Header />
+      <button>
+        <Link to={MAIN}>Go Back</Link>
+      </button>
       <h3>NewDiary</h3>
       <div onClick={DrawingHandler}>{drawingImg !== '' ? <img src={drawingImg} alt='drawingImg' /> : 'click me!'}</div>
       {clickDrawing ? <DrawingModal DrawingHandler={DrawingHandler} SaveDrawingHandler={SaveDrawingHandler} /> : null}
@@ -181,11 +192,32 @@ const NewDiary = () => {
       /> */}
       <Tag tags={tags} setTags={setTags} />
       {/* 날씨 선택 */}
-      <TiWeatherSunny onClick={weatherSelectHandler} data-weather='0' className={weatherIdx === 0 ? 'select' : ''} />
-      <TiWeatherPartlySunny onClick={weatherSelectHandler} data-weather='1' className={weatherIdx === 1 ? 'select' : ''} />
-      <TiWeatherDownpour onClick={weatherSelectHandler} data-weather='2' className={weatherIdx === 2 ? 'select' : ''} />
-      <TiWeatherSnow onClick={weatherSelectHandler} data-weather='3' className={weatherIdx === 3 ? 'select' : ''} />
-      <input type='text' placeholder='오늘의 일기' value={inputContent} onChange={inputHandler} />
+      <TiWeatherSunny
+        onClick={weatherSelectHandler}
+        data-weather='0'
+        className={weatherIdx === 0 ? 'select' : ''}
+      />
+      <TiWeatherPartlySunny
+        onClick={weatherSelectHandler}
+        data-weather='1'
+        className={weatherIdx === 1 ? 'select' : ''}
+      />
+      <TiWeatherDownpour
+        onClick={weatherSelectHandler}
+        data-weather='2'
+        className={weatherIdx === 2 ? 'select' : ''}
+      />
+      <TiWeatherSnow
+        onClick={weatherSelectHandler}
+        data-weather='3'
+        className={weatherIdx === 3 ? 'select' : ''}
+      />
+      <input
+        type='text'
+        placeholder='오늘의 일기'
+        value={inputContent}
+        onChange={inputHandler}
+      />
     </NewDiaryWrap>
   );
 };

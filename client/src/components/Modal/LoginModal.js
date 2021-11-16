@@ -8,17 +8,21 @@ import IsLoginState from '../../states/IsLoginState';
 const LoginModalWrap = styled.div`
   display: flex;
   position: relative;
-  width: 70%;
+  width: 70vw;
   height: 70vh;
+  padding: 3rem;
   background-color: #ffffff;
+  border-radius: 1rem;
 
   .closeButton {
+    width: 3rem;
+    height: 3rem;
     position: absolute;
-    top: 1%;
-    right: 1%;
+    top: 0;
+    right: 0;
     border: none;
     color: #646464;
-    background-color: #ffffff;
+    background: none;
     font-weight: 700;
     font-size: 1.5em;
   }
@@ -28,59 +32,83 @@ const LoginModalWrap = styled.div`
 `;
 
 const LoginModalImg = styled.div`
-  width: 50%;
-  height: 100%;
-  border-right: 1px solid black;
+  flex: 1;
+  background-color: tomato;
+  overflow: hidden;
+
+  img {
+    height: 100%;
+  }
 `;
 
 const LoginModalContentWrap = styled.div`
-  width: 50%;
-  height: 100%;
+  flex: 1;
   text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 `;
 
 const LoginModalSubContentWrap = styled.div`
-  width: 80%;
-  height: 85%;
-  border-radius: 10px;
-  box-shadow: 23px 23px 46px #d9d6d6, -23px -23px 46px #ffffff;
-`;
-const LoginModalInputWrap = styled.div`
   display: flex;
   flex-direction: column;
+  align-content: space-between;
+  height: 100%;
+  margin-left: 2rem;
+  padding: 2rem;
+  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.2);
+`;
+
+const LoginModalLogoWrap = styled.div`
+  height: 10vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  img {
+    height: 100%;
+  }
+`;
+const LoginModalInputWrap = styled.div`
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 2rem;
+
+  h3 {
+    font-size: 1.4em;
+    font-weight: 700;
+    margin: 0 0 2rem;
+    padding: 0;
+  }
 
   input {
     border: none;
-    height: 1.2em;
+    margin-bottom: 1rem;
     border-bottom: 1px solid #c4c4c4;
     text-align: center;
-    font-size: 1.4em;
-    margin: 0.3em 3em;
+    font-size: 1.1em;
   }
   input:focus {
     outline: none;
   }
   span {
+    font-size: 0.85em;
     color: red;
   }
 `;
 
 const LoginModalLinkWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
   button {
-    width: 18em;
-    height: 3em;
+    width: 100%;
+    height: 2.5rem;
+    margin-top: 1rem;
     border: none;
     border-radius: 10px;
     background-color: #9e9e9e;
     color: #ffffff;
     font-weight: 700;
+    font-size: 1.1em;
+    transition: all 0.5s;
   }
 
   button:hover,
@@ -91,11 +119,12 @@ const LoginModalLinkWrap = styled.div`
   }
 
   span {
-    margin: 0.6em 0;
+    font-size: 1em;
+    color: #666;
   }
   span:hover {
-    color: blue;
-    border-bottom: 1px solid blue;
+    color: brown;
+    border-bottom: 1px solid brown;
   }
 `;
 
@@ -177,15 +206,19 @@ const LoginModal = ({ LoginModalHandler, SignupModalHandler }) => {
 
   return (
     <LoginModalWrap onClick={(e) => e.stopPropagation()}>
-      <LoginModalImg>이미지</LoginModalImg>
+      <LoginModalImg>
+        <img src='/images/bg.jpeg' alt='일러스트 이미지' />
+      </LoginModalImg>
       <button onClick={LoginModalCloseHandler} className={'closeButton'}>
         &times;
       </button>
       <LoginModalContentWrap>
         <LoginModalSubContentWrap>
-          <div>로고</div>
+          <LoginModalLogoWrap>
+            <img src='/images/geutda_logo.svg' alt='Logo' />
+          </LoginModalLogoWrap>
           <LoginModalInputWrap>
-            <div>Login</div>
+            <h3>Login</h3>
             <input
               type='email'
               placeholder='Email'
