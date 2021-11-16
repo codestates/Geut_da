@@ -18,6 +18,7 @@ const RealLeavModalWrap = styled.div`
 `;
 
 const RealLeaveModal = ({ isRealUserResignHandler }) => {
+  const [isLogin, setIsLogin] = useRecoilState(IsLoginState);
   const config = {
     bucketName: process.env.REACT_APP_BUCKET_NAME,
     region: process.env.REACT_APP_REGION,
@@ -25,13 +26,19 @@ const RealLeaveModal = ({ isRealUserResignHandler }) => {
     secretAccessKey: process.env.REACT_APP_ACCESS_KEY,
   };
   const ReactS3Client = new S3(config);
-  const [isLogin, setIsLogin] = useRecoilState(IsLoginState);
+
   const realResignHandler = () => {
     const config = {
       headers: {
         Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}`,
       },
     };
+    axios
+      .get('/api/contents/all', config)
+      .then((res) => {
+        res.data.map((el) => ReactS3Client.deleteFile(el.split('/')[3]));
+      })
+      .catch((err) => console.log(err));
     axios
       .delete('/api/users/profile', config)
       .then((res) => {
