@@ -5,12 +5,12 @@ import Header from '../components/Header';
 import DrawingModal from '../components/Modal/DrawingModal';
 import { Tag } from '../components/Tags';
 import axios from 'axios';
-import {
-  TiWeatherSunny,
-  TiWeatherPartlySunny,
-  TiWeatherDownpour,
-  TiWeatherSnow,
-} from 'react-icons/ti';
+import { TiWeatherSunny, TiWeatherPartlySunny, TiWeatherDownpour, TiWeatherSnow } from 'react-icons/ti';
+import S3 from 'react-aws-s3';
+import { v4 as uuidv4 } from 'uuid';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const NewDiaryWrap = styled.div`
   svg {
@@ -68,62 +68,67 @@ const NewDiary = () => {
     }
   };
 
+  const dataURLtoFile = (dataurl, filename) => {
+    let arr = dataurl.split(','),
+      mime = arr[0].match(/:(.*?);/)[1],
+      bstr = atob(arr[1]),
+      n = bstr.length,
+      u8arr = new Uint8Array(n);
+    while (n--) u8arr[n] = bstr.charCodeAt(n);
+    return new File([u8arr], filename, { type: mime });
+  };
+  // let file = dataURLtoFile('data:text/plain;base64,aGVsbG8gd29ybGQ=', 'hello.txt');
+
   const postDiaryHandler = () => {
+    const file = dataURLtoFile(drawingImg, 'hello.png');
+    const newFileName = uuidv4();
     const config = {
+      bucketName: process.env.REACT_APP_BUCKET_NAME,
+      region: process.env.REACT_APP_REGION,
+      accessKeyId: process.env.REACT_APP_ACCESS_ID,
+      secretAccessKey: process.env.REACT_APP_ACCESS_KEY,
+    };
+    const ReactS3Client = new S3(config);
+    const config2 = {
       headers: {
-        Authorization: `Bearer ${
-          JSON.parse(localStorage.getItem('userInfo')).token
-        }`,
+        Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}`,
         'Content-Type': 'application/json',
       },
     };
-    axios
-      .post(
-        '/api/contents',
-        {
-          title: inputTitle,
-          text: inputContent,
-          weather: weatherIdx,
-          drawing:
-            'https://twitter.com/Chuwinkle_/status/1002903547761999873/photo/1',
-          hashtags: tags,
-        },
-        config
-      )
-      .then((res) => {
-        console.log(res);
-        //만약 내가쓴 일기가 잘 저장이 되면, res.data._id 에 내가 쓴 일기에 대한 고유한 id가 들어오는데
-        //이 id값을 DiaryView에 전달만해주면 DiaryView에서 useEffec로 서버에 요청 해줌.
-        history('/main/diaryview', { state: { _id: res.data._id } });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    ReactS3Client.uploadFile(file, newFileName).then((data) => {
+      if (data.status === 204) {
+        axios
+          .post(
+            '/api/contents',
+            {
+              title: inputTitle,
+              text: inputContent,
+              weather: weatherIdx,
+              drawing: data.location,
+              hashtags: tags,
+            },
+            config2
+          )
+          .then((res) => {
+            console.log(res);
+            //만약 내가쓴 일기가 잘 저장이 되면, res.data._id 에 내가 쓴 일기에 대한 고유한 id가 들어오는데
+            //이 id값을 DiaryView에 전달만해주면 DiaryView에서 useEffec로 서버에 요청 해줌.
+            history('/main/diaryview', { state: { _id: res.data._id } });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    });
   };
 
   return (
     <NewDiaryWrap>
       <Header />
       <h3>NewDiary</h3>
-      <div onClick={DrawingHandler}>
-        {drawingImg !== '' ? (
-          <img src={drawingImg} alt='drawingImg' />
-        ) : (
-          'click me!'
-        )}
-      </div>
-      {clickDrawing ? (
-        <DrawingModal
-          DrawingHandler={DrawingHandler}
-          SaveDrawingHandler={SaveDrawingHandler}
-        />
-      ) : null}
-      <input
-        type='text'
-        placeholder='Title'
-        value={inputTitle}
-        onChange={inputHandler}
-      />
+      <div onClick={DrawingHandler}>{drawingImg !== '' ? <img src={drawingImg} alt='drawingImg' /> : 'click me!'}</div>
+      {clickDrawing ? <DrawingModal DrawingHandler={DrawingHandler} SaveDrawingHandler={SaveDrawingHandler} /> : null}
+      <input type='text' placeholder='Title' value={inputTitle} onChange={inputHandler} />
       <button onClick={postDiaryHandler}>Save</button>
       {/* <input
         type='text'
@@ -133,32 +138,11 @@ const NewDiary = () => {
       /> */}
       <Tag tags={tags} setTags={setTags} />
       {/* 날씨 선택 */}
-      <TiWeatherSunny
-        onClick={weatherSelectHandler}
-        data-weather='0'
-        className={weatherIdx === 0 ? 'select' : ''}
-      />
-      <TiWeatherPartlySunny
-        onClick={weatherSelectHandler}
-        data-weather='1'
-        className={weatherIdx === 1 ? 'select' : ''}
-      />
-      <TiWeatherDownpour
-        onClick={weatherSelectHandler}
-        data-weather='2'
-        className={weatherIdx === 2 ? 'select' : ''}
-      />
-      <TiWeatherSnow
-        onClick={weatherSelectHandler}
-        data-weather='3'
-        className={weatherIdx === 3 ? 'select' : ''}
-      />
-      <input
-        type='text'
-        placeholder='오늘의 일기'
-        value={inputContent}
-        onChange={inputHandler}
-      />
+      <TiWeatherSunny onClick={weatherSelectHandler} data-weather='0' className={weatherIdx === 0 ? 'select' : ''} />
+      <TiWeatherPartlySunny onClick={weatherSelectHandler} data-weather='1' className={weatherIdx === 1 ? 'select' : ''} />
+      <TiWeatherDownpour onClick={weatherSelectHandler} data-weather='2' className={weatherIdx === 2 ? 'select' : ''} />
+      <TiWeatherSnow onClick={weatherSelectHandler} data-weather='3' className={weatherIdx === 3 ? 'select' : ''} />
+      <input type='text' placeholder='오늘의 일기' value={inputContent} onChange={inputHandler} />
     </NewDiaryWrap>
   );
 };
