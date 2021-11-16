@@ -6,6 +6,21 @@ import Content from '../models/content.js';
 moment2.tz.setDefault('Asia/Seoul');
 const now = new Date();
 
+//  @desc    GET    user All Contetns
+//  @route   GET    /api/contents/all
+//  @access  Private
+const getAllContents = asyncHandler(async (req, res) => {
+  const contents = await Content.find({
+    user: req.user._id,
+  }).exec();
+  // console.log(contents);
+  if (contents) {
+    res.json(contents.map((el) => el.drawing));
+  } else {
+    res.status(404).json({ message: 'Contents not found' });
+  }
+});
+
 //  @desc    GET    user contents by month
 //  @route   GET    /api/contents/by-month
 //  @access  Private
@@ -56,17 +71,13 @@ const getContentsByDate = asyncHandler(async (req, res) => {
     {
       user: req.user._id,
       createdAt: {
-        $gte: moment(`${year}/${month}/${date}`, 'YYYY/MM/DD')
-          .startOf('day')
-          .format(),
-        $lte: moment(`${year}/${month}/${date}`, 'YYYY/MM/DD')
-          .endOf('day')
-          .format(),
+        $gte: moment(`${year}/${month}/${date}`, 'YYYY/MM/DD').startOf('day').format(),
+        $lte: moment(`${year}/${month}/${date}`, 'YYYY/MM/DD').endOf('day').format(),
       },
     },
     { title: 1, weather: 1, drawing: 1, createdAt: 1 }
   ).exec();
-  console.log(contents);
+  // console.log(contents);
   if (contents) {
     res.json(
       contents.map((el) => {
@@ -170,11 +181,7 @@ const deleteMyContent = asyncHandler(async (req, res) => {
 const updateMyContent = asyncHandler(async (req, res) => {
   // 해당 그림일기 수정
 
-  const updatedContent = await Content.findByIdAndUpdate(
-    req.body._id,
-    req.body,
-    { projection: { user: 0, __v: 0, updatedAt: 0 }, new: true }
-  );
+  const updatedContent = await Content.findByIdAndUpdate(req.body._id, req.body, { projection: { user: 0, __v: 0, updatedAt: 0 }, new: true });
 
   res.status(200).json(
     [updatedContent].map((el) => {
@@ -279,14 +286,4 @@ const getCount = asyncHandler(async (req, res) => {
   });
 });
 
-export {
-  getContentsByMonth,
-  getContentsByDate,
-  getContentsByHashtag,
-  getHashtags,
-  getContentDetail,
-  addContent,
-  updateMyContent,
-  deleteMyContent,
-  getCount,
-};
+export { getAllContents, getContentsByMonth, getContentsByDate, getContentsByHashtag, getHashtags, getContentDetail, addContent, updateMyContent, deleteMyContent, getCount };
