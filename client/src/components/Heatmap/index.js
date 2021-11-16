@@ -14,25 +14,30 @@ const HeatmapSize = styled.div`
 `;
 
 // 데이터에 해당일자 정보가 없으면
-const Heatmap = ({ counts: { total, totalByMonth, totalByDay }, searchDayHandler }) => {
+const Heatmap = ({
+  counts: { total, totalByMonth, totalByDay },
+  searchDayHandler,
+}) => {
   return (
     <div>
       <h3>긋다를 통해 추억을 새겨보세요!</h3>
       <p>
-        {`이번 달 ${totalByMonth}개의
-        기억을 담았다. 나의 그림일기 총 ${total}개`}
+        {`이번 달 ${totalByMonth || 0}개의
+        기억을 담았다. 나의 그림일기 총 ${total || 0}개`}
         .
       </p>
       <HeatmapSize>
         <CalendarHeatmap
           startDate={new Date(`${year - 1}-${month}-${date}`)}
           endDate={now}
-          values={totalByDay === undefined ? [] : totalByDay}
+          values={totalByDay || []}
           classForValue={(value) => {
             if (!value) {
               return 'color-empty';
             }
-            return value.count < 5 ? `color-github-${value.count}` : `color-github-4`;
+            return value.count < 5
+              ? `color-github-${value.count}`
+              : `color-github-4`;
           }}
           tooltipDataAttrs={(value) => {
             if (value.date && value.count) {
@@ -45,9 +50,8 @@ const Heatmap = ({ counts: { total, totalByMonth, totalByDay }, searchDayHandler
             };
           }}
           showWeekdayLabels={true}
-          disabled={(value) => !value.count}
           onClick={(value) => {
-            if (!value) return;
+            // if (!value) return;
             searchDayHandler(value);
           }}
         />
