@@ -71,9 +71,7 @@ const Mypage = () => {
 
   const config = {
     headers: {
-      Authorization: `Bearer ${
-        JSON.parse(localStorage.getItem('userInfo')).token
-      }`,
+      Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}`,
     },
   };
 
@@ -89,7 +87,6 @@ const Mypage = () => {
         setIsLoading(false);
       });
   }, []);
-
   const searchDayHandler = (value) => {
     const [year, month, date] = value.date.split('-');
 
@@ -163,18 +160,12 @@ const Mypage = () => {
           <ProfileUpload />
           {isUserResign && (
             <ModalBackDrop onClick={isUserResignHandler}>
-              <LeaveModal
-                isUserResignHandler={isUserResignHandler}
-                isRealUserResignHandler={isRealUserResignHandler}
-              />
+              <LeaveModal isUserResignHandler={isUserResignHandler} isRealUserResignHandler={isRealUserResignHandler} />
             </ModalBackDrop>
           )}
           {isRealUserResign && (
             <ModalBackDrop onClick={isRealUserResignHandler}>
-              <RealLeaveModal
-                isRealUserResignHandler={isRealUserResignHandler}
-                isUserResignHandler={isUserResignHandler}
-              />
+              <RealLeaveModal isRealUserResignHandler={isRealUserResignHandler} isUserResignHandler={isUserResignHandler} />
             </ModalBackDrop>
           )}
           {openPasswordModal && (
@@ -189,10 +180,7 @@ const Mypage = () => {
           )}
           {openUserEditModal && (
             <ModalBackDrop onClick={openUserEditModalHandler}>
-              <UserEditModal
-                openUserEditModalHandler={openUserEditModalHandler}
-                pwCheckdValue={pwCheckdValue}
-              />
+              <UserEditModal openUserEditModalHandler={openUserEditModalHandler} pwCheckdValue={pwCheckdValue} />
             </ModalBackDrop>
           )}
           <Heatmap counts={counts} searchDayHandler={searchDayHandler} />
