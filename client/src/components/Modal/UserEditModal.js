@@ -4,11 +4,78 @@ import styled from 'styled-components';
 
 const UserEditModalWrap = styled.div`
   display: flex;
-  width: 50%;
-  height: 50vh;
-  margin: 15em auto;
-  border: 1px solid black;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 40%;
+  height: 50vh;
+  background-color: #ffffff;
+  padding: 5em auto;
+  border-radius: 10px;
+
+  .closeButton {
+    position: absolute;
+    top: 1%;
+    right: 1%;
+    border: none;
+    color: #646464;
+    background-color: #ffffff;
+    font-weight: 700;
+    font-size: 1.5em;
+  }
+  .closeButton:hover {
+    cursor: pointer;
+  }
+
+  div.userEditText {
+    margin-bottom: 1.5em;
+    font-weight: 700;
+  }
+
+  input {
+    width: 80%;
+    border: none;
+    height: 1.2em;
+    border-bottom: 1px solid #c4c4c4;
+    text-align: center;
+    font-size: 1.4em;
+    margin: 0.3em 3em;
+  }
+
+  input:focus {
+    outline: none;
+  }
+
+  .userEditButton {
+    width: 18em;
+    height: 3em;
+    border: none;
+    border-radius: 10px;
+    background-color: #9e9e9e;
+    color: #ffffff;
+    font-weight: 700;
+    transform: all, 1s;
+  }
+
+  .userEditButton:focus,
+  .userEditButton:hover {
+    cursor: pointer;
+    outline: none;
+    transform: scale(1.05);
+  }
+
+  span {
+    color: red;
+  }
+
+  span.validatepass {
+    color: green;
+  }
+
+  span.lineheight {
+    margin-bottom: 2em;
+  }
 `;
 
 const UserEditModal = ({ openUserEditModalHandler, pwCheckdValue }) => {
@@ -29,6 +96,11 @@ const UserEditModal = ({ openUserEditModalHandler, pwCheckdValue }) => {
   const [pwValidText, setPwValidText] = useState(false);
   const [pwCheckValidateMessage, setPwCheckValidateMessage] = useState(false);
   const [pwCheckValidText, setPwCheckValidText] = useState(false);
+  const [isSpanColor, setIsSpanColor] = useState({
+    password: false,
+    passwordCheck: false,
+    nickname: false,
+  });
 
   useEffect(() => {
     //닉네임
@@ -116,12 +188,14 @@ const UserEditModal = ({ openUserEditModalHandler, pwCheckdValue }) => {
     //nickname OnBlur
     if (event.target.type === 'text' && userInputInfo.nickname === '') {
       setEditValidateState({ ...editValidateState, nickname: false });
+      setIsSpanColor({ ...isSpanColor, nickname: false });
       setNicknameValidText('nothing');
     } else if (
       event.target.type === 'text' &&
       !nicknameExp.test(userInputInfo.nickname)
     ) {
       setEditValidateState({ ...editValidateState, nickname: false });
+      setIsSpanColor({ ...isSpanColor, nickname: false });
       setNicknameValidText('invalidate');
     } else if (
       event.target.type === 'text' &&
@@ -136,11 +210,13 @@ const UserEditModal = ({ openUserEditModalHandler, pwCheckdValue }) => {
         .then((res) => {
           //사용가능한 닉네임인 경우
           setEditValidateState({ ...editValidateState, nickname: true });
+          setIsSpanColor({ ...isSpanColor, nickname: true });
           setNicknameValidText('ok');
         })
         .catch((err) => {
           //닉네임이 중복인 경우
           setEditValidateState({ ...editValidateState, nickname: false });
+          setIsSpanColor({ ...isSpanColor, nickname: false });
           setNicknameValidText('overlap');
         });
     }
@@ -154,6 +230,7 @@ const UserEditModal = ({ openUserEditModalHandler, pwCheckdValue }) => {
       event.target.placeholder === 'New Password'
     ) {
       setEditValidateState({ ...editValidateState, password: false });
+      setIsSpanColor({ ...isSpanColor, password: false });
       setPwValidText('same');
     } else if (
       event.target.type === 'password' &&
@@ -161,6 +238,7 @@ const UserEditModal = ({ openUserEditModalHandler, pwCheckdValue }) => {
       event.target.placeholder === 'New Password'
     ) {
       setEditValidateState({ ...editValidateState, password: false });
+      setIsSpanColor({ ...isSpanColor, password: false });
       setPwValidText('nothing');
     } else if (
       event.target.type === 'password' &&
@@ -168,6 +246,7 @@ const UserEditModal = ({ openUserEditModalHandler, pwCheckdValue }) => {
       event.target.placeholder === 'New Password'
     ) {
       setEditValidateState({ ...editValidateState, password: false });
+      setIsSpanColor({ ...isSpanColor, password: false });
       setPwValidText('invalidate');
     } else if (
       event.target.type === 'password' &&
@@ -175,6 +254,7 @@ const UserEditModal = ({ openUserEditModalHandler, pwCheckdValue }) => {
       event.target.placeholder === 'New Password'
     ) {
       setEditValidateState({ ...editValidateState, password: true });
+      setIsSpanColor({ ...isSpanColor, password: true });
       setPwValidText('ok');
     }
 
@@ -185,6 +265,7 @@ const UserEditModal = ({ openUserEditModalHandler, pwCheckdValue }) => {
       event.target.placeholder === 'Password Check'
     ) {
       setEditValidateState({ ...editValidateState, passwordCheck: false });
+      setIsSpanColor({ ...isSpanColor, passwordCheck: false });
       setPwCheckValidText('nothing');
     } else if (
       event.target.type === 'password' &&
@@ -193,6 +274,7 @@ const UserEditModal = ({ openUserEditModalHandler, pwCheckdValue }) => {
       userInputInfo.password !== userInputInfo.passwordCheck
     ) {
       setEditValidateState({ ...editValidateState, passwordCheck: false });
+      setIsSpanColor({ ...isSpanColor, passwordCheck: false });
       setPwCheckValidText('invalidate');
     } else if (
       event.target.type === 'password' &&
@@ -201,6 +283,7 @@ const UserEditModal = ({ openUserEditModalHandler, pwCheckdValue }) => {
       userInputInfo.password === userInputInfo.passwordCheck
     ) {
       setEditValidateState({ ...editValidateState, passwordCheck: true });
+      setIsSpanColor({ ...isSpanColor, passwordCheck: true });
       setPwCheckValidText('ok');
     }
   };
@@ -246,9 +329,10 @@ const UserEditModal = ({ openUserEditModalHandler, pwCheckdValue }) => {
 
   return (
     <UserEditModalWrap onClick={(e) => e.stopPropagation()}>
-      <h2>UserEditModal</h2>
-      <button onClick={openUserEditModalHandler}>Close</button>
-      <div>회원 정보 수정</div>
+      <button onClick={openUserEditModalHandler} className={'closeButton'}>
+        &times;
+      </button>
+      <div className={'userEditText'}>회원 정보 수정</div>
       <input
         type='text'
         placeholder='Nickname'
@@ -257,9 +341,13 @@ const UserEditModal = ({ openUserEditModalHandler, pwCheckdValue }) => {
         onBlur={editUpOnBlurHandler}
       />
       {nicknameValidateMessage ? (
-        <span>{nicknameValidateMessage}</span>
+        <span className={isSpanColor.nickname ? 'validatepass' : null}>
+          {nicknameValidateMessage}
+        </span>
       ) : (
-        <br />
+        <span>
+          <br />
+        </span>
       )}
       <input
         type='password'
@@ -268,7 +356,15 @@ const UserEditModal = ({ openUserEditModalHandler, pwCheckdValue }) => {
         onChange={editInputValueChange}
         onBlur={PasswordOnBlurHandler}
       />
-      {pwValidateMessage ? <span>{pwValidateMessage}</span> : <br />}
+      {pwValidateMessage ? (
+        <span className={isSpanColor.password ? 'validatepass' : null}>
+          {pwValidateMessage}
+        </span>
+      ) : (
+        <span>
+          <br />
+        </span>
+      )}
       <input
         type='password'
         placeholder='Password Check'
@@ -276,8 +372,22 @@ const UserEditModal = ({ openUserEditModalHandler, pwCheckdValue }) => {
         onChange={editInputValueChange}
         onBlur={PasswordOnBlurHandler}
       />
-      {pwCheckValidateMessage ? <span>{pwCheckValidateMessage}</span> : <br />}
-      <button onClick={editHandler}>수 정</button>
+      {pwCheckValidateMessage ? (
+        <span
+          className={
+            isSpanColor.passwordCheck ? 'validatepass lineheight' : null
+          }
+        >
+          {pwCheckValidateMessage}
+        </span>
+      ) : (
+        <span className={'lineheight'}>
+          <br />
+        </span>
+      )}
+      <button onClick={editHandler} className={'userEditButton'}>
+        수 정
+      </button>
     </UserEditModalWrap>
   );
 };

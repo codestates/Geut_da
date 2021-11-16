@@ -43,7 +43,7 @@ const LoginModalContentWrap = styled.div`
 `;
 
 const LoginModalSubContentWrap = styled.div`
-  width: 70%;
+  width: 80%;
   height: 85%;
   border-radius: 10px;
   box-shadow: 23px 23px 46px #d9d6d6, -23px -23px 46px #ffffff;
@@ -83,8 +83,11 @@ const LoginModalLinkWrap = styled.div`
     font-weight: 700;
   }
 
-  button:hover {
+  button:hover,
+  button:focus {
     cursor: pointer;
+    outline: none;
+    transform: scale(1.05);
   }
 
   span {
