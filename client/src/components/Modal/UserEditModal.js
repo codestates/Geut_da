@@ -48,7 +48,7 @@ const UserEditModalWrap = styled.div`
   }
 
   .userEditButton {
-    width: 18em;
+    width: 60%;
     height: 3em;
     border: none;
     border-radius: 10px;
@@ -56,6 +56,7 @@ const UserEditModalWrap = styled.div`
     color: #ffffff;
     font-weight: 700;
     transform: all, 1s;
+    font-size: 1.2em;
   }
 
   .userEditButton:focus,
@@ -96,11 +97,20 @@ const UserEditModal = ({ openUserEditModalHandler, pwCheckdValue }) => {
   const [pwValidText, setPwValidText] = useState(false);
   const [pwCheckValidateMessage, setPwCheckValidateMessage] = useState(false);
   const [pwCheckValidText, setPwCheckValidText] = useState(false);
+  const [pwValidateAllPass, setPwValidateAllPass] = useState(false);
   const [isSpanColor, setIsSpanColor] = useState({
     password: false,
     passwordCheck: false,
     nickname: false,
   });
+
+  useEffect(() => {
+    if (editValidateState.password && editValidateState.passwordCheck) {
+      setPwValidateAllPass(true);
+    } else {
+      setPwValidateAllPass(false);
+    }
+  }, [editValidateState]);
 
   useEffect(() => {
     //닉네임
@@ -289,18 +299,28 @@ const UserEditModal = ({ openUserEditModalHandler, pwCheckdValue }) => {
   };
 
   const editHandler = (event) => {
+    const existingNickname = JSON.parse(localStorage.getItem('userInfo'))
+      .nickname;
+    const existingPw = pwCheckdValue;
+
     if (userInputInfo.nickname === '' && userInputInfo.password === '') {
       setNicknameValidText('nothing');
       setPwValidText('nothing');
-    } else if (
-      editValidateState.nickname ||
-      (editValidateState.password && editValidateState.passwordCheck)
-    ) {
-      if (editValidateState.password && editValidateState.passwordCheck) {
-        userInputInfo.password = userInputInfo.password;
-      } else {
-        userInputInfo.password = pwCheckdValue;
+    } else {
+      //닉네임, 패스워드 모두 유효성 검사를 통과하지 못한 경우
+      if (!editValidateState.nickname && !pwValidateAllPass) {
+        return;
       }
+      //닉네임만 유효성검사를 통과한경우
+      if (editValidateState.nickname && !pwValidateAllPass) {
+        userInputInfo.password = existingPw;
+      }
+      //비밀번호만 유효성 검사를 통과한 경우
+      if (!editValidateState.nickname && pwValidateAllPass) {
+        userInputInfo.nickname = existingNickname;
+      }
+
+      //axios요청
       axios
         .patch(
           '/api/users/profile',

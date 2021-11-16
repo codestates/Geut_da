@@ -5,6 +5,7 @@ const FooterWrap = styled.footer`
   padding: 1rem 2rem;
   background-color: #f0eee7;
   display: flex;
+  z-index: 998;
 
   > div {
     flex: 1;

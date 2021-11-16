@@ -12,7 +12,7 @@ const ModalBackDrop = styled.div`
   top: 0;
   left: 0;
   z-index: 999;
-  background-color: #eeebe2;
+  background-color: rgba(0, 0, 0, 0.2);
   display: flex;
   justify-content: center;
   align-items: center;
