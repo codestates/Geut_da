@@ -6,12 +6,12 @@ import DrawingModal from '../components/Modal/DrawingModal';
 import { Tag } from '../components/Tags';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
-import {
-  TiWeatherSunny,
-  TiWeatherPartlySunny,
-  TiWeatherDownpour,
-  TiWeatherSnow,
-} from 'react-icons/ti';
+import { TiWeatherSunny, TiWeatherPartlySunny, TiWeatherDownpour, TiWeatherSnow } from 'react-icons/ti';
+import S3 from 'react-aws-s3';
+import { v4 as uuidv4 } from 'uuid';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const DiaryWrap = styled.div`
   width: 100vw;
@@ -41,11 +41,12 @@ const DiaryView = () => {
   const [diaryInfo, setDiaryInfo] = useState([]);
   const [isEdit, setIsEdit] = useState(false);
   const [clickDrawing, setClickDrawing] = useState(false);
-  const [drawingImg, setDrawingImg] = useState('');
+  const [drawingImg, setDrawingImg] = useState(diaryInfo.drawing);
   const [inputTitle, setInputTitle] = useState('');
   const [weatherIdx, setWeatherIdx] = useState(0);
   const [inputContent, setInputContent] = useState('');
   const [tags, setTags] = useState([]);
+  const [originImg, setOriginImg] = useState('');
 
   const history = useNavigate();
   const location = useLocation();
@@ -62,7 +63,8 @@ const DiaryView = () => {
         })
         .then((res) => {
           setDiaryInfo(res.data);
-          setDrawingImg(res.data.image);
+          setDrawingImg(res.data.drawing);
+          setOriginImg(res.data.drawing);
           setInputTitle(res.data.title);
           setWeatherIdx(res.data.weather);
           setInputContent(res.data.text);
@@ -76,17 +78,13 @@ const DiaryView = () => {
 
   const config = {
     headers: {
-      Authorization: `Bearer ${
-        JSON.parse(localStorage.getItem('userInfo')).token
-      }`,
+      Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}`,
     },
   };
 
   const config2 = {
     headers: {
-      Authorization: `Bearer ${
-        JSON.parse(localStorage.getItem('userInfo')).token
-      }`,
+      Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}`,
       'Content-Type': 'application/json',
     },
   };
@@ -109,32 +107,52 @@ const DiaryView = () => {
     setIsEdit(!isEdit);
   };
 
+  const dataURLtoFile = (dataurl, filename) => {
+    let arr = dataurl.split(','),
+      mime = arr[0].match(/:(.*?);/)[1],
+      bstr = atob(arr[1]),
+      n = bstr.length,
+      u8arr = new Uint8Array(n);
+    while (n--) u8arr[n] = bstr.charCodeAt(n);
+    return new File([u8arr], filename, { type: mime });
+  };
+
   const diaryUpdateHandler = () => {
     //수정완료하여 save버튼 클릭시 axios 요청 / 수정 완료되면 isEditHander 실행
-    console.log(inputTitle);
-    console.log(inputContent);
-    console.log(tags);
-    console.log(location.state._id);
-    axios
-      .patch(
-        '/api/contents',
-        {
-          drawing:
-            'https://twitter.com/Chuwinkle_/status/1002903547761999873/photo/1',
-          title: inputTitle,
-          text: inputContent,
-          hashtags: tags,
-          _id: location.state._id,
-        },
-        config2
-      )
-      .then((res) => {
-        //수정이 잘되었을 경우 새로 전달받은 정보를 다시 DiaryViwe에 띄워줌
-        window.location.replace('/main/diaryview');
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    const file = dataURLtoFile(drawingImg, 'hello.png');
+    const newFileName = uuidv4();
+    const config = {
+      bucketName: process.env.REACT_APP_BUCKET_NAME,
+      region: process.env.REACT_APP_REGION,
+      accessKeyId: process.env.REACT_APP_ACCESS_ID,
+      secretAccessKey: process.env.REACT_APP_ACCESS_KEY,
+    };
+    const ReactS3Client = new S3(config);
+    console.log(originImg);
+    ReactS3Client.deleteFile(originImg.split('/')[3]);
+    ReactS3Client.uploadFile(file, newFileName).then((data) => {
+      if (data.status === 204) {
+        axios
+          .patch(
+            '/api/contents',
+            {
+              drawing: data.location,
+              title: inputTitle,
+              text: inputContent,
+              hashtags: tags,
+              _id: location.state._id,
+            },
+            config2
+          )
+          .then((res) => {
+            //수정이 잘되었을 경우 새로 전달받은 정보를 다시 DiaryViwe에 띄워줌
+            window.location.replace('/main/diaryview');``
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    });
   };
 
   const inputHandler = (event) => {
@@ -157,31 +175,16 @@ const DiaryView = () => {
           <div className='img' onClick={DrawingHandler}>
             <img src={drawingImg} alt='drawing' />
           </div>
-          {clickDrawing && (
-            <DrawingModal
-              DrawingHandler={DrawingHandler}
-              SaveDrawingHandler={SaveDrawingHandler}
-            />
-          )}
+          {clickDrawing && <DrawingModal DrawingHandler={DrawingHandler} SaveDrawingHandler={SaveDrawingHandler} />}
           <div>
             <div className='title'>
-              <input
-                type='text'
-                placeholder='Title'
-                value={inputTitle}
-                onChange={inputHandler}
-              />
+              <input type='text' placeholder='Title' value={inputTitle} onChange={inputHandler} />
               <button onClick={diaryUpdateHandler}>Save</button>
             </div>
             <Tag tags={tags} setTags={setTags} />
             <button>{diaryInfo.weather}</button>
             <span>{diaryInfo.createdAt}</span>
-            <input
-              type='text'
-              placeholder='오늘의 일기'
-              value={inputContent}
-              onChange={inputHandler}
-            />
+            <input type='text' placeholder='오늘의 일기' value={inputContent} onChange={inputHandler} />
           </div>
         </DiaryWrap>
       ) : (

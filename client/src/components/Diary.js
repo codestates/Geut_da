@@ -14,6 +14,10 @@ const DiaryWrap = styled.div`
   .img {
     height: 260px;
     background-color: #eee;
+    > img {
+      width: 200px;
+      height: 260px;
+    }
   }
   h3 {
     margin: 0;
@@ -26,10 +30,11 @@ const DiaryWrap = styled.div`
 `;
 
 const Diary = ({ diary }) => {
-  
   return (
     <DiaryWrap>
-      <div className='img'></div>
+      <div className='img'>
+        <img src={diary.drawing} size='200x260' />
+      </div>
       <div className='title'>
         <h3>{diary.title}</h3>
         <span>{weather[diary.weather]}</span>
