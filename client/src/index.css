@@ -3,8 +3,7 @@
   box-sizing: border-box;
 }
 html, body {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
   margin: 0;
   padding: 0;
 }
@@ -26,10 +25,36 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  padding-top: 10vh;
+  padding-bottom: 24vh;
+  background-color: #F0EEE7;
   position: relative;
+  /* 스크롤바 제거 */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+body::-webkit-scrollbar {
+  display: none;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+header {
+  width: 100vw;
+  height: 10vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
+}
+footer {
+  width: 100vw;
+  height: 24vh;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 999;
 }

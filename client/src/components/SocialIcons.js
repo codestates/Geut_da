@@ -15,8 +15,8 @@ export const StyledSocialIcons = styled.div`
     justify-content: center;
     cursor: pointer;
     margin-right: 10px;
-    height: 40px;
-    width: 40px;
+    height: 2.2rem;
+    width: 2.2rem;
     text-decoration: none;
     &:hover {
       color: #daa520;
