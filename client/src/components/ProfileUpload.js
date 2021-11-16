@@ -2,13 +2,43 @@ import S3 from 'react-aws-s3';
 import { v4 as uuidv4 } from 'uuid';
 import dotenv from 'dotenv';
 import axios from 'axios';
+import styled from 'styled-components';
+import { FiPenTool } from 'react-icons/fi';
+
+const ProfileUploadWrap = styled.div`
+  input[id='editicon'] {
+    display: none;
+  }
+  input[id='editicon'] + label {
+    width: 1.9rem;
+    height: 1.9rem;
+    padding: 0.5rem;
+    font-size: 0.9em;
+    text-align: center;
+    color: #333;
+    border-radius: 50%;
+    background-color: #fff;
+    border: 1px solid #f6f6f6;
+    box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.2);
+    display: block;
+    position: absolute;
+    bottom: 0;
+    right: -0.8rem;
+  }
+  input[id='editicon'] + label:hover {
+    color: #fff;
+    background-color: brown;
+  }
+`;
 
 dotenv.config();
 // console.log((JSON.parse(localStorage.userInfo).image = data.location));
 const ProfileUpload = () => {
   const imagePatchConfig = {
     headers: {
-      Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}`,
+      Authorization: `Bearer ${
+        JSON.parse(localStorage.getItem('userInfo')).token
+      }`,
       'Content-Type': 'application/json',
     },
   };
@@ -27,27 +57,58 @@ const ProfileUpload = () => {
         alert('1mb 이하의 파일만 업로드 가능합니다.');
         event.target.value = null;
       } else {
-        if (file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg') {
+        if (
+          file.type === 'image/jpeg' ||
+          file.type === 'image/png' ||
+          file.type === 'image/jpg'
+        ) {
           ReactS3Client.uploadFile(file, newFileName).then((data) => {
             console.log(data);
             if (data.status === 204) {
               axios
-                .patch('/api/users/image', { image: data.location }, imagePatchConfig)
+                .patch(
+                  '/api/users/image',
+                  { image: data.location },
+                  imagePatchConfig
+                )
                 .then((res) => {
                   console.log(res, '이미지 보내짐');
-                  if (JSON.parse(localStorage.getItem('userInfo')).image.split('.')[0] === 'https://geutdaimage') {
-                    ReactS3Client.deleteFile(JSON.parse(localStorage.getItem('userInfo')).image.split('/')[3])
+                  if (
+                    JSON.parse(localStorage.getItem('userInfo')).image.split(
+                      '.'
+                    )[0] === 'https://geutdaimage'
+                  ) {
+                    ReactS3Client.deleteFile(
+                      JSON.parse(localStorage.getItem('userInfo')).image.split(
+                        '/'
+                      )[3]
+                    )
                       .then((res) => {
-                        localStorage.setItem('userInfo', JSON.stringify({ ...JSON.parse(localStorage.userInfo), image: data.location }));
+                        localStorage.setItem(
+                          'userInfo',
+                          JSON.stringify({
+                            ...JSON.parse(localStorage.userInfo),
+                            image: data.location,
+                          })
+                        );
                         window.location.reload();
                         console.log(res, '삭제');
                       })
                       .catch((err) => {
                         console.log(err, '삭제안됨');
-                        console.log(JSON.parse(localStorage.getItem('userInfo')).image, 'tet');
+                        console.log(
+                          JSON.parse(localStorage.getItem('userInfo')).image,
+                          'tet'
+                        );
                       });
                   } else {
-                    localStorage.setItem('userInfo', JSON.stringify({ ...JSON.parse(localStorage.userInfo), image: data.location }));
+                    localStorage.setItem(
+                      'userInfo',
+                      JSON.stringify({
+                        ...JSON.parse(localStorage.userInfo),
+                        image: data.location,
+                      })
+                    );
                     window.location.reload();
                   }
                 })
@@ -67,9 +128,17 @@ const ProfileUpload = () => {
   };
 
   return (
-    <>
-      <input type='file' accept='image/*' onChange={handleClick} />
-    </>
+    <ProfileUploadWrap>
+      <input
+        id='editicon'
+        type='file'
+        accept='image/*'
+        onChange={handleClick}
+      />
+      <label htmlFor='editicon'>
+        <FiPenTool />
+      </label>
+    </ProfileUploadWrap>
   );
 };
 
