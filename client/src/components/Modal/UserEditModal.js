@@ -328,11 +328,12 @@ const UserEditModal = ({ openUserEditModalHandler, pwCheckdValue }) => {
       axios
         .patch('/api/users/profile', editInfo, config2)
         .then((res) => {
+          console.log(res);
           localStorage.setItem(
             'userInfo',
             JSON.stringify({
               ...JSON.parse(localStorage.userInfo),
-              nickname: userInputInfo.nickname,
+              nickname: res.data.nickname,
             })
           );
           alert(res.data.message);
