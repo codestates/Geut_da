@@ -4,17 +4,21 @@ import axios from 'axios';
 const SignUpModalWrap = styled.div`
   display: flex;
   position: relative;
-  width: 70%;
+  width: 70vw;
   height: 70vh;
+  padding: 3rem;
   background-color: #ffffff;
+  border-radius: 1rem;
 
   .closeButton {
+    width: 3rem;
+    height: 3rem;
     position: absolute;
-    top: 1%;
-    right: 1%;
+    top: 0;
+    right: 0;
     border: none;
     color: #646464;
-    background-color: #ffffff;
+    background: none;
     font-weight: 700;
     font-size: 1.5em;
   }
@@ -24,55 +28,35 @@ const SignUpModalWrap = styled.div`
 `;
 
 const SignUpModalImg = styled.div`
-  width: 50%;
-  height: 100%;
-  background-color: lavender;
-`;
-
-const SignUpModalContentWrap = styled.div`
-  width: 50%;
-  height: 100%;
-  text-align: center;
-  background-color: yellow;
-`;
-
-const SignUpModalSubContentWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin: 3em auto;
-  width: 80%;
-  height: 85%;
-  border-radius: 10px;
-`;
-
-const SignUpModalLogoWrap = styled.div`
   flex: 1;
+  overflow: hidden;
 
   img {
-    height: 5em;
-    margin: 2em;
+    height: 100%;
   }
 `;
 
-const SignUpModalInputWrap = styled.div`
-  flex: 2;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
+const SignUpModalContentWrap = styled.div`
+  flex: 1;
+`;
 
+const SignUpModalSubContentWrap = styled.div`
+  border-radius: 10px;
+`;
+
+const SignUpModalLogoWrap = styled.div``;
+
+const SignUpModalInputWrap = styled.div`
   div.SignUpTitle {
     font-size: 2em;
     font-weight: 700;
-    margin-bottom: 1em;
   }
 
   input {
     border: none;
-    height: 1.2em;
     border-bottom: 1px solid #c4c4c4;
     text-align: center;
     font-size: 1.4em;
-    margin: 0 3em;
   }
 
   input:focus {
@@ -89,11 +73,8 @@ const SignUpModalInputWrap = styled.div`
 
 const SignUpModalButtonWrap = styled.div`
   flex: 1;
-  margin-top: 1em;
 
   .signUp {
-    width: 70%;
-    height: 3.5em;
     border: none;
     border-radius: 10px;
     background-color: #9e9e9e;

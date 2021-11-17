@@ -304,9 +304,9 @@ const UserEditModal = ({ openUserEditModalHandler, pwCheckdValue }) => {
   };
 
   const editHandler = (event) => {
-    const existingNickname = JSON.parse(localStorage.getItem('userInfo'))
-      .nickname;
-    const existingPw = pwCheckdValue;
+    const editInfo = { ...userInputInfo };
+    delete editInfo.passwordCheck;
+
     if (userInputInfo.nickname === '' && userInputInfo.password === '') {
       setNicknameValidText('nothing');
       setPwValidText('nothing');
@@ -317,23 +317,16 @@ const UserEditModal = ({ openUserEditModalHandler, pwCheckdValue }) => {
       }
       //닉네임만 유효성검사를 통과한경우
       if (editValidateState.nickname && !pwValidateAllPass) {
-        userInputInfo.password = existingPw;
+        delete editInfo.password;
       }
       //비밀번호만 유효성 검사를 통과한 경우
       if (!editValidateState.nickname && pwValidateAllPass) {
-        userInputInfo.nickname = existingNickname;
+        delete editInfo.nickname;
       }
 
       //axios요청
       axios
-        .patch(
-          '/api/users/profile',
-          {
-            nickname: userInputInfo.nickname,
-            password: userInputInfo.password,
-          },
-          config2
-        )
+        .patch('/api/users/profile', editInfo, config2)
         .then((res) => {
           localStorage.setItem(
             'userInfo',
@@ -342,7 +335,7 @@ const UserEditModal = ({ openUserEditModalHandler, pwCheckdValue }) => {
               nickname: userInputInfo.nickname,
             })
           );
-          alert(`회원정보 수정 완료되었습니다`);
+          alert(res.data.message);
           openUserEditModalHandler();
         })
         .catch((err) => {

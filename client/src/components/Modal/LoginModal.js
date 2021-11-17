@@ -33,7 +33,6 @@ const LoginModalWrap = styled.div`
 
 const LoginModalImg = styled.div`
   flex: 1;
-  background-color: tomato;
   overflow: hidden;
 
   img {
