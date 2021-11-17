@@ -4,18 +4,21 @@ import Content from '../models/content.js';
 
 const now = new Date();
 
-//  @desc    GET    user All Contetns
+//  @desc    GET    all user drawings
 //  @route   GET    /api/contents/all
 //  @access  Private
-const getAllContents = asyncHandler(async (req, res) => {
-  const contents = await Content.find({
-    user: req.user._id,
-  }).exec();
-  // console.log(contents);
-  if (contents) {
-    res.json(contents.map((el) => el.drawing));
+const getAllDrawings = asyncHandler(async (req, res) => {
+  const drawings = await Content.find(
+    {
+      user: req.user._id,
+    },
+    { _id: 0, drawing: 1 }
+  ).exec();
+
+  if (drawings) {
+    res.json(drawings);
   } else {
-    res.status(404).json({ message: 'Contents not found' });
+    res.status(404).json({ message: 'Drawings not found' });
   }
 });
 
@@ -192,7 +195,11 @@ const deleteMyContent = asyncHandler(async (req, res) => {
 const updateMyContent = asyncHandler(async (req, res) => {
   // 해당 그림일기 수정
 
-  const updatedContent = await Content.findByIdAndUpdate(req.body._id, req.body, { projection: { user: 0, __v: 0, updatedAt: 0 }, new: true });
+  const updatedContent = await Content.findByIdAndUpdate(
+    req.body._id,
+    req.body,
+    { projection: { user: 0, __v: 0, updatedAt: 0 }, new: true }
+  );
 
   res.status(200).json(
     [updatedContent].map((el) => {
@@ -234,8 +241,7 @@ const getCount = asyncHandler(async (req, res) => {
   const year = now.getFullYear();
   const month = now.getMonth();
   const date = now.getDate();
-  console.log(new Date(year, month));
-  console.log(new Date(year - 1, month - 1, date - 1));
+
   const total = await Content.aggregate([
     {
       $match: {
@@ -307,4 +313,15 @@ const getCount = asyncHandler(async (req, res) => {
   });
 });
 
-export { getAllContents, getContentsByMonth, getContentsByDate, getContentsByHashtag, getHashtags, getContentDetail, addContent, updateMyContent, deleteMyContent, getCount };
+export {
+  getAllDrawings,
+  getContentsByMonth,
+  getContentsByDate,
+  getContentsByHashtag,
+  getHashtags,
+  getContentDetail,
+  addContent,
+  updateMyContent,
+  deleteMyContent,
+  getCount,
+};
