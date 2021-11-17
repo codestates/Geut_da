@@ -111,15 +111,28 @@ const updateUserImage = asyncHandler(async (req, res) => {
 // @access Private
 const updateUserProfile = asyncHandler(async (req, res) => {
   // 닉네임과 비밀번호 변경
+
+  let message = '';
+
   if (req.body.password) {
     req.body.password = await bcrypt.hash(req.body.password, 10);
   } // 비밀번호 들어오면 해시해주고 넣기
 
+  if (req.body.nickname && req.body.password) {
+    message = '모두 성공적으로 변경되었습니다';
+  } else {
+    if (req.body.nickname) {
+      message = '닉네임이 성공적으로 변경되었습니다';
+    } else {
+      message = '비밀번호가 성공적으로 변경되었습니다';
+    }
+  }
   const updatedUser = await User.findByIdAndUpdate(req.user._id, req.body, {
     new: true,
   });
 
   res.status(200).json({
+    message,
     nickname: updatedUser.nickname,
     token: generateToken(updatedUser._id),
   });
