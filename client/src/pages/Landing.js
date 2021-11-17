@@ -23,6 +23,8 @@ const LandingWrap = styled.div`
     height: 90vh;
     padding: 2rem;
     position: relative;
+    overflow: wrap;
+    text-overflow: whitespace-break;
   }
   section h1 {
     margin: 0;

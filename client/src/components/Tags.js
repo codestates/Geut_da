@@ -1,42 +1,41 @@
 import styled from 'styled-components';
 
 export const TagsInput = styled.div`
-  margin: 8rem auto;
   display: flex;
   align-items: flex-start;
   flex-wrap: wrap;
   min-height: 48px;
-  width: 480px;
-  padding: 0 8px;
-  border: 1px solid rgb(214, 216, 218);
+  padding: 0;
   border-radius: 6px;
   > ul {
     display: flex;
     flex-wrap: wrap;
     padding: 0;
-    margin: 8px 0 0 0;
+    margin: 0;
     > .tag {
       width: auto;
-      height: 32px;
+      height: 2rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #fff;
       padding: 0 8px;
-      font-size: 14px;
+      font-size: 0.9em;
       list-style: none;
       border-radius: 6px;
       margin: 0 8px 8px 0;
-      background: #4000c7;
+      background: var(--color-black);
+      > .tag-title {
+        color: #fff;
+      }
       > .tag-close-icon {
         display: block;
         width: 16px;
         height: 16px;
         line-height: 16px;
         text-align: center;
-        font-size: 14px;
-        margin-left: 8px;
-        color: #4000c7;
+        font-size: 1em;
+        margin-left: 0.4rem;
+        color: var(--color-red);
         border-radius: 50%;
         background: #fff;
         cursor: pointer;
@@ -46,15 +45,18 @@ export const TagsInput = styled.div`
   > input {
     flex: 1;
     border: none;
-    height: 46px;
-    font-size: 14px;
-    padding: 4px 0 0 0;
+    height: 2.2rem;
+    font-size: 1em;
+    padding: 0 0 0 0.4rem;
+    border: 1px solid #ddd;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 0.2rem;
     :focus {
       outline: transparent;
     }
   }
   &:focus-within {
-    border: 1px solid #4000c7;
+    border: none;
   }
 `;
 
@@ -93,7 +95,7 @@ export const Tag = ({ tags, setTags }) => {
           onKeyUp={(event) =>
             event.key === 'Enter' || event.key === ' ' ? addTags(event) : null
           }
-          placeholder='Press enter to add tags'
+          placeholder='Press enter to add and space tags'
         />
       </TagsInput>
     </>

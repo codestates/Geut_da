@@ -44,7 +44,7 @@ const SignUpModalContentWrap = styled.div`
 const SignUpModalSubContentWrap = styled.div`
   display: flex;
   flex-direction: column;
-  /* align-content: space-between; */
+  align-content: center;
   height: 100%;
   margin-left: 2rem;
   padding: 2rem;
@@ -80,7 +80,6 @@ const SignUpModalInputWrap = styled.div`
 
   input {
     border: none;
-    margin-bottom: 0.1rem;
     border-bottom: 1px solid #c4c4c4;
     text-align: center;
     font-size: 1.1em;
@@ -93,6 +92,7 @@ const SignUpModalInputWrap = styled.div`
   span {
     font-size: 0.85em;
     color: red;
+    margin-bottom: 0.5rem;
   }
   span.validatepass {
     color: green;
@@ -100,11 +100,13 @@ const SignUpModalInputWrap = styled.div`
 `;
 
 const SignUpModalButtonWrap = styled.div`
+  flex: 1;
+  display: flex;
+  align-items: center;
+
   .signUp {
     width: 100%;
     height: 2.5rem;
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
     border: none;
     border-radius: 10px;
     background-color: #9e9e9e;

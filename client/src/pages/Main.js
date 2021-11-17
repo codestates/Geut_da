@@ -9,6 +9,10 @@ import HashTags from '../components/HashTags';
 import Loader from '../components/Loader';
 import { BsPlusLg } from 'react-icons/bs';
 
+const MainWrap = styled.div`
+  padding-bottom: 22vh;
+`;
+
 const LoaderBackDrop = styled.div`
   height: 72vh;
   display: flex;
@@ -33,16 +37,13 @@ const Search = styled.div`
     border: none;
     border-bottom: 1px solid #ccc;
   }
-  > input[type='month'] + span {
-    background: red;
-  }
   > input[type='month']:focus {
     outline: none;
   }
   span {
     padding-left: 0.5rem;
     cursor: pointer;
-    color: brown;
+    color: var(--color-red);
   }
 `;
 
@@ -55,8 +56,8 @@ const AddBtn = styled.div`
     height: 2rem;
     margin-right: 1rem;
     text-align: center;
-    color: brown;
-    border: 2px solid brown;
+    color: var(--color-red);
+    border: 2px solid var(--color-red);
     border-radius: 50%;
     display: inline-block;
     display: flex;
@@ -65,7 +66,7 @@ const AddBtn = styled.div`
   }
   a:hover {
     color: #fff;
-    background-color: brown;
+    background-color: var(--color-red);
   }
 `;
 
@@ -76,8 +77,19 @@ const ContentWrap = styled.div`
 `;
 
 const TagList = styled.aside`
-  padding-top: 1rem;
+  margin: 1rem 2rem 0 0;
   flex: 1;
+  overflow-y: scroll;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #fff;
+    border-radius: 2px;
+  }
 `;
 
 const DiaryList = styled.ul`
@@ -90,12 +102,13 @@ const DiaryList = styled.ul`
   align-items: center;
 
   &::-webkit-scrollbar {
+    height: 0.6rem;
     background-color: rgba(255, 255, 255, 0.2);
     border: 1px solid #eee;
     border-radius: 1rem;
   }
   &::-webkit-scrollbar-thumb {
-    background-color: lavender;
+    background-color: var(--color-beige);
     border-radius: 1rem;
   }
 
@@ -199,7 +212,7 @@ const Main = () => {
   };
 
   return (
-    <>
+    <MainWrap>
       <Header />
       {/* dialog 라이브러리 연결하기, 월별 필터링 구현하기 */}
       <Search>
@@ -252,7 +265,7 @@ const Main = () => {
         </ContentWrap>
       )}
       <Footer />
-    </>
+    </MainWrap>
   );
 };
 
