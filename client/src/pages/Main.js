@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Diary from '../components/Diary';
@@ -147,11 +147,17 @@ const Main = () => {
   useEffect(() => {
     // 현재 년월 일기목록 요청
     axios
-      .get('http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/contents/by-month', config)
+      .get(
+        'http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/contents/by-month',
+        config
+      )
       .then((res) => {
         setDiaries(res.data);
         axios
-          .get('http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/contents/hashtags', config)
+          .get(
+            'http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/contents/hashtags',
+            config
+          )
           .then((res) => {
             setTags(res.data);
             setIsLoading(false);
@@ -174,10 +180,13 @@ const Main = () => {
     const [year, month] = data.split('-');
 
     axios
-      .get('http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/contents/by-month', {
-        ...config,
-        params: { year: year, month: month },
-      })
+      .get(
+        'http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/contents/by-month',
+        {
+          ...config,
+          params: { year: year, month: month },
+        }
+      )
       .then((res) => {
         setDiaries(res.data);
         setIsLoading(false);
@@ -193,10 +202,13 @@ const Main = () => {
     setSearchMonth(new Date().toISOString().slice(0, 7));
 
     axios
-      .get('http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/contents/by-hashtag', {
-        ...config,
-        params: { hashtag: tag },
-      })
+      .get(
+        'http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/contents/by-hashtag',
+        {
+          ...config,
+          params: { hashtag: tag },
+        }
+      )
       .then((res) => {
         setDiaries(res.data);
         setIsLoading(false);

@@ -3,7 +3,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import LoginModal from '../components/Modal/LoginModal';
 import SignupModal from '../components/Modal/SignupModal';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 const ModalBackDrop = styled.div`
   width: 100vw;
