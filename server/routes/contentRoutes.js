@@ -1,6 +1,6 @@
 import express from 'express';
 import {
-  getAllContents,
+  getAllDrawings,
   getContentsByMonth,
   getContentsByDate,
   getContentsByHashtag,
@@ -16,8 +16,13 @@ import { protect } from '../middleware/auth.js';
 const router = express.Router();
 
 // endpoint => /api/contents
-router.route('/').get(protect, getContentDetail).post(protect, addContent).patch(protect, updateMyContent).delete(protect, deleteMyContent);
-router.route('/all').get(protect, getAllContents);
+router
+  .route('/')
+  .get(protect, getContentDetail)
+  .post(protect, addContent)
+  .patch(protect, updateMyContent)
+  .delete(protect, deleteMyContent);
+router.route('/all').get(protect, getAllDrawings);
 router.route('/by-month').get(protect, getContentsByMonth); // 월별 그림일기 목록
 router.route('/by-date').get(protect, getContentsByDate); // 일별 그림일기 목록
 router.route('/by-hashtag').get(protect, getContentsByHashtag); // 해시태그별 그림일기 목록
