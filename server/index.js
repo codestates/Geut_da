@@ -12,12 +12,12 @@ connectDB();
 
 const app = express();
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+//app.use(express.urlencoded({ extended: true }));
 
 app.use(
   cors({
-    origin: ['*'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   })
 );
 
@@ -34,12 +34,6 @@ app.use(errHandler);
 
 const PORT = process.env.PORT || 5000;
 
-const server = app.listen(PORT, () =>
-  console.log(
-    colors.magenta.bold(
-      `Server running in ${process.env.NODE_ENV} mode on port ${PORT}`
-    )
-  )
-);
+const server = app.listen(PORT, () => console.log(colors.magenta.bold(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`)));
 
 export default server;
