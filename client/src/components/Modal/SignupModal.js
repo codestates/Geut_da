@@ -38,25 +38,52 @@ const SignUpModalImg = styled.div`
 
 const SignUpModalContentWrap = styled.div`
   flex: 1;
+  text-align: center;
 `;
 
 const SignUpModalSubContentWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  /* align-content: space-between; */
+  height: 100%;
+  margin-left: 2rem;
+  padding: 2rem;
   border-radius: 10px;
+  background-color: #fff;
+  box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.2);
 `;
 
-const SignUpModalLogoWrap = styled.div``;
+const SignUpModalLogoWrap = styled.div`
+  height: 10vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    height: 100%;
+  }
+`;
 
 const SignUpModalInputWrap = styled.div`
-  div.SignUpTitle {
-    font-size: 2em;
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0.2rem;
+
+  h3.SignUpTitle {
+    font-size: 1.4em;
     font-weight: 700;
+    margin: 0 0 2rem;
+    padding: 0;
   }
 
   input {
     border: none;
+    margin-bottom: 0.1rem;
     border-bottom: 1px solid #c4c4c4;
     text-align: center;
-    font-size: 1.4em;
+    font-size: 1.1em;
   }
 
   input:focus {
@@ -64,6 +91,7 @@ const SignUpModalInputWrap = styled.div`
   }
 
   span {
+    font-size: 0.85em;
     color: red;
   }
   span.validatepass {
@@ -72,15 +100,18 @@ const SignUpModalInputWrap = styled.div`
 `;
 
 const SignUpModalButtonWrap = styled.div`
-  flex: 1;
-
   .signUp {
+    width: 100%;
+    height: 2.5rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
     border: none;
     border-radius: 10px;
     background-color: #9e9e9e;
     color: #ffffff;
     font-weight: 700;
     font-size: 1.1em;
+    transition: all 0.5s;
   }
 
   .signUp:hover,
@@ -413,7 +444,7 @@ const SignupModal = ({ SignupModalHandler, LoginModalHandler }) => {
             <img src='/images/geutda_logo.svg' alt='Logo' />
           </SignUpModalLogoWrap>
           <SignUpModalInputWrap>
-            <div className={'SignUpTitle'}>Sign Up</div>
+            <h3 className={'SignUpTitle'}>Sign Up</h3>
             <input
               type='email'
               placeholder='Email'
