@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import Header from '../components/Header';
 import DrawingModal from '../components/Modal/DrawingModal';
 import { Tag } from '../components/Tags';

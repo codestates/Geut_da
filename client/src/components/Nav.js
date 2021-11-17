@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { LANDING, MAIN } from '../constants/routes';
 import IsLoginState from '../states/IsLoginState';
 import { useRecoilState } from 'recoil';

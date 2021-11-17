@@ -2,7 +2,7 @@ import CalendarHeatmap from 'react-calendar-heatmap';
 import ReactTooltip from 'react-tooltip';
 
 import styled from 'styled-components/macro';
-import 'react-calendar-heatmap/dist/styles.css';
+import './react-calendar-heatmap.css';
 
 const now = new Date();
 const year = now.getFullYear();

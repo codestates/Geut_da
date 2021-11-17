@@ -15,8 +15,8 @@
 }
 
 .react-calendar-heatmap rect:hover {
-  stroke: rgb(83, 100, 176);
-  stroke-width: 1px;
+  stroke: var(--color-beige);
+  stroke-width: 2px;
 }
 
 /*
@@ -24,7 +24,7 @@
  */
 
 .react-calendar-heatmap .color-empty {
-  fill: #ffffff;
+  fill: rgba(255, 255, 255, 0.4);
 }
 
 .react-calendar-heatmap .color-filled {
@@ -36,7 +36,7 @@
  */
 
 .react-calendar-heatmap .color-github-0 {
-  fill: #ffffff;
+  fill: rgba(255, 255, 255, 0.4);
 }
 .react-calendar-heatmap .color-github-1 {
   fill: #d6e685;

@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import styled from 'styled-components/macro';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import UserCheckModal from '../components/Modal/UserCheckModal';
@@ -11,7 +12,6 @@ import ProfileUpload from '../components/ProfileUpload';
 import RealLeaveModal from '../components/Modal/RealLeaveModal';
 import Heatmap from '../components/Heatmap';
 import Loader from '../components/Loader';
-import styled from 'styled-components';
 import Diary from '../components/Diary';
 
 const MypageWrap = styled.div`
@@ -143,7 +143,10 @@ const Mypage = () => {
 
   useEffect(() => {
     axios
-      .get('http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/contents/total', config)
+      .get(
+        'http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/contents/total',
+        config
+      )
       .then((res) => {
         setCounts({ ...counts, ...res.data });
         setIsLoading(false);
@@ -163,10 +166,13 @@ const Mypage = () => {
     const [year, month, date] = value.date.split('-');
 
     axios
-      .get('http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/contents/by-date', {
-        ...config,
-        params: { year, month, date },
-      })
+      .get(
+        'http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/contents/by-date',
+        {
+          ...config,
+          params: { year, month, date },
+        }
+      )
       .then((res) => {
         setDiaries(res.data);
         setIsLoading(false);

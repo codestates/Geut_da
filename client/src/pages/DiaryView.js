@@ -1,17 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import axios from 'axios';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import Header from '../components/Header';
 import DrawingModal from '../components/Modal/DrawingModal';
 import { MAIN } from '../constants/routes';
 import { Tag } from '../components/Tags';
-import {
-  BsSunFill,
-  BsCloudSunFill,
-  BsFillCloudRainFill,
-  BsTextarea,
-} from 'react-icons/bs';
+import { BsSunFill, BsCloudSunFill, BsFillCloudRainFill } from 'react-icons/bs';
 import { GiSnowman } from 'react-icons/gi';
 import { BsArrow90DegLeft, BsTrash, BsPen } from 'react-icons/bs';
 import { MdSaveAlt } from 'react-icons/md';
@@ -220,10 +215,13 @@ const DiaryView = () => {
   useEffect(() => {
     if (location.state._id) {
       axios
-        .get('http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/contents', {
-          ...config,
-          params: { _id: location.state._id },
-        })
+        .get(
+          'http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/contents',
+          {
+            ...config,
+            params: { _id: location.state._id },
+          }
+        )
         .then((res) => {
           setDiaryInfo(res.data);
           setDrawingImg(res.data.drawing);
@@ -259,10 +257,13 @@ const DiaryView = () => {
   const DeleteDiaryHandler = () => {
     if (location.state._id) {
       axios
-        .delete('http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/contents', {
-          ...config,
-          data: { _id: location.state._id },
-        })
+        .delete(
+          'http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/contents',
+          {
+            ...config,
+            data: { _id: location.state._id },
+          }
+        )
         .then((res) => {
           ReactS3Client.deleteFile(originImg.split('/')[3]);
           history('/main');

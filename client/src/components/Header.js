@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import IsLoginState from '../states/IsLoginState';
 import { useRecoilValue } from 'recoil';
 import Nav from './Nav';
