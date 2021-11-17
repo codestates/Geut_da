@@ -284,7 +284,7 @@ const SignupModal = ({ SignupModalHandler, LoginModalHandler }) => {
       emailExp.test(signUpInputInfo.email)
     ) {
       axios
-        .post('http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/users/email', { email: signUpInputInfo.email }, config)
+        .post('http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/users/email', { email: signUpInputInfo.email }, config)
         .then((res) => {
           //사용가능한 메일인 경우
           setSignUpvalidateState({ ...signUpValidateState, email: true });
