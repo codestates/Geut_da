@@ -282,7 +282,7 @@ const SignupModal = ({ SignupModalHandler, LoginModalHandler }) => {
       emailExp.test(signUpInputInfo.email)
     ) {
       axios
-        .post('/api/users/email', { email: signUpInputInfo.email }, config)
+        .post('http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/users/email', { email: signUpInputInfo.email }, config)
         .then((res) => {
           //사용가능한 메일인 경우
           setSignUpvalidateState({ ...signUpValidateState, email: true });
@@ -314,7 +314,7 @@ const SignupModal = ({ SignupModalHandler, LoginModalHandler }) => {
     ) {
       axios
         .post(
-          '/api/users/nickname',
+          'http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/users/nickname',
           { nickname: signUpInputInfo.nickname },
           config
         )
@@ -397,7 +397,7 @@ const SignupModal = ({ SignupModalHandler, LoginModalHandler }) => {
       //axios 요청
       axios
         .post(
-          '/api/users',
+          'http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/users',
           {
             email: signUpInputInfo.email,
             password: signUpInputInfo.password,

@@ -218,7 +218,7 @@ const UserEditModal = ({ openUserEditModalHandler, pwCheckdValue }) => {
     ) {
       axios
         .post(
-          '/api/users/nickname',
+          'http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/users/nickname',
           { nickname: userInputInfo.nickname },
           config
         )
@@ -326,7 +326,7 @@ const UserEditModal = ({ openUserEditModalHandler, pwCheckdValue }) => {
 
       //axios요청
       axios
-        .patch('/api/users/profile', editInfo, config2)
+        .patch('http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/users/profile', editInfo, config2)
         .then((res) => {
           console.log(res);
           localStorage.setItem(

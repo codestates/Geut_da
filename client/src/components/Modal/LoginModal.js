@@ -167,7 +167,7 @@ const LoginModal = ({ LoginModalHandler, SignupModalHandler }) => {
     ) {
       axios
         .post(
-          '/api/users/login',
+          'http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/users/login',
           {
             email: loginInputInfo.email,
             password: loginInputInfo.password,

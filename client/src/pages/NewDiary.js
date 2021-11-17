@@ -101,7 +101,7 @@ const NewDiary = () => {
       if (!drawingImg) {
         axios
           .post(
-            '/api/contents',
+            'http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/contents',
             {
               title: inputTitle,
               text: inputContent,
@@ -136,7 +136,7 @@ const NewDiary = () => {
           if (data.status === 204) {
             axios
               .post(
-                '/api/contents',
+                'http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/contents',
                 {
                   title: inputTitle,
                   text: inputContent,

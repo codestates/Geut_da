@@ -130,7 +130,7 @@ const Mypage = () => {
 
   useEffect(() => {
     axios
-      .get('/api/contents/total', config)
+      .get('http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/contents/total', config)
       .then((res) => {
         setCounts({ ...counts, ...res.data });
         setIsLoading(false);
@@ -150,7 +150,7 @@ const Mypage = () => {
     const [year, month, date] = value.date.split('-');
 
     axios
-      .get('/api/contents/by-date', {
+      .get('http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/contents/by-date', {
         ...config,
         params: { year, month, date },
       })

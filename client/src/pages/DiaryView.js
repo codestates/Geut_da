@@ -69,7 +69,7 @@ const DiaryView = () => {
   useEffect(() => {
     if (location.state._id) {
       axios
-        .get('/api/contents', {
+        .get('http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/contents', {
           ...config,
           params: { _id: location.state._id },
         })
@@ -108,7 +108,7 @@ const DiaryView = () => {
   const DeleteDiaryHandler = () => {
     if (location.state._id) {
       axios
-        .delete('/api/contents', {
+        .delete('http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/contents', {
           ...config,
           data: { _id: location.state._id },
         })
@@ -129,7 +129,7 @@ const DiaryView = () => {
     if (drawingImg.split('/')[1] === 'images') {
       axios
         .patch(
-          '/api/contents',
+          'http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/contents',
           {
             drawing: drawingImg,
             title: inputTitle,
@@ -150,7 +150,7 @@ const DiaryView = () => {
       if (drawingImg === originImg) {
         axios
           .patch(
-            '/api/contents',
+            'http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/contents',
             {
               drawing: originImg,
               title: inputTitle,
@@ -185,7 +185,7 @@ const DiaryView = () => {
           if (data.status === 204) {
             axios
               .patch(
-                '/api/contents',
+                'http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/contents',
                 {
                   drawing: data.location,
                   title: inputTitle,
