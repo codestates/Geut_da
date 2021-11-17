@@ -111,11 +111,10 @@ const Nav = ({ userInfo }) => {
         </NavModal>
       ) : (
         <NavModal>
-          <ul>
-            <li>
-              <Link to='/'>Landing</Link>
-            </li>
-          </ul>
+          <div className='img_box'>
+            <img src='/images/user.jpeg' alt='profile image' />
+          </div>
+          <div className='nickname'>로그인이 필요합니다</div>
         </NavModal>
       )}
     </>

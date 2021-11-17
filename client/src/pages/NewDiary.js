@@ -106,7 +106,9 @@ const NewDiary = () => {
               title: inputTitle,
               text: inputContent,
               weather: weatherIdx,
-              drawing: `/images/examplePaints/${Math.floor(Math.random() * 5) + 1}.png`,
+              drawing: `/images/examplePaints/${
+                Math.floor(Math.random() * 5) + 1
+              }.png`,
               hashtags: tags,
             },
             config2
@@ -178,9 +180,25 @@ const NewDiary = () => {
         <Link to={MAIN}>Go Back</Link>
       </button>
       <h3>NewDiary</h3>
-      <div onClick={DrawingHandler}>{drawingImg !== '' ? <img src={drawingImg} alt='drawingImg' /> : 'click me!'}</div>
-      {clickDrawing ? <DrawingModal DrawingHandler={DrawingHandler} SaveDrawingHandler={SaveDrawingHandler} /> : null}
-      <input type='text' placeholder='Title' value={inputTitle} onChange={inputHandler} />
+      <div onClick={DrawingHandler}>
+        {drawingImg !== '' ? (
+          <img src={drawingImg} alt='drawingImg' />
+        ) : (
+          'click me!'
+        )}
+      </div>
+      {clickDrawing ? (
+        <DrawingModal
+          DrawingHandler={DrawingHandler}
+          SaveDrawingHandler={SaveDrawingHandler}
+        />
+      ) : null}
+      <input
+        type='text'
+        placeholder='Title'
+        value={inputTitle}
+        onChange={inputHandler}
+      />
       <button onClick={handleClick} disabled={blockDoubleClick}>
         {blockDoubleClick ? '전송중...' : 'save'}
       </button>

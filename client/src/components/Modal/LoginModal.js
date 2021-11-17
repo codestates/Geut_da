@@ -97,6 +97,10 @@ const LoginModalInputWrap = styled.div`
 `;
 
 const LoginModalLinkWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
   button {
     width: 100%;
     height: 2.5rem;
@@ -122,8 +126,8 @@ const LoginModalLinkWrap = styled.div`
     color: #666;
   }
   span:hover {
-    color: brown;
-    border-bottom: 1px solid brown;
+    color: var(--color-red);
+    border-bottom: 1px solid var(--color-red);
   }
 `;
 

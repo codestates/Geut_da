@@ -6,20 +6,22 @@ const LeaveModalWrap = styled.div`
   justify-content: center;
   align-items: center;
   position: relative;
-  width: 30%;
+  width: 30vw;
   height: 30vh;
+  padding: 3rem;
   background-color: #ffffff;
-  padding: 5em auto;
-  border-radius: 10px;
+  border-radius: 1rem;
   text-align: center;
 
   .closeButton {
+    width: 3rem;
+    height: 3rem;
     position: absolute;
-    top: 1%;
-    right: 1%;
+    top: 0;
+    right: 0;
     border: none;
     color: #646464;
-    background-color: #ffffff;
+    background: none;
     font-weight: 700;
     font-size: 1.5em;
   }
@@ -28,21 +30,25 @@ const LeaveModalWrap = styled.div`
   }
 `;
 
-const LeaveTextWrap = styled.div``;
+const LeaveTextWrap = styled.div`
+  margin-bottom: 0.1rem;
+`;
 
 const LeaveButtonWrap = styled.div`
   display: flex;
-  margin-top: 1.5em;
+  margin-top: 2rem;
+  width: 100%;
 
   button {
-    width: 6em;
-    height: 2.5em;
+    width: 50%;
+    height: 2.5rem;
     border: none;
     border-radius: 10px;
     background-color: #9e9e9e;
     color: #ffffff;
     font-weight: 700;
     font-size: 1.1em;
+    transition: all 0.5s;
   }
 
   button:focus,
@@ -60,10 +66,10 @@ const LeaveButtonWrap = styled.div`
 const LeaveModal = ({ isUserResignHandler, isRealUserResignHandler }) => {
   return (
     <LeaveModalWrap onClick={(e) => e.stopPropagation()}>
+      <button onClick={isUserResignHandler} className={'closeButton'}>
+        &times;
+      </button>
       <LeaveTextWrap>
-        <button onClick={isUserResignHandler} className={'closeButton'}>
-          &times;
-        </button>
         <div>
           탈퇴시 모든 게시물이 삭제됩니다.
           <br />

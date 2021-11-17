@@ -13,10 +13,13 @@ const DiaryWrap = styled.div`
   }
   .img {
     height: 260px;
-    background-color: #eee;
+    background-color: rgba(255, 255, 255, 0.8);
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     > img {
-      width: 200px;
-      height: 260px;
+      height: 100%;
     }
   }
   h3 {
@@ -33,7 +36,7 @@ const Diary = ({ diary }) => {
   return (
     <DiaryWrap>
       <div className='img'>
-        <img src={diary.drawing} size='200x260' />
+        <img src={diary.drawing} size='200x260' alt='drawing' />
       </div>
       <div className='title'>
         <h3>{diary.title}</h3>

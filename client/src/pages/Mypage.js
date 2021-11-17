@@ -14,17 +14,28 @@ import Loader from '../components/Loader';
 import styled from 'styled-components';
 import Diary from '../components/Diary';
 
+const MypageWrap = styled.div`
+  padding-bottom: 22vh;
+`;
+
+const LoaderBackDrop = styled.div`
+  height: 72vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 const ProfileInfo = styled.div`
   width: 80vw;
-  margin: auto;
+  margin: 1.5rem auto 0;
   text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-bottom: 1px solid #d2b69e;
+  border-bottom: 1px solid var(--color-beige);
 
   div.user_info {
-    margin-right: 2rem;
+    margin-right: 2.5rem;
   }
 
   div.img_box {
@@ -44,21 +55,22 @@ const ProfileInfo = styled.div`
   p {
     margin: 0;
     padding: 0;
-    color: #333;
+    color: var(--color-black);
     line-height: 2;
   }
   button {
     margin: 0.4rem;
     padding: 0.2rem 0.4rem;
     font-size: 0.8em;
-    color: brown;
+    color: var(--color-red);
     background: none;
     border: none;
     border-radius: 0.2rem;
+    transition: all 0.5s;
   }
   button:hover {
     color: #fff;
-    background-color: brown;
+    background-color: var(--color-red);
   }
 `;
 
@@ -86,12 +98,13 @@ const DiaryList = styled.ul`
   align-items: center;
 
   &::-webkit-scrollbar {
+    height: 0.6rem;
     background-color: rgba(255, 255, 255, 0.2);
     border: 1px solid #eee;
     border-radius: 1rem;
   }
   &::-webkit-scrollbar-thumb {
-    background-color: lavender;
+    background-color: var(--color-beige);
     border-radius: 1rem;
   }
 
@@ -200,10 +213,12 @@ const Mypage = () => {
   };
 
   return (
-    <>
+    <MypageWrap>
       <Header />
       {isLoading ? (
-        <Loader />
+        <LoaderBackDrop>
+          <Loader />
+        </LoaderBackDrop>
       ) : (
         <>
           <ProfileInfo>
@@ -281,7 +296,7 @@ const Mypage = () => {
         </>
       )}
       <Footer />
-    </>
+    </MypageWrap>
   );
 };
 

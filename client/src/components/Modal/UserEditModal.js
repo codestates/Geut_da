@@ -5,72 +5,70 @@ import styled from 'styled-components';
 const UserEditModalWrap = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   position: relative;
-  width: 40%;
+  width: 40vw;
   height: 50vh;
+  padding: 3.5rem;
   background-color: #ffffff;
-  padding: 5em auto;
   border-radius: 10px;
 
   .closeButton {
+    width: 3rem;
+    height: 3rem;
     position: absolute;
-    top: 1%;
-    right: 1%;
+    top: 0;
+    right: 0;
     border: none;
     color: #646464;
-    background-color: #ffffff;
+    background: none;
     font-weight: 700;
     font-size: 1.5em;
   }
   .closeButton:hover {
     cursor: pointer;
   }
+`;
 
-  div.userEditText {
+const UserEditTitleWrap = styled.div`
+  flex: 1;
+  text-align: center;
+  padding: 1rem 0;
+
+  h3.userEditText {
     font-weight: 700;
+    padding: 0;
+    margin: 0;
   }
 
-  div.userEditText.userEditMargin {
-    margin-bottom: 0.5rem;
+  .userEditText.userEditMargin {
+    font-weight: 500;
   }
+`;
+
+const UserEditInputWrap = styled.div`
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
 
   input {
-    width: 80%;
     border: none;
-    height: 1.2em;
+    margin-bottom: 0.1rem;
     border-bottom: 1px solid #c4c4c4;
     text-align: center;
-    font-size: 1.4em;
-    margin: 0.3em 3em;
+    font-size: 1.1em;
   }
 
   input:focus {
     outline: none;
   }
 
-  .userEditButton {
-    width: 60%;
-    height: 3em;
-    border: none;
-    border-radius: 10px;
-    background-color: #9e9e9e;
-    color: #ffffff;
-    font-weight: 700;
-    transform: all, 1s;
-    font-size: 1.2em;
-  }
-
-  .userEditButton:focus,
-  .userEditButton:hover {
-    cursor: pointer;
-    outline: none;
-    transform: scale(1.05);
-  }
-
   span {
     color: red;
+    margin-bottom: 0.4rem;
   }
 
   span.validatepass {
@@ -78,7 +76,33 @@ const UserEditModalWrap = styled.div`
   }
 
   span.lineheight {
-    margin-bottom: 2em;
+    margin-bottom: 2rem;
+  }
+`;
+
+const UserEditButtonWrap = styled.div`
+  flex: 1;
+  width: 100%;
+
+  .userEditButton {
+    width: 100%;
+    height: 2.5rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    border: none;
+    border-radius: 10px;
+    background-color: #9e9e9e;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 1.1em;
+    transition: all 0.5s;
+  }
+
+  .userEditButton:focus,
+  .userEditButton:hover {
+    cursor: pointer;
+    outline: none;
+    transform: scale(1.05);
   }
 `;
 
@@ -350,65 +374,71 @@ const UserEditModal = ({ openUserEditModalHandler, pwCheckdValue }) => {
       <button onClick={openUserEditModalHandler} className={'closeButton'}>
         &times;
       </button>
-      <div className={'userEditText'}>회원 정보 수정</div>
-      <div className={'userEditText userEditMargin'}>
-        &#42;닉네임 혹은 비밀번호만 수정도 가능합니다
-      </div>
-      <input
-        type='text'
-        placeholder='Nickname'
-        value={userInputInfo.nickname}
-        onChange={editInputValueChange}
-        onBlur={editUpOnBlurHandler}
-      />
-      {nicknameValidateMessage ? (
-        <span className={isSpanColor.nickname ? 'validatepass' : null}>
-          {nicknameValidateMessage}
-        </span>
-      ) : (
-        <span>
-          <br />
-        </span>
-      )}
-      <input
-        type='password'
-        placeholder='New Password'
-        value={userInputInfo.password}
-        onChange={editInputValueChange}
-        onBlur={PasswordOnBlurHandler}
-      />
-      {pwValidateMessage ? (
-        <span className={isSpanColor.password ? 'validatepass' : null}>
-          {pwValidateMessage}
-        </span>
-      ) : (
-        <span>
-          <br />
-        </span>
-      )}
-      <input
-        type='password'
-        placeholder='Password Check'
-        value={userInputInfo.passwordCheck}
-        onChange={editInputValueChange}
-        onBlur={PasswordOnBlurHandler}
-      />
-      {pwCheckValidateMessage ? (
-        <span
-          className={
-            isSpanColor.passwordCheck ? 'validatepass lineheight' : null
-          }
-        >
-          {pwCheckValidateMessage}
-        </span>
-      ) : (
-        <span className={'lineheight'}>
-          <br />
-        </span>
-      )}
-      <button onClick={editHandler} className={'userEditButton'}>
-        수 정
-      </button>
+      <UserEditTitleWrap>
+        <h3 className={'userEditText'}>회원 정보 수정</h3>
+        <div className={'userEditText userEditMargin'}>
+          &#42;닉네임 혹은 비밀번호만 수정도 가능합니다
+        </div>
+      </UserEditTitleWrap>
+      <UserEditInputWrap>
+        <input
+          type='text'
+          placeholder='Nickname'
+          value={userInputInfo.nickname}
+          onChange={editInputValueChange}
+          onBlur={editUpOnBlurHandler}
+        />
+        {nicknameValidateMessage ? (
+          <span className={isSpanColor.nickname ? 'validatepass' : null}>
+            {nicknameValidateMessage}
+          </span>
+        ) : (
+          <span>
+            <br />
+          </span>
+        )}
+        <input
+          type='password'
+          placeholder='New Password'
+          value={userInputInfo.password}
+          onChange={editInputValueChange}
+          onBlur={PasswordOnBlurHandler}
+        />
+        {pwValidateMessage ? (
+          <span className={isSpanColor.password ? 'validatepass' : null}>
+            {pwValidateMessage}
+          </span>
+        ) : (
+          <span>
+            <br />
+          </span>
+        )}
+        <input
+          type='password'
+          placeholder='Password Check'
+          value={userInputInfo.passwordCheck}
+          onChange={editInputValueChange}
+          onBlur={PasswordOnBlurHandler}
+        />
+        {pwCheckValidateMessage ? (
+          <span
+            className={
+              isSpanColor.passwordCheck ? 'validatepass lineheight' : null
+            }
+          >
+            {pwCheckValidateMessage}
+          </span>
+        ) : (
+          <span className={'lineheight'}>
+            <br />
+          </span>
+        )}
+      </UserEditInputWrap>
+      <UserEditButtonWrap>
+        <button onClick={editHandler} className={'userEditButton'}>
+          수 정
+        </button>
+      </UserEditButtonWrap>
     </UserEditModalWrap>
   );
 };

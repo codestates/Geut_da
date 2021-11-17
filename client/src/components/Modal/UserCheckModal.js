@@ -4,23 +4,25 @@ import styled from 'styled-components';
 
 const UserCheckModalWrap = styled.div`
   display: flex;
+  position: relative;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  position: relative;
-  width: 30%;
+  width: 30vw;
   height: 30vh;
+  padding: 3rem;
   background-color: #ffffff;
-  padding: 5em auto;
   border-radius: 10px;
 
   .closeButton {
+    width: 3rem;
+    height: 3rem;
     position: absolute;
-    top: 1%;
-    right: 1%;
+    top: 0;
+    right: 0;
     border: none;
     color: #646464;
-    background-color: #ffffff;
+    background: none;
     font-weight: 700;
     font-size: 1.5em;
   }
@@ -28,38 +30,37 @@ const UserCheckModalWrap = styled.div`
     cursor: pointer;
   }
 
-  div.pwCeckText {
+  h3.pwCeckText {
     margin-bottom: 1.5em;
     font-weight: 700;
   }
 
   span {
     color: red;
-    margin-bottom: 2em;
+    margin-bottom: 2rem;
   }
 
   input {
-    width: 80%;
     border: none;
-    height: 1.2em;
+    margin-bottom: 0.5rem;
     border-bottom: 1px solid #c4c4c4;
     text-align: center;
     font-size: 1.4em;
-    margin: 0.3em 3em;
   }
 
   input:focus {
     outline: none;
   }
   .userCheckButton {
-    width: 60%;
-    height: 3em;
+    width: 100%;
+    height: 3rem;
     border: none;
     border-radius: 10px;
     background-color: #9e9e9e;
     color: #ffffff;
     font-weight: 700;
     font-size: 1.2em;
+    transition: all 0.5s;
   }
 
   .userCheckButton:focus,
@@ -132,7 +133,7 @@ const UserCheckModal = ({
       <button onClick={openPasswordModalHandler} className={'closeButton'}>
         &times;
       </button>
-      <div className={'pwCeckText'}>비밀번호 확인</div>
+      <h3 className={'pwCeckText'}>비밀번호 확인</h3>
       <input
         type='password'
         placeholder='password'

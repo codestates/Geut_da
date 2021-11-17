@@ -14,20 +14,22 @@ const RealLeavModalWrap = styled.div`
   justify-content: center;
   align-items: center;
   position: relative;
-  width: 30%;
+  width: 30vw;
   height: 30vh;
   background-color: #ffffff;
-  padding: 5em auto;
+  padding: 5rem;
   border-radius: 10px;
   text-align: center;
 
   .closeButton {
+    width: 3rem;
+    height: 3rem;
     position: absolute;
-    top: 1%;
-    right: 1%;
+    top: 0;
+    right: 0;
     border: none;
     color: #646464;
-    background-color: #ffffff;
+    background: none;
     font-weight: 700;
     font-size: 1.5em;
   }
@@ -39,16 +41,18 @@ const RealLeavModalWrap = styled.div`
 const RealLeaveButtonWrap = styled.div`
   display: flex;
   margin-top: 2em;
+  width: 100%;
 
   button {
-    width: 6em;
-    height: 2.5em;
+    width: 50%;
+    height: 2.5rem;
     border: none;
     border-radius: 10px;
     background-color: #9e9e9e;
     color: #ffffff;
     font-weight: 700;
     font-size: 1.1em;
+    transition: all 0.5s;
   }
 
   button:focus,

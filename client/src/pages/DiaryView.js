@@ -7,38 +7,189 @@ import DrawingModal from '../components/Modal/DrawingModal';
 import { MAIN } from '../constants/routes';
 import { Tag } from '../components/Tags';
 import {
-  TiWeatherSunny,
-  TiWeatherPartlySunny,
-  TiWeatherDownpour,
-  TiWeatherSnow,
-} from 'react-icons/ti';
+  BsSunFill,
+  BsCloudSunFill,
+  BsFillCloudRainFill,
+  BsTextarea,
+} from 'react-icons/bs';
+import { GiSnowman } from 'react-icons/gi';
+import { BsArrow90DegLeft, BsTrash, BsPen } from 'react-icons/bs';
+import { MdSaveAlt } from 'react-icons/md';
 import S3 from 'react-aws-s3';
 import { v4 as uuidv4 } from 'uuid';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-const DiaryWrap = styled.div`
-  width: 100vw;
+const DiaryViewWrap = styled.div`
   height: 90vh;
+  padding: 4rem 0 3rem;
+  position: relative;
+
+  > button {
+    margin: 0;
+    padding: 0;
+    border: none;
+    position: absolute;
+    top: 0.5rem;
+    left: 0;
+  }
+  > button a {
+    width: 2.3rem;
+    height: 2.3rem;
+    color: #fff;
+    font-size: 1.1em;
+    line-height: 2.4rem;
+    background: var(--color-black);
+    border-radius: 50%;
+    display: inline-block;
+  }
+  > button a:hover {
+    background-color: var(--color-beige);
+  }
+`;
+
+const DiaryWrap = styled.div`
+  height: 100%;
   display: flex;
   flex-direction: row;
 
   > div {
-    flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
   }
   > div.img {
-    background-color: #eee;
+    flex: 2;
+    margin-right: 3rem;
+    background-color: rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+
+    img {
+      max-width: 100%;
+      height: auto;
+      overflow: hidden;
+    }
+  }
+  > div:nth-child(2) {
+    flex: 3;
+    justify-content: flex-start;
   }
   div.title {
+    width: 100%;
     margin: 0.5rem 0;
-    padding: 0.5rem 0 1rem;
+    padding: 1rem 0;
     border-top: 1px solid #000;
     border-bottom: 1px solid #000;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  div.title div:nth-child(1) {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+  }
+  /* 일기 제목 */
+  div.title div:nth-child(1) h3 {
+    flex: 1;
+    margin: 0;
+    padding: 0;
+    font-size: 1.8em;
+    font-weight: 700;
+  }
+  div.title div:nth-child(2) {
+    font-size: 0.9em;
+    text-align: right;
+    color: #666;
+  }
+  /* 수정, 삭제 버튼 */
+  div.title button {
+    width: 2rem;
+    height: 2rem;
+    margin-top: -0.2rem;
+    margin-left: 0.4rem;
+    padding-top: 0.2rem;
+    font-size: 1.1em;
+    border: none;
+    background: none;
+    cursor: pointer;
+    transition: all 0.5s;
+  }
+  div.title button:hover {
+    color: #fff;
+    background-color: var(--color-beige);
+    border-radius: 50%;
+  }
+
+  div.title div input {
+    width: 90%;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: 0 0 0 0.4rem;
+    font-size: 1.8em;
+    font-weight: 700;
+    border-radius: 10px;
+  }
+
+  div.title div input:focus {
+    outline: none;
+  }
+  /* 추가 설명 (태그, 날씨) */
+  div.description {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  div.description div:nth-child(1) {
+    flex: 9;
+  }
+  div.description div:nth-child(2) {
+    flex: 1;
+    text-align: right;
+  }
+
+  /* 태그 (span) */
+  div.description div:nth-child(1) > span {
+    margin-right: 0.4rem;
+    color: var(--color-black);
+  }
+  /* 날씨 (svg) */
+  div.description div:nth-child(2) svg {
+    font-size: 1.4em;
+  }
+  div.diary_text {
+    flex: 1;
+    width: 100%;
+    padding: 1rem;
+    margin-top: 1.5rem;
+    border: 1px solid #ddd;
+    word-break: break-all;
+    word-wrap: break-word;
+    text-overflow: ellipsis;
+  }
+  div.diary_text p {
+    margin: 0;
+    line-height: 1.2;
+  }
+  div.diary_text textarea {
+    max-width: 100%;
+    max-height: 100%;
+    width: 100%;
+    border: none;
+    background: none;
+    line-height: 1.2;
+    resize: none;
+    font-size: 1.3em;
+  }
+
+  div.diary_text textarea:focus {
+    outline: none;
+    background-color: rgba(255, 255, 255, 0.5);
   }
 `;
 
@@ -221,16 +372,19 @@ const DiaryView = () => {
   };
 
   return (
-    <>
+    <DiaryViewWrap>
       <Header />
       <button>
-        <Link to={MAIN}>Go Back</Link>
+        <Link to={MAIN}>
+          <BsArrow90DegLeft />
+        </Link>
       </button>
       {isEdit ? (
         <DiaryWrap>
           <div className='img' onClick={DrawingHandler}>
-            <img src={drawingImg} alt='drawing' />
+            <img src={diaryInfo.drawing} alt='drawing' />
           </div>
+          {/* Drawing Modal */}
           {clickDrawing && (
             <DrawingModal
               DrawingHandler={DrawingHandler}
@@ -239,23 +393,40 @@ const DiaryView = () => {
           )}
           <div>
             <div className='title'>
-              <input
-                type='text'
-                placeholder='Title'
-                value={inputTitle}
+              <div>
+                <input
+                  type='text'
+                  placeholder='Title'
+                  value={inputTitle}
+                  onChange={inputHandler}
+                />
+                <div>
+                  <button onClick={diaryUpdateHandler}>
+                    <MdSaveAlt />
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div className='description'>
+              {/* 해쉬태그 */}
+              <div>
+                <Tag tags={tags} setTags={setTags} />
+              </div>
+              {/* 날씨 아이콘 */}
+              <div>
+                {weatherIdx === 0 && <BsSunFill />}
+                {weatherIdx === 1 && <BsCloudSunFill />}
+                {weatherIdx === 2 && <BsFillCloudRainFill />}
+                {weatherIdx === 3 && <GiSnowman />}
+              </div>
+            </div>
+            <div className='diary_text'>
+              <textarea
+                placeholder='오늘의 일기'
+                value={inputContent}
                 onChange={inputHandler}
               />
-              <button onClick={diaryUpdateHandler}>Save</button>
             </div>
-            <Tag tags={tags} setTags={setTags} />
-            <button>{diaryInfo.weather}</button>
-            <span>{diaryInfo.createdAt}</span>
-            <input
-              type='text'
-              placeholder='오늘의 일기'
-              value={inputContent}
-              onChange={inputHandler}
-            />
           </div>
         </DiaryWrap>
       ) : (
@@ -265,21 +436,44 @@ const DiaryView = () => {
           </div>
           <div>
             <div className='title'>
-              {diaryInfo.title}
-              <button onClick={DeleteDiaryHandler}>Delete</button>
-              <button onClick={isEditHanlder}>Edit</button>
+              <div>
+                <h3>{diaryInfo.title}</h3>
+                <div>
+                  <button onClick={DeleteDiaryHandler}>
+                    <BsTrash />
+                  </button>
+                  <button onClick={isEditHanlder}>
+                    <BsPen />
+                  </button>
+                </div>
+              </div>
+              <div>
+                <span>{diaryInfo.createdAt}</span>
+              </div>
             </div>
-            {diaryInfo.hashtags &&
-              diaryInfo.hashtags.map((el, idx) => {
-                return <span key={idx}>#{el}</span>;
-              })}
-            <button>{diaryInfo.weather}</button>
-            <span>{diaryInfo.createdAt}</span>
-            <p>{diaryInfo.text}</p>
+            <div className='description'>
+              {/* 해쉬태그 */}
+              <div>
+                {diaryInfo.hashtags &&
+                  diaryInfo.hashtags.map((el, idx) => {
+                    return <span key={idx}>#{el}</span>;
+                  })}
+              </div>
+              {/* 날씨 아이콘 */}
+              <div>
+                {weatherIdx === 0 && <BsSunFill />}
+                {weatherIdx === 1 && <BsCloudSunFill />}
+                {weatherIdx === 2 && <BsFillCloudRainFill />}
+                {weatherIdx === 3 && <GiSnowman />}
+              </div>
+            </div>
+            <div className='diary_text'>
+              <p>{diaryInfo.text}</p>
+            </div>
           </div>
         </DiaryWrap>
       )}
-    </>
+    </DiaryViewWrap>
   );
 };
 

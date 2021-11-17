@@ -5,10 +5,14 @@ import Nav from './Nav';
 
 const HeaderWrap = styled.header`
   padding: 1.2rem;
-  background-color: #f0eee7;
+  background-color: var(--color-bg);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  @media screen and (max-width: 768px) {
+    display: none;
+    background-color: red;
+  }
 `;
 
 const Logo = styled.div`
@@ -79,7 +83,7 @@ const NavWrap = styled.div`
     color: brown;
     position: absolute;
     left: 50%;
-    bottom: -1rem;
+    bottom: -1.3rem;
     transform: translate(-50%, -50%);
   }
   input[id='menuicon'] + label div.backdrop {
