@@ -146,7 +146,7 @@ const DrawingModal = ({ DrawingHandler, SaveDrawingHandler, drawingImg }) => {
     const ctx = canvas.getContext('2d');
     const image = new Image();
     image.src = previousImg;
-    // image.crossOrigin = '*';
+    image.crossOrigin = '*';
     image.onload = () => {
       ctx.drawImage(image, 0, 0);
     };
