@@ -30,6 +30,9 @@ const FooterWrap = styled.footer`
     font-size: 0.85em;
     line-height: 1.3;
   }
+  a:hover {
+    text-decoration: underline;
+  }
   a.top_btn {
     width: 2rem;
     height: 2rem;
@@ -58,19 +61,36 @@ const Footer = () => {
       <div>
         <h3>DEVELOPER</h3>
         <ul>
-          <li>JUNGHUN</li>
-          <li>GARAM</li>
-          <li>JINHYUN</li>
-          <li>SOHUN</li>
+          <li>
+            <a href='https://github.com/linehyang'>JUNGHUN</a>
+          </li>
+          <li>
+            <a href='https://github.com/heartane'>GARAM</a>
+          </li>
+          <li>
+            <a href='https://github.com/developerjhp'>JINHYUN</a>
+          </li>
+          <li>
+            <a href='https://github.com/devTiana'>SOHUN</a>
+          </li>
         </ul>
       </div>
       <div>
         <h3>SOCIAL</h3>
         <ul>
-          <li>GITHUB</li>
-          <li>FACEBOOK</li>
-          <li>INSTAGRAM</li>
-          <li>TWITTER</li>
+          <li>
+            <a href='https://github.com/'>GITHUB</a>
+          </li>
+          <li>
+            <a href='https://facebook.com/'>FACEBOOK</a>
+          </li>
+          <li>
+            {' '}
+            <a href='https://instagram.com/'>INSTAGRAM</a>
+          </li>
+          <li>
+            <a href='https://twitter.com/'>TWITTER</a>
+          </li>
         </ul>
       </div>
       <div>
