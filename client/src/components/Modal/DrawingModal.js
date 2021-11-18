@@ -106,7 +106,7 @@ const DrawingModal = ({ DrawingHandler, SaveDrawingHandler, drawingImg }) => {
   const [isDrawing, setIsDrawing] = useState(false);
   const [isFillMode, setIsFillMode] = useState(false);
   const [lineWidth, setLineWidth] = useState(7.5);
-  const previousImg = drawingImg;
+  let previousImg = drawingImg;
 
   //반응형 캔버스
   const [windowSize, setWindowSize] = useState({

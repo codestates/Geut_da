@@ -137,25 +137,16 @@ const Landing = () => {
 
   return (
     <LandingWrap>
-      <Header
-        LoginModalHandler={LoginModalHandler}
-        SignupModalHandler={SignupModalHandler}
-      />
+      <Header LoginModalHandler={LoginModalHandler} SignupModalHandler={SignupModalHandler} />
       {/* 로그인, 회원가입 모달 */}
       {clickLogin ? (
         <ModalBackDrop onClick={LoginModalHandler}>
-          <LoginModal
-            LoginModalHandler={LoginModalHandler}
-            SignupModalHandler={SignupModalHandler}
-          />
+          <LoginModal LoginModalHandler={LoginModalHandler} SignupModalHandler={SignupModalHandler} />
         </ModalBackDrop>
       ) : null}
       {clickSignup ? (
         <ModalBackDrop onClick={SignupModalHandler}>
-          <SignupModal
-            SignupModalHandler={SignupModalHandler}
-            LoginModalHandler={LoginModalHandler}
-          />
+          <SignupModal SignupModalHandler={SignupModalHandler} LoginModalHandler={LoginModalHandler} />
         </ModalBackDrop>
       ) : null}
       <section className='section1'>
@@ -179,7 +170,7 @@ const Landing = () => {
           <p>
             소중한 일상을 기억해내는 또 다른 방법, "긋다".
             <br />
-            내 생각과 감정들이 오롯이 새겨진 일기장이 될거에요.
+            내 생각과 감정들이 오롯이 새겨진 일기장이 될 거에요.
             <br />
             이제 나만의 갤러리를 채워나가보세요!
           </p>
