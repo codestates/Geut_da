@@ -9,7 +9,6 @@ const UserEditModalWrap = styled.div`
   align-items: center;
   position: relative;
   width: 40vw;
-  height: 50vh;
   padding: 3.5rem;
   background-color: #ffffff;
   border-radius: 10px;
@@ -350,7 +349,11 @@ const UserEditModal = ({ openUserEditModalHandler, pwCheckdValue }) => {
 
       //axios요청
       axios
-        .patch('http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/users/profile', editInfo, config2)
+        .patch(
+          'http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/users/profile',
+          editInfo,
+          config2
+        )
         .then((res) => {
           console.log(res);
           localStorage.setItem(

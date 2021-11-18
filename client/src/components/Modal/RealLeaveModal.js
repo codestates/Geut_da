@@ -11,13 +11,12 @@ dotenv.config();
 const RealLeavModalWrap = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   position: relative;
   width: 30vw;
-  height: 30vh;
   background-color: #ffffff;
-  padding: 5rem;
+  padding: 3rem;
   border-radius: 10px;
   text-align: center;
 
@@ -86,13 +85,19 @@ const RealLeaveModal = ({ isRealUserResignHandler }) => {
       },
     };
     axios
-      .get('http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/contents/all', config)
+      .get(
+        'http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/contents/all',
+        config
+      )
       .then((res) => {
         res.data.map((el) => ReactS3Client.deleteFile(el.split('/')[3]));
       })
       .then((res) => {
         axios
-          .delete('http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/users/profile', config)
+          .delete(
+            'http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/users/profile',
+            config
+          )
           .then((res) => {
             ReactS3Client.deleteFile(
               JSON.parse(localStorage.getItem('userInfo')).image.split('/')[3]
