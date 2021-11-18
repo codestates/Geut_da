@@ -6,7 +6,7 @@ const SignUpModalWrap = styled.div`
   position: relative;
   width: 70vw;
   height: 70vh;
-  padding: 3rem;
+  padding: 3rem 3rem 3rem 0;
   background-color: #ffffff;
   border-radius: 1rem;
 
@@ -30,9 +30,12 @@ const SignUpModalWrap = styled.div`
 const SignUpModalImg = styled.div`
   flex: 1;
   overflow: hidden;
+  display: flex;
+  align-items: flex-end;
 
   img {
-    height: 100%;
+    width: 100%;
+    height: auto;
   }
 `;
 
@@ -284,7 +287,11 @@ const SignupModal = ({ SignupModalHandler, LoginModalHandler }) => {
       emailExp.test(signUpInputInfo.email)
     ) {
       axios
-        .post('http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/users/email', { email: signUpInputInfo.email }, config)
+        .post(
+          'http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/users/email',
+          { email: signUpInputInfo.email },
+          config
+        )
         .then((res) => {
           //사용가능한 메일인 경우
           setSignUpvalidateState({ ...signUpValidateState, email: true });
@@ -435,7 +442,7 @@ const SignupModal = ({ SignupModalHandler, LoginModalHandler }) => {
   return (
     <SignUpModalWrap onClick={(e) => e.stopPropagation()}>
       <SignUpModalImg>
-        <img src='/images/bg.jpeg' alt='일러스트 이미지' />
+        <img src='/images/dog.jpeg' alt='일러스트 이미지' />
       </SignUpModalImg>
       <button onClick={SignupModalHandler} className={'closeButton'}>
         &times;
