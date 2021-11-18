@@ -19,30 +19,6 @@ const ModalBackDrop = styled.div`
 `;
 
 const LandingWrap = styled.div`
-  section {
-    height: 90vh;
-    padding: 2rem;
-    position: relative;
-    overflow: wrap;
-    text-overflow: whitespace-break;
-  }
-  section h1 {
-    margin: 0;
-    padding: 0;
-    font-size: 10em;
-    font-family: serif;
-    line-height: 1;
-    text-align: center;
-    color: #333;
-  }
-  section p {
-    line-height: 1.4em;
-    position: absolute;
-    left: 2rem;
-    bottom: 2rem;
-  }
-  section.section1 {
-  }
   a.bottom_btn {
     width: 2rem;
     height: 2rem;
@@ -54,6 +30,96 @@ const LandingWrap = styled.div`
     position: absolute;
     right: 2rem;
     bottom: 2rem;
+  }
+  section.section1 {
+    height: 90vh;
+    padding: 2rem;
+    position: relative;
+    overflow: wrap;
+    text-overflow: whitespace-break;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    h1 {
+      margin: 0;
+      padding: 0;
+      font-size: 10em;
+      font-family: serif;
+      line-height: 1;
+      text-align: center;
+      color: #333;
+    }
+    div {
+      font-size: 2em;
+      margin-top: 3rem;
+      text-align: center;
+    }
+    b {
+      padding-bottom: 0.2rem;
+      border-bottom: 2px solid var(--color-black);
+    }
+  }
+  section.section2 {
+    > div:nth-child(1) {
+      display: flex;
+      padding: 2rem 3.5rem;
+      justify-content: space-between;
+      p {
+        font-size: 1.3em;
+        line-height: 1.4;
+      }
+      p:nth-child(2) {
+        text-align: right;
+      }
+    }
+    > div:nth-child(2) {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+    }
+    div.box {
+      width: 50%;
+      padding: 3rem;
+      display: flex;
+      align-items: flex-end;
+      img {
+        flex: 1;
+      }
+      h2 {
+        margin: 0;
+        padding: 0 0 0 0.5rem;
+        font-size: 10em;
+        font-family: 'Racing Sans One', cursive;
+        line-height: 1;
+      }
+    }
+    div.box:nth-child(2),
+    div.box:nth-child(4) {
+      margin-top: 40vh;
+      h2 {
+        padding: 0 0.5rem 0 0;
+      }
+    }
+  }
+  section.section3 {
+    height: 85vh;
+    position: relative;
+    span {
+      height: auto;
+      padding-bottom: 0.2rem;
+      font-size: 4em;
+      border-bottom: 2px solid var(--color-black);
+      position: absolute;
+      bottom: 32vh;
+      left: 50%;
+      transform: translateX(-50%);
+      transition: all 0.5s;
+    }
+    span:hover {
+      color: var(--color-beige);
+      border-bottom: 2px solid var(--color-beige);
+    }
   }
 `;
 
@@ -94,37 +160,51 @@ const Landing = () => {
       ) : null}
       <section className='section1'>
         <h1>GEUT_DA</h1>
-        <p>
+        <div>
           나의 일상을 그려내는 그림일기 어플리케이션 <b>긋다</b>
-          <br />
-          어린 시절에 쓰던 그림 일기장 떠올리며, 나 자신에게 조금이나마
-          <br />
-          집중하는 시간을 갖길 바라는 마음에서 서비스를 기획하게 되었습니다.
-          <br />
-          그림을 그려보고 싶은데 막막할 때, 나의 일상을 하나씩 그려보며 그림
-          연습도 하고,
-          <br />
-          직접 그린 그림과 일기로 무심하게 지나칠 뻔한 일상들을 좀 더 특별하게
-          기록할 수 있습니다.
-          <br />
-          사진보다는 내 머릿속의 기억을 표현한 그림과 그 날의 감정을 글로 새긴
-          그림일기.
-          <br />
-          오롯이 나에게 집중하기 위한 앱으로, 개인기록에 초점을 맞추고
-          <br />
-          필요한 기능만 담백하게 담아 지속적으로 사용가능하도록 구현했습니다.
-          <br />
-          나의 소중한 일상을 기억해내는 또 다른 방법, "긋다".
-          <br />
-          나만의 갤러리를 매일매일 채워나가보세요!
-        </p>
+        </div>
         <a href='#bottom' className='bottom_btn'>
           &darr;
         </a>
       </section>
-      <section className='section2'></section>
+      <section className='section2'>
+        <div>
+          <p>
+            나 자신에게 마음을 열어주세요.
+            <br />
+            그림을 그리며 나의 하루에 말을 걸어보세요.
+            <br />
+            오늘은 너무 평범한 날인 동시에 미래를 있는 가장 소중한 시간이니까요.
+          </p>
+          <p>
+            소중한 일상을 기억해내는 또 다른 방법, "긋다".
+            <br />
+            내 생각과 감정들이 오롯이 새겨진 일기장이 될거에요.
+            <br />
+            나만의 갤러리를 채워나가보세요!
+          </p>
+        </div>
+        <div>
+          <div className='box'>
+            <img src='/images/exampleDiary/1.png' alt='유저 다이어리 1' />
+            <h2>1</h2>
+          </div>
+          <div className='box'>
+            <h2>2</h2>
+            <img src='/images/exampleDiary/2.png' alt='유저 다이어리 2' />
+          </div>
+          <div className='box'>
+            <img src='/images/exampleDiary/3.png' alt='유저 다이어리 3' />
+            <h2>3</h2>
+          </div>
+          <div className='box'>
+            <h2>4</h2>
+            <img src='/images/exampleDiary/4.png' alt='유저 다이어리 4' />
+          </div>
+        </div>
+      </section>
       <section className='section3'>
-        <button onClick={LoginModalHandler}>START</button>
+        <span onClick={LoginModalHandler}>시작하기</span>
       </section>
       <Footer />
     </LandingWrap>
