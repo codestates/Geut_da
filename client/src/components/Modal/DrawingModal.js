@@ -1,3 +1,4 @@
+import { set } from 'mongoose';
 import { useRef, useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
 
@@ -106,7 +107,7 @@ const DrawingModal = ({ DrawingHandler, SaveDrawingHandler, drawingImg }) => {
   const [isDrawing, setIsDrawing] = useState(false);
   const [isFillMode, setIsFillMode] = useState(false);
   const [lineWidth, setLineWidth] = useState(2.5);
-  const previousImg = drawingImg;
+  let previousImg = drawingImg;
 
   //반응형 캔버스
   const [windowSize, setWindowSize] = useState({
@@ -138,17 +139,24 @@ const DrawingModal = ({ DrawingHandler, SaveDrawingHandler, drawingImg }) => {
   }, [windowSize]);
 
   // 초기값 설정
+  const image = new Image();
   useEffect(() => {
     const canvas = canvasRef.current;
     canvas.width = document.body.clientWidth / 2;
     canvas.height = document.body.clientHeight / 2;
 
     const ctx = canvas.getContext('2d');
-    const image = new Image();
+    image.setAttribute('crossOrigin', '*');
     image.src = previousImg;
-    image.crossOrigin = '*';
     image.onload = () => {
       ctx.drawImage(image, 0, 0);
+    };
+    image.onerror = () => {
+      previousImg = 'https://geutda-cors.herokuapp.com/' + drawingImg;
+      image.src = previousImg;
+      image.onload = () => {
+        ctx.drawImage(image, 0, 0);
+      };
     };
     // first draw
     ctx.strokeStyle = '#2c2c2c';
