@@ -5,12 +5,7 @@ import Header from '../components/Header';
 import DrawingModal from '../components/Modal/DrawingModal';
 import { Tag } from '../components/Tags';
 import axios from 'axios';
-import {
-  BsSunFill,
-  BsCloudSunFill,
-  BsFillCloudRainFill,
-  BsArrow90DegLeft,
-} from 'react-icons/bs';
+import { BsSunFill, BsCloudSunFill, BsFillCloudRainFill, BsArrow90DegLeft } from 'react-icons/bs';
 import { GiSnowman } from 'react-icons/gi';
 import { MdSaveAlt } from 'react-icons/md';
 import { BiLoaderCircle } from 'react-icons/bi';
@@ -280,9 +275,7 @@ const NewDiary = () => {
     const ReactS3Client = new S3(config);
     const config2 = {
       headers: {
-        Authorization: `Bearer ${
-          JSON.parse(localStorage.getItem('userInfo')).token
-        }`,
+        Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}`,
         'Content-Type': 'application/json',
       },
     };
@@ -296,9 +289,7 @@ const NewDiary = () => {
               title: inputTitle,
               text: inputContent,
               weather: weatherIdx,
-              drawing: `/images/examplePaints/${
-                Math.floor(Math.random() * 5) + 1
-              }.png`,
+              drawing: `/images/examplePaints/${Math.floor(Math.random() * 5) + 1}.png`,
               hashtags: tags,
             },
             config2
@@ -374,28 +365,14 @@ const NewDiary = () => {
         </button>
         <DiaryWrap>
           <div className='img' onClick={DrawingHandler}>
-            {drawingImg !== '' ? (
-              <img src={drawingImg} alt='drawingImg' />
-            ) : (
-              'CLICK ME!'
-            )}
+            {drawingImg !== '' ? <img src={drawingImg} alt='drawingImg' /> : 'CLICK ME!'}
           </div>
           {/* Drawing Modal */}
-          {clickDrawing && (
-            <DrawingModal
-              DrawingHandler={DrawingHandler}
-              SaveDrawingHandler={SaveDrawingHandler}
-            />
-          )}
+          {clickDrawing && <DrawingModal DrawingHandler={DrawingHandler} SaveDrawingHandler={SaveDrawingHandler} drawingImg={drawingImg} />}
           <div>
             <div className='title'>
               <div>
-                <input
-                  type='text'
-                  placeholder='Title'
-                  value={inputTitle}
-                  onChange={inputHandler}
-                />
+                <input type='text' placeholder='Title' value={inputTitle} onChange={inputHandler} />
                 <div>
                   <button onClick={handleClick} disabled={blockDoubleClick}>
                     {blockDoubleClick ? <BiLoaderCircle /> : <MdSaveAlt />}
@@ -429,11 +406,7 @@ const NewDiary = () => {
               </div>
             </div>
             <div className='diary_text'>
-              <textarea
-                placeholder='오늘의 일기'
-                value={inputContent}
-                onChange={inputHandler}
-              />
+              <textarea placeholder='오늘의 일기' value={inputContent} onChange={inputHandler} />
             </div>
           </div>
         </DiaryWrap>
