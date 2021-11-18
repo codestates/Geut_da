@@ -13,6 +13,7 @@ import { MdSaveAlt } from 'react-icons/md';
 import S3 from 'react-aws-s3';
 import { v4 as uuidv4 } from 'uuid';
 import dotenv from 'dotenv';
+import Loader from '../components/Loader';
 
 dotenv.config();
 
@@ -188,6 +189,13 @@ const DiaryWrap = styled.div`
   }
 `;
 
+const LoaderBackDrop = styled.div`
+  height: 72vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 const DiaryView = () => {
   const [diaryInfo, setDiaryInfo] = useState([]);
   const [isEdit, setIsEdit] = useState(false);
@@ -198,6 +206,7 @@ const DiaryView = () => {
   const [inputContent, setInputContent] = useState('');
   const [tags, setTags] = useState([]);
   const [originImg, setOriginImg] = useState('');
+  const [isLoading, setisLoading] = useState(true);
   const history = useNavigate();
   const location = useLocation();
   const s3config = {
@@ -230,9 +239,11 @@ const DiaryView = () => {
           setWeatherIdx(res.data.weather);
           setInputContent(res.data.text);
           setTags(res.data.hashtags);
+          setisLoading(false);
         })
         .catch((err) => {
           console.log(err);
+          setisLoading(false);
         });
     }
   }, []);
@@ -375,104 +386,112 @@ const DiaryView = () => {
   return (
     <DiaryViewWrap>
       <Header />
-      <button>
-        <Link to={MAIN}>
-          <BsArrow90DegLeft />
-        </Link>
-      </button>
-      {isEdit ? (
-        <DiaryWrap>
-          <div className='img' onClick={DrawingHandler}>
-            <img src={diaryInfo.drawing} alt='drawing' />
-          </div>
-          {/* Drawing Modal */}
-          {clickDrawing && (
-            <DrawingModal
-              DrawingHandler={DrawingHandler}
-              SaveDrawingHandler={SaveDrawingHandler}
-            />
-          )}
-          <div>
-            <div className='title'>
-              <div>
-                <input
-                  type='text'
-                  placeholder='Title'
-                  value={inputTitle}
-                  onChange={inputHandler}
-                />
-                <div>
-                  <button onClick={diaryUpdateHandler}>
-                    <MdSaveAlt />
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div className='description'>
-              {/* 해쉬태그 */}
-              <div>
-                <Tag tags={tags} setTags={setTags} />
-              </div>
-              {/* 날씨 아이콘 */}
-              <div>
-                {weatherIdx === 0 && <BsSunFill />}
-                {weatherIdx === 1 && <BsCloudSunFill />}
-                {weatherIdx === 2 && <BsFillCloudRainFill />}
-                {weatherIdx === 3 && <GiSnowman />}
-              </div>
-            </div>
-            <div className='diary_text'>
-              <textarea
-                placeholder='오늘의 일기'
-                value={inputContent}
-                onChange={inputHandler}
-              />
-            </div>
-          </div>
-        </DiaryWrap>
+      {isLoading ? (
+        <LoaderBackDrop>
+          <Loader />
+        </LoaderBackDrop>
       ) : (
-        <DiaryWrap>
-          <div className='img'>
-            <img src={diaryInfo.drawing} alt='drawing' />
-          </div>
-          <div>
-            <div className='title'>
+        <>
+          <button>
+            <Link to={MAIN}>
+              <BsArrow90DegLeft />
+            </Link>
+          </button>
+          {isEdit ? (
+            <DiaryWrap>
+              <div className='img' onClick={DrawingHandler}>
+                <img src={diaryInfo.drawing} alt='drawing' />
+              </div>
+              {/* Drawing Modal */}
+              {clickDrawing && (
+                <DrawingModal
+                  DrawingHandler={DrawingHandler}
+                  SaveDrawingHandler={SaveDrawingHandler}
+                />
+              )}
               <div>
-                <h3>{diaryInfo.title}</h3>
-                <div>
-                  <button onClick={DeleteDiaryHandler}>
-                    <BsTrash />
-                  </button>
-                  <button onClick={isEditHanlder}>
-                    <BsPen />
-                  </button>
+                <div className='title'>
+                  <div>
+                    <input
+                      type='text'
+                      placeholder='Title'
+                      value={inputTitle}
+                      onChange={inputHandler}
+                    />
+                    <div>
+                      <button onClick={diaryUpdateHandler}>
+                        <MdSaveAlt />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div className='description'>
+                  {/* 해쉬태그 */}
+                  <div>
+                    <Tag tags={tags} setTags={setTags} />
+                  </div>
+                  {/* 날씨 아이콘 */}
+                  <div>
+                    {weatherIdx === 0 && <BsSunFill />}
+                    {weatherIdx === 1 && <BsCloudSunFill />}
+                    {weatherIdx === 2 && <BsFillCloudRainFill />}
+                    {weatherIdx === 3 && <GiSnowman />}
+                  </div>
+                </div>
+                <div className='diary_text'>
+                  <textarea
+                    placeholder='오늘의 일기'
+                    value={inputContent}
+                    onChange={inputHandler}
+                  />
                 </div>
               </div>
-              <div>
-                <span>{diaryInfo.createdAt}</span>
+            </DiaryWrap>
+          ) : (
+            <DiaryWrap>
+              <div className='img'>
+                <img src={diaryInfo.drawing} alt='drawing' />
               </div>
-            </div>
-            <div className='description'>
-              {/* 해쉬태그 */}
               <div>
-                {diaryInfo.hashtags &&
-                  diaryInfo.hashtags.map((el, idx) => {
-                    return <span key={idx}>#{el}</span>;
-                  })}
+                <div className='title'>
+                  <div>
+                    <h3>{diaryInfo.title}</h3>
+                    <div>
+                      <button onClick={DeleteDiaryHandler}>
+                        <BsTrash />
+                      </button>
+                      <button onClick={isEditHanlder}>
+                        <BsPen />
+                      </button>
+                    </div>
+                  </div>
+                  <div>
+                    <span>{diaryInfo.createdAt}</span>
+                  </div>
+                </div>
+                <div className='description'>
+                  {/* 해쉬태그 */}
+                  <div>
+                    {diaryInfo.hashtags &&
+                      diaryInfo.hashtags.map((el, idx) => {
+                        return <span key={idx}>#{el}</span>;
+                      })}
+                  </div>
+                  {/* 날씨 아이콘 */}
+                  <div>
+                    {weatherIdx === 0 && <BsSunFill />}
+                    {weatherIdx === 1 && <BsCloudSunFill />}
+                    {weatherIdx === 2 && <BsFillCloudRainFill />}
+                    {weatherIdx === 3 && <GiSnowman />}
+                  </div>
+                </div>
+                <div className='diary_text'>
+                  <p>{diaryInfo.text}</p>
+                </div>
               </div>
-              {/* 날씨 아이콘 */}
-              <div>
-                {weatherIdx === 0 && <BsSunFill />}
-                {weatherIdx === 1 && <BsCloudSunFill />}
-                {weatherIdx === 2 && <BsFillCloudRainFill />}
-                {weatherIdx === 3 && <GiSnowman />}
-              </div>
-            </div>
-            <div className='diary_text'>
-              <p>{diaryInfo.text}</p>
-            </div>
-          </div>
-        </DiaryWrap>
+            </DiaryWrap>
+          )}
+        </>
       )}
     </DiaryViewWrap>
   );
