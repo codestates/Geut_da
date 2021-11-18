@@ -12,6 +12,11 @@ const DrawingModalBackdrop = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  h3 {
+    text-align: center;
+  }
+
   div.drawing_modal {
     padding: 2rem 3rem;
     background-color: #fff;
@@ -70,6 +75,11 @@ const DrawingModalBackdrop = styled.div`
     margin: 0 0.2rem;
     border-radius: 50%;
     cursor: pointer;
+  }
+
+  p {
+    text-align: center;
+    color: var(--color-black);
   }
 `;
 // 캔버스 영역 css
@@ -221,7 +231,7 @@ const DrawingModal = ({ DrawingHandler, SaveDrawingHandler }) => {
   return (
     <DrawingModalBackdrop>
       <div className='drawing_modal'>
-        <h3>DrawingModal</h3>
+        <h3>Drawing Canvas</h3>
         <button className='close_btn' onClick={DrawingHandler}>
           &times;
         </button>
@@ -301,6 +311,7 @@ const DrawingModal = ({ DrawingHandler, SaveDrawingHandler }) => {
             onClick={handleColorClick}
           />
         </ul>
+        <p>*배경을 채우면 기존에 그린 그림이 배경색으로 채워집니다</p>
       </div>
     </DrawingModalBackdrop>
   );
