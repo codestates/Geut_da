@@ -22,6 +22,7 @@ const DiaryViewWrap = styled.div`
   padding: 4rem 0 3rem;
   position: relative;
 
+  /* 뒤로가기 버튼 */
   > button {
     margin: 0;
     padding: 0;
@@ -39,6 +40,8 @@ const DiaryViewWrap = styled.div`
     background: var(--color-black);
     border-radius: 50%;
     display: inline-block;
+    padding-top: 0.15rem;
+    padding-right: 0.1rem;
   }
   > button a:hover {
     background-color: var(--color-beige);
@@ -128,7 +131,7 @@ const DiaryWrap = styled.div`
     padding: 0 0 0 0.4rem;
     font-size: 1.8em;
     font-weight: 700;
-    border-radius: 10px;
+    border-radius: 0.1rem;
   }
 
   div.title div input:focus {
@@ -176,16 +179,21 @@ const DiaryWrap = styled.div`
     max-width: 100%;
     max-height: 100%;
     width: 100%;
+    height: 100%;
     border: none;
     background: none;
     line-height: 1.2;
     resize: none;
     font-size: 1.3em;
+    background-color: rgba(255, 255, 255, 0.5);
   }
 
   div.diary_text textarea:focus {
     outline: none;
-    background-color: rgba(255, 255, 255, 0.5);
+  }
+
+  div.diary_text textarea::placeholder {
+    font-size: 1em;
   }
 `;
 

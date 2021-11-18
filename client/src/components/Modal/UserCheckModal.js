@@ -6,10 +6,9 @@ const UserCheckModalWrap = styled.div`
   display: flex;
   position: relative;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
   width: 30vw;
-  height: 30vh;
   padding: 3rem;
   background-color: #ffffff;
   border-radius: 10px;
@@ -94,7 +93,11 @@ const UserCheckModal = ({
       setPwCheckMessage('필수 입력 사항입니다');
     }
     axios
-      .post('http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/users/check', { password: checkPassword }, config)
+      .post(
+        'http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/users/check',
+        { password: checkPassword },
+        config
+      )
       .then((res) => {
         isPasswordCorrectHandler();
         pwCheckValueHandler(checkPassword);
