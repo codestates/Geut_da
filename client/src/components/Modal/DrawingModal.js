@@ -146,7 +146,7 @@ const DrawingModal = ({ DrawingHandler, SaveDrawingHandler, drawingImg }) => {
     const ctx = canvas.getContext('2d');
     const image = new Image();
     image.src = previousImg;
-    image.crossOrigin = '*';
+    // image.crossOrigin = '*';
     image.onload = () => {
       ctx.drawImage(image, 0, 0);
     };
@@ -246,40 +246,19 @@ const DrawingModal = ({ DrawingHandler, SaveDrawingHandler, drawingImg }) => {
         </button>
         {/* Cavas 구현 */}
         <CanvasWrap>
-          <canvas
-            ref={canvasRef}
-            onMouseDown={initDraw}
-            onMouseUp={finishDraw}
-            onMouseMove={draw}
-            onMouseLeave={finishDraw}
-          />
+          <canvas ref={canvasRef} onMouseDown={initDraw} onMouseUp={finishDraw} onMouseMove={draw} onMouseLeave={finishDraw} />
         </CanvasWrap>
         <div className='controls'>
           <div className='controls_range'>
-            <input
-              type='range'
-              min='0.1'
-              max='15'
-              value={lineWidth}
-              step='0.1'
-              onChange={handleRangeChange}
-            />
+            <input type='range' min='0.1' max='15' value={lineWidth} step='0.1' onChange={handleRangeChange} />
             <div>{lineWidth}</div>
           </div>
           <div className='controls_btns'>
             <button onClick={fillWhiteHandler}>Clear</button>
-            <button
-              onClick={fillModeHandler}
-              className={!isFillMode ? 'active' : ''}
-              data-mode='paint'
-            >
+            <button onClick={fillModeHandler} className={!isFillMode ? 'active' : ''} data-mode='paint'>
               Paint
             </button>
-            <button
-              onClick={fillModeHandler}
-              className={isFillMode ? 'active' : ''}
-              data-mode='fill'
-            >
+            <button onClick={fillModeHandler} className={isFillMode ? 'active' : ''} data-mode='fill'>
               Fill
             </button>
             <button onClick={SaveImgHandler}>Save</button>
@@ -287,62 +266,20 @@ const DrawingModal = ({ DrawingHandler, SaveDrawingHandler, drawingImg }) => {
         </div>
         {/* 컬러 팔레트 */}
         <ul>
-          <li
-            style={{ backgroundColor: '#ffffff', border: '1px solid #ccc' }}
-            onClick={handleColorClick}
-          />
-          <li
-            style={{ backgroundColor: '#f0f0f0' }}
-            onClick={handleColorClick}
-          />
-          <li
-            style={{ backgroundColor: '#2c2c2c' }}
-            onClick={handleColorClick}
-          />
-          <li
-            style={{ backgroundColor: '#FAEBD7' }}
-            onClick={handleColorClick}
-          />
-          <li
-            style={{ backgroundColor: '#a52a2a' }}
-            onClick={handleColorClick}
-          />
-          <li
-            style={{ backgroundColor: '#d26c6c' }}
-            onClick={handleColorClick}
-          />
-          <li
-            style={{ backgroundColor: '#d2691e' }}
-            onClick={handleColorClick}
-          />
-          <li
-            style={{ backgroundColor: '#ffbb00' }}
-            onClick={handleColorClick}
-          />
-          <li
-            style={{ backgroundColor: '#8fbc8f' }}
-            onClick={handleColorClick}
-          />
-          <li
-            style={{ backgroundColor: '#339933' }}
-            onClick={handleColorClick}
-          />
-          <li
-            style={{ backgroundColor: '#b7e2fc' }}
-            onClick={handleColorClick}
-          />
-          <li
-            style={{ backgroundColor: '#4682b4' }}
-            onClick={handleColorClick}
-          />
-          <li
-            style={{ backgroundColor: '#f2f2fc' }}
-            onClick={handleColorClick}
-          />
-          <li
-            style={{ backgroundColor: '#c37fcc' }}
-            onClick={handleColorClick}
-          />
+          <li style={{ backgroundColor: '#ffffff', border: '1px solid #ccc' }} onClick={handleColorClick} />
+          <li style={{ backgroundColor: '#f0f0f0' }} onClick={handleColorClick} />
+          <li style={{ backgroundColor: '#2c2c2c' }} onClick={handleColorClick} />
+          <li style={{ backgroundColor: '#FAEBD7' }} onClick={handleColorClick} />
+          <li style={{ backgroundColor: '#a52a2a' }} onClick={handleColorClick} />
+          <li style={{ backgroundColor: '#d26c6c' }} onClick={handleColorClick} />
+          <li style={{ backgroundColor: '#d2691e' }} onClick={handleColorClick} />
+          <li style={{ backgroundColor: '#ffbb00' }} onClick={handleColorClick} />
+          <li style={{ backgroundColor: '#8fbc8f' }} onClick={handleColorClick} />
+          <li style={{ backgroundColor: '#339933' }} onClick={handleColorClick} />
+          <li style={{ backgroundColor: '#b7e2fc' }} onClick={handleColorClick} />
+          <li style={{ backgroundColor: '#4682b4' }} onClick={handleColorClick} />
+          <li style={{ backgroundColor: '#f2f2fc' }} onClick={handleColorClick} />
+          <li style={{ backgroundColor: '#c37fcc' }} onClick={handleColorClick} />
         </ul>
         <p>*배경을 채우면 기존에 그린 배경색과 섞여서 채워집니다</p>
       </div>
