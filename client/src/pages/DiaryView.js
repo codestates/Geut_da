@@ -232,13 +232,10 @@ const DiaryView = () => {
   useEffect(() => {
     if (location.state._id) {
       axios
-        .get(
-          'http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/contents',
-          {
-            ...config,
-            params: { _id: location.state._id },
-          }
-        )
+        .get('http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/contents', {
+          ...config,
+          params: { _id: location.state._id },
+        })
         .then((res) => {
           setDiaryInfo(res.data);
           setDrawingImg(res.data.drawing);
@@ -258,17 +255,13 @@ const DiaryView = () => {
 
   const config = {
     headers: {
-      Authorization: `Bearer ${
-        JSON.parse(localStorage.getItem('userInfo')).token
-      }`,
+      Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}`,
     },
   };
 
   const config2 = {
     headers: {
-      Authorization: `Bearer ${
-        JSON.parse(localStorage.getItem('userInfo')).token
-      }`,
+      Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}`,
       'Content-Type': 'application/json',
     },
   };
@@ -276,13 +269,10 @@ const DiaryView = () => {
   const DeleteDiaryHandler = () => {
     if (location.state._id) {
       axios
-        .delete(
-          'http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/contents',
-          {
-            ...config,
-            data: { _id: location.state._id },
-          }
-        )
+        .delete('http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/contents', {
+          ...config,
+          data: { _id: location.state._id },
+        })
         .then((res) => {
           ReactS3Client.deleteFile(originImg.split('/')[3]);
           history('/main');
@@ -408,24 +398,14 @@ const DiaryView = () => {
           {isEdit ? (
             <DiaryWrap>
               <div className='img' onClick={DrawingHandler}>
-                <img src={diaryInfo.drawing} alt='drawing' />
+                <img src={drawingImg} alt='drawing' />
               </div>
               {/* Drawing Modal */}
-              {clickDrawing && (
-                <DrawingModal
-                  DrawingHandler={DrawingHandler}
-                  SaveDrawingHandler={SaveDrawingHandler}
-                />
-              )}
+              {clickDrawing && <DrawingModal DrawingHandler={DrawingHandler} SaveDrawingHandler={SaveDrawingHandler} drawingImg={drawingImg} />}
               <div>
                 <div className='title'>
                   <div>
-                    <input
-                      type='text'
-                      placeholder='Title'
-                      value={inputTitle}
-                      onChange={inputHandler}
-                    />
+                    <input type='text' placeholder='Title' value={inputTitle} onChange={inputHandler} />
                     <div>
                       <button onClick={diaryUpdateHandler}>
                         <MdSaveAlt />
@@ -447,11 +427,7 @@ const DiaryView = () => {
                   </div>
                 </div>
                 <div className='diary_text'>
-                  <textarea
-                    placeholder='오늘의 일기'
-                    value={inputContent}
-                    onChange={inputHandler}
-                  />
+                  <textarea placeholder='오늘의 일기' value={inputContent} onChange={inputHandler} />
                 </div>
               </div>
             </DiaryWrap>

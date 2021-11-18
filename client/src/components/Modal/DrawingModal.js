@@ -100,11 +100,12 @@ const CanvasWrap = styled.div`
   }
 `;
 
-const DrawingModal = ({ DrawingHandler, SaveDrawingHandler }) => {
+const DrawingModal = ({ DrawingHandler, SaveDrawingHandler, drawingImg }) => {
   const canvasRef = useRef(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [isFillMode, setIsFillMode] = useState(false);
   const [lineWidth, setLineWidth] = useState(2.5);
+  const previousImg = drawingImg;
 
   //반응형 캔버스
   const [windowSize, setWindowSize] = useState({
@@ -142,7 +143,12 @@ const DrawingModal = ({ DrawingHandler, SaveDrawingHandler }) => {
     canvas.height = document.body.clientHeight / 2;
 
     const ctx = canvas.getContext('2d');
-
+    const image = new Image();
+    image.src = previousImg;
+    image.crossOrigin = '*';
+    image.onload = () => {
+      ctx.drawImage(image, 0, 0);
+    };
     // first draw
     ctx.strokeStyle = '#2c2c2c';
     ctx.lineWidth = 2.5;
