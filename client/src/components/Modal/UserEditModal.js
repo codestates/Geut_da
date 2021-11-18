@@ -355,7 +355,7 @@ const UserEditModal = ({ openUserEditModalHandler, pwCheckdValue }) => {
           config2
         )
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           localStorage.setItem(
             'userInfo',
             JSON.stringify({

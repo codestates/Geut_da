@@ -135,18 +135,13 @@ const Mypage = () => {
 
   const config = {
     headers: {
-      Authorization: `Bearer ${
-        JSON.parse(localStorage.getItem('userInfo')).token
-      }`,
+      Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}`,
     },
   };
 
   useEffect(() => {
     axios
-      .get(
-        'http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/contents/total',
-        config
-      )
+      .get('http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/contents/total', config)
       .then((res) => {
         setCounts({ ...counts, ...res.data });
         setIsLoading(false);
@@ -166,13 +161,10 @@ const Mypage = () => {
     const [year, month, date] = value.date.split('-');
 
     axios
-      .get(
-        'http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/contents/by-date',
-        {
-          ...config,
-          params: { year, month, date },
-        }
-      )
+      .get('http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/contents/by-date', {
+        ...config,
+        params: { year, month, date },
+      })
       .then((res) => {
         setDiaries(res.data);
         setIsLoading(false);
@@ -220,6 +212,42 @@ const Mypage = () => {
 
   return (
     <MypageWrap>
+      {console.log(
+        '                                                                        ,,\n\
+                                                                       /  ,\n\
+                                                                      /   /\n\
+                                                                     /   /\n\
+                                                                    /   /\n\
+    __________________________                                     /   /\n\
+    ⎢                         ⎥                                   /   /\n\
+    ⎢  혹시 내가 보여? 난 고양이야  ⎥                                  /   /\n\
+    ⎢____    _________________⎥                                 /   /\n\
+          \\/    ,      ,,                                      /   /\n\
+               /%c@%c\\____/%c@%c \\                                ____/   /\n\
+              /           \\                         _____/        /__\n\
+        /" \\ / •    •      \\                     __/             /  %c@@%c"\\\n\
+        \\    %c@@%c  ㅅ  %c@@%c     /___             ___/                /    _/\n\
+      /" \\   \\                 \\__________/                    |__/ "\\\n\
+      \\   \\                                                   /      /\n\
+       \\    \\  __                                                  _/\n\
+        \\                                                       __/\n\
+          \\_                                             ______/\n\
+             \\ ___                                     _/\n\
+                    \\__                             __/\n\
+                        \\_____                _____/\n\
+                              \\______________/\n\
+          \n',
+        'color:#ff6905',
+        'color:defalut',
+        'color:#ff6905',
+        'color:defalut',
+        'color:#ff6905',
+        'color:defalut',
+        'color:#ff6905',
+        'color:defalut',
+        'color:#ff6905',
+        'color:defalut'
+      )}
       <Header />
       {isLoading ? (
         <LoaderBackDrop>
@@ -230,10 +258,7 @@ const Mypage = () => {
           <ProfileInfo>
             <div className='user_info'>
               <div className='img_box'>
-                <img
-                  src={JSON.parse(localStorage.getItem('userInfo')).image}
-                  alt='profile image'
-                />
+                <img src={JSON.parse(localStorage.getItem('userInfo')).image} alt='profile image' />
                 {/* 이미지 수정 버튼 클릭시 바로 파일 업로드창 표출(input[type='file']) */}
                 <ProfileUpload />
               </div>
@@ -267,18 +292,12 @@ const Mypage = () => {
           {/* Modal */}
           {isUserResign && (
             <ModalBackDrop onClick={isUserResignHandler}>
-              <LeaveModal
-                isUserResignHandler={isUserResignHandler}
-                isRealUserResignHandler={isRealUserResignHandler}
-              />
+              <LeaveModal isUserResignHandler={isUserResignHandler} isRealUserResignHandler={isRealUserResignHandler} />
             </ModalBackDrop>
           )}
           {isRealUserResign && (
             <ModalBackDrop onClick={isRealUserResignHandler}>
-              <RealLeaveModal
-                isRealUserResignHandler={isRealUserResignHandler}
-                isUserResignHandler={isUserResignHandler}
-              />
+              <RealLeaveModal isRealUserResignHandler={isRealUserResignHandler} isUserResignHandler={isUserResignHandler} />
             </ModalBackDrop>
           )}
           {openPasswordModal && (
@@ -293,10 +312,7 @@ const Mypage = () => {
           )}
           {openUserEditModal && (
             <ModalBackDrop onClick={openUserEditModalHandler}>
-              <UserEditModal
-                openUserEditModalHandler={openUserEditModalHandler}
-                pwCheckdValue={pwCheckdValue}
-              />
+              <UserEditModal openUserEditModalHandler={openUserEditModalHandler} pwCheckdValue={pwCheckdValue} />
             </ModalBackDrop>
           )}
         </>

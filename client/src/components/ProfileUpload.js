@@ -63,7 +63,7 @@ const ProfileUpload = () => {
           file.type === 'image/jpg'
         ) {
           ReactS3Client.uploadFile(file, newFileName).then((data) => {
-            console.log(data);
+            // console.log(data);
             if (data.status === 204) {
               axios
                 .patch(
@@ -72,7 +72,7 @@ const ProfileUpload = () => {
                   imagePatchConfig
                 )
                 .then((res) => {
-                  console.log(res, '이미지 보내짐');
+                  // console.log(res, '이미지 보내짐');
                   if (
                     JSON.parse(localStorage.getItem('userInfo')).image.split(
                       '.'
@@ -92,7 +92,7 @@ const ProfileUpload = () => {
                           })
                         );
                         window.location.reload();
-                        console.log(res, '삭제');
+                        // console.log(res, '삭제');
                       })
                       .catch((err) => {
                         console.log(err, '삭제안됨');

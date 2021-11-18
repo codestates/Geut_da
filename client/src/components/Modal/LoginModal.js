@@ -184,7 +184,7 @@ const LoginModal = ({ LoginModalHandler, SignupModalHandler }) => {
           config
         )
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           const userInfo = res.data;
           localStorage.setItem('userInfo', JSON.stringify(userInfo));
           LoginStateHandler(true);

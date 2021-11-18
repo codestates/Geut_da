@@ -295,7 +295,7 @@ const NewDiary = () => {
             config2
           )
           .then((res) => {
-            console.log(res);
+            // console.log(res);
             //만약 내가쓴 일기가 잘 저장이 되면, res.data._id 에 내가 쓴 일기에 대한 고유한 id가 들어오는데
             //이 id값을 DiaryView에 전달만해주면 DiaryView에서 useEffec로 서버에 요청 해줌.
             history('/main/diaryview', { state: { _id: res.data._id } });
@@ -330,7 +330,7 @@ const NewDiary = () => {
                 config2
               )
               .then((res) => {
-                console.log(res);
+                // console.log(res);
                 //만약 내가쓴 일기가 잘 저장이 되면, res.data._id 에 내가 쓴 일기에 대한 고유한 id가 들어오는데
                 //이 id값을 DiaryView에 전달만해주면 DiaryView에서 useEffec로 서버에 요청 해줌.
                 history('/main/diaryview', { state: { _id: res.data._id } });
