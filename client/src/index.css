@@ -69,6 +69,14 @@ code {
     monospace;
 }
 
+input[type='email'],
+input[type='text'],
+button,
+span,
+textarea {
+  font-family: 'OTWelcome', serif;
+}
+
 header {
   max-width: 1440px;
   width: 90vw;
