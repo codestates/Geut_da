@@ -6,11 +6,14 @@ import DrawingModal from '../components/Modal/DrawingModal';
 import { Tag } from '../components/Tags';
 import axios from 'axios';
 import {
-  TiWeatherSunny,
-  TiWeatherPartlySunny,
-  TiWeatherDownpour,
-  TiWeatherSnow,
-} from 'react-icons/ti';
+  BsSunFill,
+  BsCloudSunFill,
+  BsFillCloudRainFill,
+  BsArrow90DegLeft,
+} from 'react-icons/bs';
+import { GiSnowman } from 'react-icons/gi';
+import { MdSaveAlt } from 'react-icons/md';
+import { BiLoaderCircle } from 'react-icons/bi';
 import S3 from 'react-aws-s3';
 import { v4 as uuidv4 } from 'uuid';
 import dotenv from 'dotenv';
@@ -19,17 +22,204 @@ import { MAIN } from '../constants/routes';
 dotenv.config();
 
 const NewDiaryWrap = styled.div`
-  svg {
-    width: 1.5rem;
-    height: 1.5rem;
-    margin: 0.2rem;
-    padding: 0.2rem;
-    border-radius: 50%;
-    cursor: pointer;
+  height: 90vh;
+  padding: 4rem 0 3rem;
+  position: relative;
+
+  /* 뒤로가기 버튼 */
+  > button.backbutton {
+    margin: 0;
+    padding: 0;
+    border: none;
+    position: absolute;
+    top: 0.5rem;
+    left: 0;
   }
-  svg.select {
-    color: darkmagenta;
-    background-color: lavender;
+  > button.backbutton a {
+    width: 2.3rem;
+    height: 2.3rem;
+    color: #fff;
+    font-size: 1.1em;
+    line-height: 2.4rem;
+    background: var(--color-black);
+    border-radius: 50%;
+    display: inline-block;
+    padding-top: 0.15rem;
+    padding-right: 0.1rem;
+  }
+  > button.backbutton a:hover {
+    background-color: var(--color-beige);
+  }
+`;
+
+const DiaryWrap = styled.div`
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  > div.img {
+    flex: 2;
+    margin-right: 3rem;
+    font-family: serif;
+    font-size: 2em;
+    font-weight: bold;
+    background-color: rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+
+    img {
+      max-width: 100%;
+      height: auto;
+      overflow: hidden;
+    }
+  }
+  > div:nth-child(2) {
+    flex: 3;
+    justify-content: flex-start;
+  }
+  div.title {
+    width: 100%;
+    margin: 0.5rem 0;
+    padding: 1rem 0;
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #000;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  div.title div:nth-child(1) {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+  }
+  /* 일기 제목 */
+  div.title div:nth-child(1) input {
+    width: 90%;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: 0 0 0 0.4rem;
+    font-size: 1.8em;
+    font-weight: 700;
+    border-radius: 0.1rem;
+  }
+  div.title div:nth-child(2) {
+    font-size: 0.9em;
+    text-align: right;
+    color: #666;
+  }
+  /* 저장, 저장중 버튼 */
+  div.title button {
+    width: 2.4rem;
+    height: 2.4rem;
+    margin-top: -0.2rem;
+    margin-left: 0.4rem;
+    padding-top: 0.4rem;
+    font-size: 1.5em;
+    text-align: center;
+    border: none;
+    background: none;
+    cursor: pointer;
+    transition: all 0.5s;
+  }
+  div.title button:hover {
+    color: #fff;
+    background-color: var(--color-beige);
+    border-radius: 50%;
+  }
+
+  div.title div input:focus {
+    outline: none;
+  }
+  /* 추가 설명 (태그, 날씨) */
+  div.description {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* 태그 (span) */
+  div.description div:nth-child(1) {
+    flex: 8;
+  }
+  div.description div:nth-child(1) > span {
+    margin-right: 0.4rem;
+    color: var(--color-black);
+  }
+  /* 날씨 (svg) */
+  div.description div.weather {
+    flex: 3;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+  }
+  div.description div.weather div {
+    max-width: 2rem;
+    max-height: 2rem;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    transition: all 0.5s;
+    cursor: pointer;
+    position: relative;
+  }
+  div.description div.weather div.select {
+    background-color: var(--color-beige);
+  }
+  div.description div.weather div span {
+    display: block;
+    width: 100%;
+    height: 100%;
+    color: #fff;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+  }
+  div.description div.weather div svg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  div.diary_text {
+    flex: 1;
+    width: 100%;
+    padding: 1rem;
+    margin-top: 1.5rem;
+    border: 1px solid #ddd;
+    word-break: break-all;
+    word-wrap: break-word;
+    text-overflow: ellipsis;
+  }
+  div.diary_text p {
+    margin: 0;
+    line-height: 1.2;
+  }
+  div.diary_text textarea {
+    max-width: 100%;
+    max-height: 100%;
+    width: 100%;
+    height: 100%;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.4);
+    line-height: 1.2;
+    resize: none;
+    font-size: 1.3em;
+  }
+
+  div.diary_text textarea::placeholder {
+    font-size: 1em;
+  }
+  div.diary_text textarea:focus {
+    outline: none;
   }
 `;
 
@@ -176,66 +366,78 @@ const NewDiary = () => {
   return (
     <NewDiaryWrap>
       <Header />
-      <button>
-        <Link to={MAIN}>Go Back</Link>
-      </button>
-      <h3>NewDiary</h3>
-      <div onClick={DrawingHandler}>
-        {drawingImg !== '' ? (
-          <img src={drawingImg} alt='drawingImg' />
-        ) : (
-          'click me!'
-        )}
-      </div>
-      {clickDrawing ? (
-        <DrawingModal
-          DrawingHandler={DrawingHandler}
-          SaveDrawingHandler={SaveDrawingHandler}
-        />
-      ) : null}
-      <input
-        type='text'
-        placeholder='Title'
-        value={inputTitle}
-        onChange={inputHandler}
-      />
-      <button onClick={handleClick} disabled={blockDoubleClick}>
-        {blockDoubleClick ? '전송중...' : 'save'}
-      </button>
-      {/* <input
-        type='text'
-        placeholder='HashTag'
-        value={inputTag}
-        onChange={inputHandler}
-      /> */}
-      <Tag tags={tags} setTags={setTags} />
-      {/* 날씨 선택 */}
-      <TiWeatherSunny
-        onClick={weatherSelectHandler}
-        data-weather='0'
-        className={weatherIdx === 0 ? 'select' : ''}
-      />
-      <TiWeatherPartlySunny
-        onClick={weatherSelectHandler}
-        data-weather='1'
-        className={weatherIdx === 1 ? 'select' : ''}
-      />
-      <TiWeatherDownpour
-        onClick={weatherSelectHandler}
-        data-weather='2'
-        className={weatherIdx === 2 ? 'select' : ''}
-      />
-      <TiWeatherSnow
-        onClick={weatherSelectHandler}
-        data-weather='3'
-        className={weatherIdx === 3 ? 'select' : ''}
-      />
-      <input
-        type='text'
-        placeholder='오늘의 일기'
-        value={inputContent}
-        onChange={inputHandler}
-      />
+      <>
+        <button className='backbutton'>
+          <Link to={MAIN}>
+            <BsArrow90DegLeft />
+          </Link>
+        </button>
+        <DiaryWrap>
+          <div className='img' onClick={DrawingHandler}>
+            {drawingImg !== '' ? (
+              <img src={drawingImg} alt='drawingImg' />
+            ) : (
+              'CLICK ME!'
+            )}
+          </div>
+          {/* Drawing Modal */}
+          {clickDrawing && (
+            <DrawingModal
+              DrawingHandler={DrawingHandler}
+              SaveDrawingHandler={SaveDrawingHandler}
+            />
+          )}
+          <div>
+            <div className='title'>
+              <div>
+                <input
+                  type='text'
+                  placeholder='Title'
+                  value={inputTitle}
+                  onChange={inputHandler}
+                />
+                <div>
+                  <button onClick={handleClick} disabled={blockDoubleClick}>
+                    {blockDoubleClick ? <BiLoaderCircle /> : <MdSaveAlt />}
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div className='description'>
+              {/* 해쉬태그 */}
+              <div>
+                <Tag tags={tags} setTags={setTags} />
+              </div>
+              {/* 날씨 선택 */}
+              <div className='weather'>
+                <div className={weatherIdx === 0 ? 'select' : ''}>
+                  <span onClick={weatherSelectHandler} data-weather='0'></span>
+                  <BsSunFill />
+                </div>
+                <div className={weatherIdx === 1 ? 'select' : ''}>
+                  <span onClick={weatherSelectHandler} data-weather='1'></span>
+                  <BsCloudSunFill />
+                </div>
+                <div className={weatherIdx === 2 ? 'select' : ''}>
+                  <span onClick={weatherSelectHandler} data-weather='2'></span>
+                  <BsFillCloudRainFill />
+                </div>
+                <div className={weatherIdx === 3 ? 'select' : ''}>
+                  <span onClick={weatherSelectHandler} data-weather='3'></span>
+                  <GiSnowman />
+                </div>
+              </div>
+            </div>
+            <div className='diary_text'>
+              <textarea
+                placeholder='오늘의 일기'
+                value={inputContent}
+                onChange={inputHandler}
+              />
+            </div>
+          </div>
+        </DiaryWrap>
+      </>
     </NewDiaryWrap>
   );
 };
