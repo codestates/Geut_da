@@ -250,7 +250,7 @@ const DrawingModal = ({ DrawingHandler, SaveDrawingHandler }) => {
             <input
               type='range'
               min='0.1'
-              max='5'
+              max='15'
               value={lineWidth}
               step='0.1'
               onChange={handleRangeChange}
@@ -283,11 +283,23 @@ const DrawingModal = ({ DrawingHandler, SaveDrawingHandler }) => {
             onClick={handleColorClick}
           />
           <li
+            style={{ backgroundColor: '#f0f0f0' }}
+            onClick={handleColorClick}
+          />
+          <li
             style={{ backgroundColor: '#2c2c2c' }}
             onClick={handleColorClick}
           />
           <li
+            style={{ backgroundColor: '#FAEBD7' }}
+            onClick={handleColorClick}
+          />
+          <li
             style={{ backgroundColor: '#a52a2a' }}
+            onClick={handleColorClick}
+          />
+          <li
+            style={{ backgroundColor: '#d26c6c' }}
             onClick={handleColorClick}
           />
           <li
@@ -303,7 +315,19 @@ const DrawingModal = ({ DrawingHandler, SaveDrawingHandler }) => {
             onClick={handleColorClick}
           />
           <li
+            style={{ backgroundColor: '#339933' }}
+            onClick={handleColorClick}
+          />
+          <li
+            style={{ backgroundColor: '#b7e2fc' }}
+            onClick={handleColorClick}
+          />
+          <li
             style={{ backgroundColor: '#4682b4' }}
+            onClick={handleColorClick}
+          />
+          <li
+            style={{ backgroundColor: '#f2f2fc' }}
             onClick={handleColorClick}
           />
           <li
