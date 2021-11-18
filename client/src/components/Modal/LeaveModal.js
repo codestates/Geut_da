@@ -70,7 +70,7 @@ const LeaveModal = ({ isUserResignHandler, isRealUserResignHandler }) => {
       </button>
       <LeaveTextWrap>
         <div>
-          탈퇴시 모든 게시물이 삭제됩니다.
+          탈퇴 시 모든 게시물이 삭제됩니다.
           <br />
           <strong>정말 탈퇴하시겠습니까?</strong>
         </div>

@@ -143,7 +143,7 @@ const UserEditModal = ({ openUserEditModalHandler, pwCheckdValue }) => {
     if (editValidateState.nickname && nicknameValidText === 'ok') {
       setNicknameValidateMessage('사용 가능한 닉네임 입니다');
     } else if (!editValidateState.nickname && nicknameValidText === 'overlap') {
-      setNicknameValidateMessage('사용중인 닉네임 입니다');
+      setNicknameValidateMessage('사용 중인 닉네임 입니다');
     } else if (!editValidateState.nickname && nicknameValidText === 'nothing') {
       setNicknameValidateMessage('변경하실 닉네임을 적어주세요');
     } else if (
@@ -151,7 +151,7 @@ const UserEditModal = ({ openUserEditModalHandler, pwCheckdValue }) => {
       nicknameValidText === 'invalidate'
     ) {
       setNicknameValidateMessage(
-        '두글자 이상 열 글자 이하로 닉네임을 입력해주세요'
+        '두 글자 이상 열 글자 이하로 닉네임을 입력해주세요'
       );
     }
 
@@ -175,12 +175,12 @@ const UserEditModal = ({ openUserEditModalHandler, pwCheckdValue }) => {
       !editValidateState.passwordCheck &&
       pwCheckValidText === 'nothing'
     ) {
-      setPwCheckValidateMessage('비밀번호 변경시 필수 입력 사항입니다');
+      setPwCheckValidateMessage('비밀번호 변경 시 필수 입력 사항입니다');
     } else if (
       !editValidateState.passwordCheck &&
       pwCheckValidText === 'invalidate'
     ) {
-      setPwCheckValidateMessage('비밀번호와 일치하지 않습니다');
+      setPwCheckValidateMessage('비밀번호가 일치하지 않습니다');
     }
   }, [nicknameValidText, pwValidText, pwCheckValidText]);
 
