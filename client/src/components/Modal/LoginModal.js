@@ -10,9 +10,10 @@ const LoginModalWrap = styled.div`
   position: relative;
   width: 70vw;
   height: 70vh;
-  padding: 3rem;
+  padding: 3rem 3rem 3rem 0;
   background-color: #ffffff;
   border-radius: 1rem;
+  overflow: hidden;
 
   .closeButton {
     width: 3rem;
@@ -34,8 +35,12 @@ const LoginModalWrap = styled.div`
 const LoginModalImg = styled.div`
   flex: 1;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   img {
+    width: auto;
     height: 100%;
   }
 `;
@@ -210,7 +215,7 @@ const LoginModal = ({ LoginModalHandler, SignupModalHandler }) => {
   return (
     <LoginModalWrap onClick={(e) => e.stopPropagation()}>
       <LoginModalImg>
-        <img src='/images/bg.jpeg' alt='일러스트 이미지' />
+        <img src='/images/human.png' alt='일러스트 이미지' />
       </LoginModalImg>
       <button onClick={LoginModalCloseHandler} className={'closeButton'}>
         &times;
