@@ -1,4 +1,3 @@
-import { set } from 'mongoose';
 import { useRef, useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
 
@@ -300,7 +299,7 @@ const DrawingModal = ({ DrawingHandler, SaveDrawingHandler, drawingImg }) => {
             onClick={handleColorClick}
           />
           <li
-            style={{ backgroundColor: '#f0f0f0' }}
+            style={{ backgroundColor: '#fffafa' }}
             onClick={handleColorClick}
           />
           <li
