@@ -191,6 +191,7 @@ const NewDiary = () => {
         <DrawingModal
           DrawingHandler={DrawingHandler}
           SaveDrawingHandler={SaveDrawingHandler}
+          drawingImg={drawingImg}
         />
       ) : null}
       <input
