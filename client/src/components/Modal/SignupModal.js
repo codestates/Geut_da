@@ -181,7 +181,7 @@ const SignupModal = ({ SignupModalHandler, LoginModalHandler }) => {
       !signUpValidateState.nickname &&
       nicknameValidText === 'overlap'
     ) {
-      setNicknameValidateMessage('사용중인 닉네임 입니다');
+      setNicknameValidateMessage('사용 중인 닉네임 입니다');
     } else if (
       !signUpValidateState.nickname &&
       nicknameValidText === 'nothing'
@@ -192,7 +192,7 @@ const SignupModal = ({ SignupModalHandler, LoginModalHandler }) => {
       nicknameValidText === 'invalidate'
     ) {
       setNicknameValidateMessage(
-        '두글자 이상 열 글자 이하로 닉네임을 입력해주세요'
+        '두 글자 이상 열 글자 이하로 닉네임을 입력해주세요'
       );
     }
 
