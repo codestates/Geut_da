@@ -3,11 +3,10 @@ import styled from 'styled-components';
 const LeaveModalWrap = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   position: relative;
   width: 30vw;
-  height: 30vh;
   padding: 3rem;
   background-color: #ffffff;
   border-radius: 1rem;
