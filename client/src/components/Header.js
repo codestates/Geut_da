@@ -225,7 +225,7 @@ const Header = ({ LoginModalHandler, SignupModalHandler }) => {
           <p>menu</p>
           <div className='backdrop'></div>
         </label>
-        <Nav userInfo={JSON.parse(localStorage.getItem('userInfo'))} />
+        <Nav LoginModalHandler={LoginModalHandler} userInfo={JSON.parse(localStorage.getItem('userInfo'))} />
       </NavWrap>
       <InfoWrap>
         {IsLogin ? (
