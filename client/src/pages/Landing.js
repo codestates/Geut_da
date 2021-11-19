@@ -115,6 +115,7 @@ const LandingWrap = styled.div`
       left: 50%;
       transform: translateX(-50%);
       transition: all 0.5s;
+      cursor: pointer;
     }
     span:hover {
       color: var(--color-beige);

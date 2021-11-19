@@ -24,6 +24,7 @@ const ProfileUploadWrap = styled.div`
     position: absolute;
     bottom: 0;
     right: -0.8rem;
+    cursor: pointer;
   }
   input[id='editicon'] + label:hover {
     color: #fff;
@@ -36,9 +37,7 @@ dotenv.config();
 const ProfileUpload = () => {
   const imagePatchConfig = {
     headers: {
-      Authorization: `Bearer ${
-        JSON.parse(localStorage.getItem('userInfo')).token
-      }`,
+      Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}`,
       'Content-Type': 'application/json',
     },
   };
@@ -57,32 +56,16 @@ const ProfileUpload = () => {
         alert('1mb 이하의 파일만 업로드 가능합니다.');
         event.target.value = null;
       } else {
-        if (
-          file.type === 'image/jpeg' ||
-          file.type === 'image/png' ||
-          file.type === 'image/jpg'
-        ) {
+        if (file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg') {
           ReactS3Client.uploadFile(file, newFileName).then((data) => {
             // console.log(data);
             if (data.status === 204) {
               axios
-                .patch(
-                  'http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/users/image',
-                  { image: data.location },
-                  imagePatchConfig
-                )
+                .patch('http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/users/image', { image: data.location }, imagePatchConfig)
                 .then((res) => {
                   // console.log(res, '이미지 보내짐');
-                  if (
-                    JSON.parse(localStorage.getItem('userInfo')).image.split(
-                      '.'
-                    )[0] === 'http://www.geutdaimage'
-                  ) {
-                    ReactS3Client.deleteFile(
-                      JSON.parse(localStorage.getItem('userInfo')).image.split(
-                        '/'
-                      )[3]
-                    )
+                  if (JSON.parse(localStorage.getItem('userInfo')).image.split('.')[0] === 'http://www.geutdaimage') {
+                    ReactS3Client.deleteFile(JSON.parse(localStorage.getItem('userInfo')).image.split('/')[3])
                       .then((res) => {
                         localStorage.setItem(
                           'userInfo',
@@ -96,10 +79,7 @@ const ProfileUpload = () => {
                       })
                       .catch((err) => {
                         console.log(err, '삭제안됨');
-                        console.log(
-                          JSON.parse(localStorage.getItem('userInfo')).image,
-                          'tet'
-                        );
+                        console.log(JSON.parse(localStorage.getItem('userInfo')).image, 'tet');
                       });
                   } else {
                     localStorage.setItem(
@@ -129,12 +109,7 @@ const ProfileUpload = () => {
 
   return (
     <ProfileUploadWrap>
-      <input
-        id='editicon'
-        type='file'
-        accept='image/*'
-        onChange={handleClick}
-      />
+      <input id='editicon' type='file' accept='image/*' onChange={handleClick} />
       <label htmlFor='editicon'>
         <BiImageAdd />
       </label>

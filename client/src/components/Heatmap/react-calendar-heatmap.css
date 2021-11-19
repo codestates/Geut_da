@@ -17,6 +17,7 @@
 .react-calendar-heatmap rect:hover {
   stroke: var(--color-beige);
   stroke-width: 2px;
+  cursor: pointer;
 }
 
 /*

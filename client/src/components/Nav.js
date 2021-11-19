@@ -73,6 +73,7 @@ const NavModal = styled.nav`
   button.logout:hover {
     color: #fff;
     background-color: rgba(178, 34, 34, 0.5);
+    cursor: pointer;
   }
 `;
 
@@ -101,9 +102,7 @@ const Nav = ({ userInfo }) => {
             </li>
             <li>
               <a>
-                <div onClick={() => window.location.replace(MYPAGE)}>
-                  Mypage
-                </div>
+                <div onClick={() => window.location.replace(MYPAGE)}>Mypage</div>
               </a>
               {/* <Link to='/mypage'>Mypage</Link> */}
             </li>

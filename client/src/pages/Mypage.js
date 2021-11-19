@@ -33,7 +33,6 @@ const ProfileInfo = styled.div`
   justify-content: center;
   align-items: center;
   border-bottom: 1px solid var(--color-beige);
-
   div.user_info {
     margin-right: 2.5rem;
   }
@@ -67,6 +66,7 @@ const ProfileInfo = styled.div`
     border: none;
     border-radius: 0.2rem;
     transition: all 0.5s;
+    cursor: pointer;
   }
   button:hover {
     color: #fff;

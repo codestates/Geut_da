@@ -67,6 +67,7 @@ const DiaryWrap = styled.div`
     background-color: rgba(255, 255, 255, 0.2);
     position: relative;
     overflow: hidden;
+    cursor: pointer;
 
     img {
       max-width: 100%;
