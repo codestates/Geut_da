@@ -2,6 +2,7 @@ import styled from 'styled-components/macro';
 import IsLoginState from '../states/IsLoginState';
 import { useRecoilValue } from 'recoil';
 import Nav from './Nav';
+import { LANDING, MAIN } from '../constants/routes';
 
 const HeaderWrap = styled.header`
   padding: 1.2rem;
@@ -17,6 +18,7 @@ const Logo = styled.div`
 
   > img {
     height: 100%;
+    cursor: pointer;
   }
 `;
 
@@ -209,7 +211,7 @@ const Header = ({ LoginModalHandler, SignupModalHandler }) => {
   return (
     <HeaderWrap name='top'>
       <Logo>
-        <img src='/images/geutda_logo.svg' alt='Logo' />
+        <img src='/images/geutda_logo.svg' alt='Logo' onClick={() => window.location.replace(MAIN)} />
       </Logo>
       <NavWrap>
         <input type='checkbox' id='menuicon' />
