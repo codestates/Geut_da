@@ -246,7 +246,7 @@ const NewDiary = () => {
       inputTitle && setIsExistTitle(true);
     } else if (event.target.placeholder === 'HashTag') {
       setInputTag(event.target.value);
-    } else if (event.target.placeholder === '오늘의 일기') {
+    } else if (event.target.placeholder === "Today's Diary") {
       setInputContent(event.target.value);
       inputContent && setIsExistContent(true);
     }
@@ -407,7 +407,7 @@ const NewDiary = () => {
               </div>
             </div>
             <div className='diary_text'>
-              <textarea placeholder='오늘의 일기' value={inputContent} onChange={inputHandler} />
+              <textarea placeholder="Today's Diary" value={inputContent} onChange={inputHandler} />
             </div>
           </div>
         </DiaryWrap>
