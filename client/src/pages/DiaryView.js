@@ -375,7 +375,7 @@ const DiaryView = () => {
   const inputHandler = (event) => {
     if (event.target.placeholder === 'Title') {
       setInputTitle(event.target.value);
-    } else if (event.target.placeholder === '오늘의 일기') {
+    } else if (event.target.placeholder === "Today's Diary") {
       setInputContent(event.target.value);
     }
   };
@@ -434,7 +434,7 @@ const DiaryView = () => {
                   </div>
                 </div>
                 <div className='diary_text'>
-                  <textarea placeholder='오늘의 일기' value={inputContent} onChange={inputHandler} />
+                  <textarea placeholder="Today's Diary" value={inputContent} onChange={inputHandler} />
                 </div>
               </div>
             </DiaryWrap>
