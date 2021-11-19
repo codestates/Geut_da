@@ -79,29 +79,20 @@ const RealLeaveModal = ({ isRealUserResignHandler }) => {
   const realResignHandler = () => {
     const config = {
       headers: {
-        Authorization: `Bearer ${
-          JSON.parse(localStorage.getItem('userInfo')).token
-        }`,
+        Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}`,
       },
     };
     axios
-      .get(
-        'http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/contents/all',
-        config
-      )
+      .get('http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/contents/all', config)
       .then((res) => {
-        res.data.map((el) => ReactS3Client.deleteFile(el.split('/')[3]));
+        console.log(res.data);
+        res.data.map((el) => ReactS3Client.deleteFile(el.drawing.split('/')[3]));
       })
       .then((res) => {
         axios
-          .delete(
-            'http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/users/profile',
-            config
-          )
+          .delete('http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/users/profile', config)
           .then((res) => {
-            ReactS3Client.deleteFile(
-              JSON.parse(localStorage.getItem('userInfo')).image.split('/')[3]
-            ).then((res) => {
+            ReactS3Client.deleteFile(JSON.parse(localStorage.getItem('userInfo')).image.split('/')[3]).then((res) => {
               alert('탈퇴되었습니다. 이용해주셔서 감사합니다.');
               setIsLogin(false);
               localStorage.removeItem('userInfo');
