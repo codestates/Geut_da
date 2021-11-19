@@ -124,9 +124,11 @@ const LoginModalLinkWrap = styled.div`
     cursor: pointer;
     outline: none;
     transform: scale(1.05);
+    background-color: #000;
   }
 
   span {
+    cursor: pointer;
     font-size: 1em;
     color: #666;
   }
@@ -170,10 +172,7 @@ const LoginModal = ({ LoginModalHandler, SignupModalHandler }) => {
       },
     };
 
-    if (
-      emailExp.test(loginInputInfo.email) &&
-      pwdExp.test(loginInputInfo.password)
-    ) {
+    if (emailExp.test(loginInputInfo.email) && pwdExp.test(loginInputInfo.password)) {
       axios
         .post(
           'http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/users/login',
@@ -227,20 +226,8 @@ const LoginModal = ({ LoginModalHandler, SignupModalHandler }) => {
           </LoginModalLogoWrap>
           <LoginModalInputWrap>
             <h3>Login</h3>
-            <input
-              type='email'
-              placeholder='Email'
-              value={loginInputInfo.email}
-              onChange={InputValueChangeHandler}
-              onKeyPress={LogInReqEnterHandler}
-            />
-            <input
-              type='password'
-              placeholder='password'
-              value={loginInputInfo.password}
-              onChange={InputValueChangeHandler}
-              onKeyUp={LogInReqEnterHandler}
-            />
+            <input type='email' placeholder='Email' value={loginInputInfo.email} onChange={InputValueChangeHandler} onKeyPress={LogInReqEnterHandler} />
+            <input type='password' placeholder='password' value={loginInputInfo.password} onChange={InputValueChangeHandler} onKeyUp={LogInReqEnterHandler} />
             {loginMessage ? (
               <span>
                 &#42;아이디 또는 비밀번호가 잘못 입력 되었습니다.

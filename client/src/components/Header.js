@@ -2,7 +2,7 @@ import styled from 'styled-components/macro';
 import IsLoginState from '../states/IsLoginState';
 import { useRecoilValue } from 'recoil';
 import Nav from './Nav';
-import { LANDING, MAIN } from '../constants/routes';
+import { MAIN, MYPAGE } from '../constants/routes';
 
 const HeaderWrap = styled.header`
   padding: 1.2rem;
@@ -144,7 +144,9 @@ const InfoWrap = styled.div`
     justify-content: flex-end;
     align-items: center;
   }
-
+  .cursorPointer {
+    cursor: pointer;
+  }
   .btn {
     height: 100%;
     width: 3.6rem;
@@ -227,7 +229,11 @@ const Header = ({ LoginModalHandler, SignupModalHandler }) => {
       </NavWrap>
       <InfoWrap>
         {IsLogin ? (
-          <div>{JSON.parse(localStorage.getItem('userInfo')).nickname}</div>
+          <div>
+            <span onClick={() => window.location.replace(MYPAGE)} className='cursorPointer'>
+              {JSON.parse(localStorage.getItem('userInfo')).nickname}
+            </span>
+          </div>
         ) : (
           <div>
             <div className='btn' onClick={LoginModalHandler}>

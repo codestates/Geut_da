@@ -124,6 +124,7 @@ const SignUpModalButtonWrap = styled.div`
     cursor: pointer;
     outline: none;
     transform: scale(1.05);
+    background-color: #000;
   }
 `;
 
@@ -177,23 +178,12 @@ const SignupModal = ({ SignupModalHandler, LoginModalHandler }) => {
     //닉네임
     if (signUpValidateState.nickname && nicknameValidText === 'ok') {
       setNicknameValidateMessage('사용 가능한 닉네임 입니다');
-    } else if (
-      !signUpValidateState.nickname &&
-      nicknameValidText === 'overlap'
-    ) {
+    } else if (!signUpValidateState.nickname && nicknameValidText === 'overlap') {
       setNicknameValidateMessage('사용 중인 닉네임 입니다');
-    } else if (
-      !signUpValidateState.nickname &&
-      nicknameValidText === 'nothing'
-    ) {
+    } else if (!signUpValidateState.nickname && nicknameValidText === 'nothing') {
       setNicknameValidateMessage('필수 입력 사항입니다');
-    } else if (
-      !signUpValidateState.nickname &&
-      nicknameValidText === 'invalidate'
-    ) {
-      setNicknameValidateMessage(
-        '두 글자 이상 열 글자 이하로 닉네임을 입력해주세요'
-      );
+    } else if (!signUpValidateState.nickname && nicknameValidText === 'invalidate') {
+      setNicknameValidateMessage('두 글자 이상 열 글자 이하로 닉네임을 입력해주세요');
     }
 
     //비밀번호
@@ -202,35 +192,22 @@ const SignupModal = ({ SignupModalHandler, LoginModalHandler }) => {
     } else if (!signUpValidateState.password && pwValidText === 'nothing') {
       setPwValidateMessage('필수 입력 사항입니다');
     } else if (!signUpValidateState.password && pwValidText === 'invalidate') {
-      setPwValidateMessage(
-        '알파벳, 숫자, 특수문자를 포함하여 8~20글자를 입력해주세요.'
-      );
+      setPwValidateMessage('알파벳, 숫자, 특수문자를 포함하여 8~20글자를 입력해주세요.');
     }
 
     //비밀번호 확인
     if (signUpValidateState.passwordCheck && pwCheckValidText === 'ok') {
       setPwCheckValidateMessage('비밀번호 일치');
-    } else if (
-      !signUpValidateState.passwordCheck &&
-      pwCheckValidText === 'nothing'
-    ) {
+    } else if (!signUpValidateState.passwordCheck && pwCheckValidText === 'nothing') {
       setPwCheckValidateMessage('필수 입력 사항입니다');
-    } else if (
-      !signUpValidateState.passwordCheck &&
-      pwCheckValidText === 'invalidate'
-    ) {
+    } else if (!signUpValidateState.passwordCheck && pwCheckValidText === 'invalidate') {
       setPwCheckValidateMessage('비밀번호와 일치하지 않습니다');
     }
   }, [emailValidText, nicknameValidText, pwValidText, pwCheckValidText]);
 
   useEffect(() => {
     //signUpValidateState 변경시 마다 실행.
-    if (
-      signUpValidateState.email === true &&
-      signUpValidateState.password === true &&
-      signUpValidateState.passwordCheck === true &&
-      signUpValidateState.nickname === true
-    ) {
+    if (signUpValidateState.email === true && signUpValidateState.password === true && signUpValidateState.passwordCheck === true && signUpValidateState.nickname === true) {
       setAllValidateCheck(true);
     } else {
       setAllValidateCheck(false);
@@ -252,16 +229,10 @@ const SignupModal = ({ SignupModalHandler, LoginModalHandler }) => {
       setSignUpInputInfo({ ...signUpInputInfo, nickname: event.target.value });
     }
 
-    if (
-      event.target.type === 'password' &&
-      event.target.placeholder === 'password'
-    ) {
+    if (event.target.type === 'password' && event.target.placeholder === 'password') {
       setSignUpInputInfo({ ...signUpInputInfo, password: event.target.value });
     }
-    if (
-      event.target.type === 'password' &&
-      event.target.placeholder === 'password check'
-    ) {
+    if (event.target.type === 'password' && event.target.placeholder === 'password check') {
       setSignUpInputInfo({
         ...signUpInputInfo,
         passwordCheck: event.target.value,
@@ -275,23 +246,13 @@ const SignupModal = ({ SignupModalHandler, LoginModalHandler }) => {
       setSignUpvalidateState({ ...signUpValidateState, email: false });
       setIsSpanColor({ ...isSpanColor, email: false });
       setEmailValidText('nothing');
-    } else if (
-      event.target.type === 'email' &&
-      !emailExp.test(signUpInputInfo.email)
-    ) {
+    } else if (event.target.type === 'email' && !emailExp.test(signUpInputInfo.email)) {
       setSignUpvalidateState({ ...signUpValidateState, email: false });
       setIsSpanColor({ ...isSpanColor, email: false });
       setEmailValidText('invalidate');
-    } else if (
-      event.target.type === 'email' &&
-      emailExp.test(signUpInputInfo.email)
-    ) {
+    } else if (event.target.type === 'email' && emailExp.test(signUpInputInfo.email)) {
       axios
-        .post(
-          'http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/users/email',
-          { email: signUpInputInfo.email },
-          config
-        )
+        .post('http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/users/email', { email: signUpInputInfo.email }, config)
         .then((res) => {
           //사용가능한 메일인 경우
           setSignUpvalidateState({ ...signUpValidateState, email: true });
@@ -310,23 +271,13 @@ const SignupModal = ({ SignupModalHandler, LoginModalHandler }) => {
       setSignUpvalidateState({ ...signUpValidateState, nickname: false });
       setIsSpanColor({ ...isSpanColor, nickname: false });
       setNicknameValidText('nothing');
-    } else if (
-      event.target.type === 'text' &&
-      !nicknameExp.test(signUpInputInfo.nickname)
-    ) {
+    } else if (event.target.type === 'text' && !nicknameExp.test(signUpInputInfo.nickname)) {
       setSignUpvalidateState({ ...signUpValidateState, nickname: false });
       setIsSpanColor({ ...isSpanColor, nickname: false });
       setNicknameValidText('invalidate');
-    } else if (
-      event.target.type === 'text' &&
-      nicknameExp.test(signUpInputInfo.nickname)
-    ) {
+    } else if (event.target.type === 'text' && nicknameExp.test(signUpInputInfo.nickname)) {
       axios
-        .post(
-          'http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/users/nickname',
-          { nickname: signUpInputInfo.nickname },
-          config
-        )
+        .post('http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/users/nickname', { nickname: signUpInputInfo.nickname }, config)
         .then((res) => {
           //사용가능한 닉네임인 경우
           setSignUpvalidateState({ ...signUpValidateState, nickname: true });
@@ -344,38 +295,22 @@ const SignupModal = ({ SignupModalHandler, LoginModalHandler }) => {
 
   const PasswordOnBlurHandler = (event) => {
     //password OnBlur
-    if (
-      event.target.type === 'password' &&
-      signUpInputInfo.password === '' &&
-      event.target.placeholder === 'password'
-    ) {
+    if (event.target.type === 'password' && signUpInputInfo.password === '' && event.target.placeholder === 'password') {
       setSignUpvalidateState({ ...signUpValidateState, password: false });
       setIsSpanColor({ ...isSpanColor, password: false });
       setPwValidText('nothing');
-    } else if (
-      event.target.type === 'password' &&
-      !pwdExp.test(signUpInputInfo.password) &&
-      event.target.placeholder === 'password'
-    ) {
+    } else if (event.target.type === 'password' && !pwdExp.test(signUpInputInfo.password) && event.target.placeholder === 'password') {
       setSignUpvalidateState({ ...signUpValidateState, password: false });
       setIsSpanColor({ ...isSpanColor, password: false });
       setPwValidText('invalidate');
-    } else if (
-      event.target.type === 'password' &&
-      pwdExp.test(signUpInputInfo.password) &&
-      event.target.placeholder === 'password'
-    ) {
+    } else if (event.target.type === 'password' && pwdExp.test(signUpInputInfo.password) && event.target.placeholder === 'password') {
       setSignUpvalidateState({ ...signUpValidateState, password: true });
       setIsSpanColor({ ...isSpanColor, password: true });
       setPwValidText('ok');
     }
 
     //password Check OnBlur
-    if (
-      event.target.type === 'password' &&
-      signUpInputInfo.passwordCheck === '' &&
-      event.target.placeholder === 'password check'
-    ) {
+    if (event.target.type === 'password' && signUpInputInfo.passwordCheck === '' && event.target.placeholder === 'password check') {
       setSignUpvalidateState({ ...signUpValidateState, passwordCheck: false });
       setIsSpanColor({ ...isSpanColor, passwordCheck: false });
       setPwCheckValidText('nothing');
@@ -454,67 +389,33 @@ const SignupModal = ({ SignupModalHandler, LoginModalHandler }) => {
           </SignUpModalLogoWrap>
           <SignUpModalInputWrap>
             <h3 className={'SignUpTitle'}>Sign Up</h3>
-            <input
-              type='email'
-              placeholder='Email'
-              value={signUpInputInfo.email}
-              onChange={SignUpInputValueChange}
-              onBlur={SignUpOnBlurHandler}
-            />
+            <input type='email' placeholder='Email' value={signUpInputInfo.email} onChange={SignUpInputValueChange} onBlur={SignUpOnBlurHandler} />
             {emailValidateMessage ? (
-              <span className={isSpanColor.email ? 'validatepass' : null}>
-                {emailValidateMessage}
-              </span>
+              <span className={isSpanColor.email ? 'validatepass' : null}>{emailValidateMessage}</span>
             ) : (
               <span>
                 <br />
               </span>
             )}
-            <input
-              type='password'
-              placeholder='password'
-              value={signUpInputInfo.password}
-              onChange={SignUpInputValueChange}
-              onBlur={PasswordOnBlurHandler}
-            />
+            <input type='password' placeholder='password' value={signUpInputInfo.password} onChange={SignUpInputValueChange} onBlur={PasswordOnBlurHandler} />
             {pwValidateMessage ? (
-              <span className={isSpanColor.password ? 'validatepass' : null}>
-                {pwValidateMessage}
-              </span>
+              <span className={isSpanColor.password ? 'validatepass' : null}>{pwValidateMessage}</span>
             ) : (
               <span>
                 <br />
               </span>
             )}
-            <input
-              type='password'
-              placeholder='password check'
-              value={signUpInputInfo.passwordCheck}
-              onChange={SignUpInputValueChange}
-              onBlur={PasswordOnBlurHandler}
-            />
+            <input type='password' placeholder='password check' value={signUpInputInfo.passwordCheck} onChange={SignUpInputValueChange} onBlur={PasswordOnBlurHandler} />
             {pwCheckValidateMessage ? (
-              <span
-                className={isSpanColor.passwordCheck ? 'validatepass' : null}
-              >
-                {pwCheckValidateMessage}
-              </span>
+              <span className={isSpanColor.passwordCheck ? 'validatepass' : null}>{pwCheckValidateMessage}</span>
             ) : (
               <span>
                 <br />
               </span>
             )}
-            <input
-              type='text'
-              placeholder='nickname'
-              value={signUpInputInfo.nickname}
-              onChange={SignUpInputValueChange}
-              onBlur={SignUpOnBlurHandler}
-            />
+            <input type='text' placeholder='nickname' value={signUpInputInfo.nickname} onChange={SignUpInputValueChange} onBlur={SignUpOnBlurHandler} />
             {nicknameValidateMessage ? (
-              <span className={isSpanColor.nickname ? 'validatepass' : null}>
-                {nicknameValidateMessage}
-              </span>
+              <span className={isSpanColor.nickname ? 'validatepass' : null}>{nicknameValidateMessage}</span>
             ) : (
               <span>
                 <br />
