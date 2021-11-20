@@ -59,45 +59,41 @@ const ProfileUpload = () => {
         if (file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg') {
           ReactS3Client.uploadFile(file, newFileName).then((data) => {
             // console.log(data);
-            if (data.status === 204) {
-              axios
-                .patch('http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/users/image', { image: data.location }, imagePatchConfig)
-                .then((res) => {
-                  // console.log(res, '이미지 보내짐');
-                  if (JSON.parse(localStorage.getItem('userInfo')).image.split('.')[0] === 'http://www.geutdaimage') {
-                    ReactS3Client.deleteFile(JSON.parse(localStorage.getItem('userInfo')).image.split('/')[3])
-                      .then((res) => {
-                        localStorage.setItem(
-                          'userInfo',
-                          JSON.stringify({
-                            ...JSON.parse(localStorage.userInfo),
-                            image: data.location,
-                          })
-                        );
-                        window.location.reload();
-                        // console.log(res, '삭제');
-                      })
-                      .catch((err) => {
-                        console.log(err, '삭제안됨');
-                        console.log(JSON.parse(localStorage.getItem('userInfo')).image, 'tet');
-                      });
-                  } else {
-                    localStorage.setItem(
-                      'userInfo',
-                      JSON.stringify({
-                        ...JSON.parse(localStorage.userInfo),
-                        image: data.location,
-                      })
-                    );
-                    window.location.reload();
-                  }
-                })
-                .catch((err) => {
-                  console.log(err, '이미지 변경 안됨');
-                });
-            } else {
-              console.log('fail');
-            }
+            axios
+              .patch('http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/users/image', { image: data.location }, imagePatchConfig)
+              .then((res) => {
+                // console.log(res, '이미지 보내짐');
+                if (JSON.parse(localStorage.getItem('userInfo')).image.split('.')[0] === 'https://geutdaimage') {
+                  ReactS3Client.deleteFile(JSON.parse(localStorage.getItem('userInfo')).image.split('/')[3])
+                    .then((res) => {
+                      localStorage.setItem(
+                        'userInfo',
+                        JSON.stringify({
+                          ...JSON.parse(localStorage.userInfo),
+                          image: data.location,
+                        })
+                      );
+                      window.location.reload();
+                      // console.log(res, '삭제');
+                    })
+                    .catch((err) => {
+                      console.log(err, '삭제안됨');
+                      console.log(JSON.parse(localStorage.getItem('userInfo')).image, 'tet');
+                    });
+                } else {
+                  localStorage.setItem(
+                    'userInfo',
+                    JSON.stringify({
+                      ...JSON.parse(localStorage.userInfo),
+                      image: data.location,
+                    })
+                  );
+                  window.location.reload();
+                }
+              })
+              .catch((err) => {
+                console.log(err, '이미지 변경 안됨');
+              });
           });
         } else {
           alert('JPEG, PNG, JPG 파일만 업로드 가능합니다.');
