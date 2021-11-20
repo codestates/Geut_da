@@ -385,7 +385,7 @@ const DiaryView = () => {
   };
 
   const gobackHandler = () => {
-    window.history.back();
+    window.location.replace(MAIN);
   };
 
   return (
