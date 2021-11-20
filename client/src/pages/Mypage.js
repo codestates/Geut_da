@@ -150,6 +150,42 @@ const Mypage = () => {
         setCounts({});
         setIsLoading(false);
       });
+      console.log(
+        '                                                                        ,,\n\
+                                                                       /  ,\n\
+                                                                      /   /\n\
+                                                                     /   /\n\
+                                                                    /   /\n\
+    __________________________                                     /   /\n\
+    ⎢                         ⎥                                   /   /\n\
+    ⎢  혹시 내가 보여? 난 고양이야  ⎥                                  /   /\n\
+    ⎢____    _________________⎥                                 /   /\n\
+          \\/    ,      ,,                                      /   /\n\
+               /%c@%c\\____/%c@%c \\                                ____/   /\n\
+              /           \\                         _____/        /__\n\
+        /" \\ / •    •      \\                     __/             /  %c@@%c"\\\n\
+        \\    %c@@%c  ㅅ  %c@@%c     /___             ___/                /    _/\n\
+      /" \\   \\                 \\__________/                    |__/ "\\\n\
+      \\   \\                                                   /      /\n\
+       \\    \\  __                                                  _/\n\
+        \\                                                       __/\n\
+          \\_                                             ______/\n\
+             \\ ___                                     _/\n\
+                    \\__                             __/\n\
+                        \\_____                _____/\n\
+                              \\______________/\n\
+          \n',
+        'color:#ff6905',
+        'color:defalut',
+        'color:#ff6905',
+        'color:defalut',
+        'color:#ff6905',
+        'color:defalut',
+        'color:#ff6905',
+        'color:defalut',
+        'color:#ff6905',
+        'color:defalut'
+      )
   }, []);
 
   const searchDayHandler = (value) => {
@@ -212,42 +248,6 @@ const Mypage = () => {
 
   return (
     <MypageWrap>
-      {console.log(
-        '                                                                        ,,\n\
-                                                                       /  ,\n\
-                                                                      /   /\n\
-                                                                     /   /\n\
-                                                                    /   /\n\
-    __________________________                                     /   /\n\
-    ⎢                         ⎥                                   /   /\n\
-    ⎢  혹시 내가 보여? 난 고양이야  ⎥                                  /   /\n\
-    ⎢____    _________________⎥                                 /   /\n\
-          \\/    ,      ,,                                      /   /\n\
-               /%c@%c\\____/%c@%c \\                                ____/   /\n\
-              /           \\                         _____/        /__\n\
-        /" \\ / •    •      \\                     __/             /  %c@@%c"\\\n\
-        \\    %c@@%c  ㅅ  %c@@%c     /___             ___/                /    _/\n\
-      /" \\   \\                 \\__________/                    |__/ "\\\n\
-      \\   \\                                                   /      /\n\
-       \\    \\  __                                                  _/\n\
-        \\                                                       __/\n\
-          \\_                                             ______/\n\
-             \\ ___                                     _/\n\
-                    \\__                             __/\n\
-                        \\_____                _____/\n\
-                              \\______________/\n\
-          \n',
-        'color:#ff6905',
-        'color:defalut',
-        'color:#ff6905',
-        'color:defalut',
-        'color:#ff6905',
-        'color:defalut',
-        'color:#ff6905',
-        'color:defalut',
-        'color:#ff6905',
-        'color:defalut'
-      )}
       <Header />
       {isLoading ? (
         <LoaderBackDrop>
