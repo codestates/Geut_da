@@ -1,13 +1,108 @@
+/* 웰컴체 폰트 */
+@font-face {
+  font-family: 'OTWelcome';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2110@1.0/OTWelcomeBA.woff2')
+    format('woff2');
+  font-weight: bold;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'OTWelcome';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2110@1.0/OTWelcomeRA.woff2')
+    format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+@import url('https://fonts.googleapis.com/css2?family=Racing+Sans+One&display=swap');
+
+/* Reset CSS */
+* {
+  box-sizing: border-box;
+}
+html,
 body {
+  width: 100%;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  padding: 0;
+}
+ul,
+li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+a {
+  color: var(--color-black);
+  text-decoration: none;
+}
+
+/* :root css */
+:root {
+  --color-bg: #f0eee7;
+  --color-red: #b22222;
+  --color-beige: #d2b69e;
+  --color-blue: #567593;
+  --color-black: #333333;
+}
+
+/* Global CSS */
+body {
+  max-width: 1440px;
+  width: 90vw;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding-top: 10vh;
+  font-family: 'OTWelcome', serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-bg);
+  position: relative;
+  /* 스크롤바 제거 */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+body::-webkit-scrollbar {
+  display: none;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+input[type='email'],
+input[type='text'],
+button,
+span,
+textarea {
+  font-family: 'OTWelcome', serif;
+}
+
+header {
+  max-width: 1440px;
+  width: 90vw;
+  height: 10vh;
+  margin: 0 auto;
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 999;
+}
+footer {
+  width: 100%;
+  height: 22vh;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 999;
+}
+
+/* 미디어쿼리 */
+@media only screen and (min-width: 481px) and (max-width: 768px) {
+  /* 481~768 */
+}
+@media only screen and (max-width: 480px) {
+  /* 0~480 */
 }
