@@ -67,23 +67,17 @@ const UserCheckModalWrap = styled.div`
     cursor: pointer;
     outline: none;
     transform: scale(1.05);
+    background-color: #000;
   }
 `;
 
-const UserCheckModal = ({
-  openPasswordModalHandler,
-  isPasswordCorrectHandler,
-  openUserEditModalHandler,
-  pwCheckValueHandler,
-}) => {
+const UserCheckModal = ({ openPasswordModalHandler, isPasswordCorrectHandler, openUserEditModalHandler, pwCheckValueHandler }) => {
   const [checkPassword, setCheckPassword] = useState('');
   const [isPwCheck, setIsPwCheck] = useState(false);
   const [pwCheckMessage, setPwCheckMessage] = useState('');
   const config = {
     headers: {
-      Authorization: `Bearer ${
-        JSON.parse(localStorage.getItem('userInfo')).token
-      }`,
+      Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}`,
     },
   };
 
@@ -93,11 +87,7 @@ const UserCheckModal = ({
       setPwCheckMessage('필수 입력 사항입니다');
     }
     axios
-      .post(
-        'http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/users/check',
-        { password: checkPassword },
-        config
-      )
+      .post('http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/users/check', { password: checkPassword }, config)
       .then((res) => {
         isPasswordCorrectHandler();
         pwCheckValueHandler(checkPassword);
@@ -137,13 +127,7 @@ const UserCheckModal = ({
         &times;
       </button>
       <h3 className={'pwCeckText'}>비밀번호 확인</h3>
-      <input
-        type='password'
-        placeholder='password'
-        onChange={checkPasswordHandler}
-        onBlur={checkPasswordBlur}
-        onKeyUp={checkPasswordEnter}
-      />
+      <input type='password' placeholder='password' onChange={checkPasswordHandler} onBlur={checkPasswordBlur} onKeyUp={checkPasswordEnter} />
       {isPwCheck ? (
         <span>{pwCheckMessage}</span>
       ) : (

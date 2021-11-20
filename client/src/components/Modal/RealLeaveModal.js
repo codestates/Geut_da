@@ -41,6 +41,9 @@ const RealLeaveButtonWrap = styled.div`
   display: flex;
   margin-top: 2em;
   width: 100%;
+  .nobutton:hover {
+    background-color: #f00;
+  }
 
   button {
     width: 50%;
@@ -59,6 +62,7 @@ const RealLeaveButtonWrap = styled.div`
     cursor: pointer;
     outline: none;
     transform: scale(1.05);
+    background-color: #000;
   }
 
   button:nth-child(1) {
@@ -115,7 +119,9 @@ const RealLeaveModal = ({ isRealUserResignHandler }) => {
       </div>
       <RealLeaveButtonWrap>
         <button onClick={realResignHandler}>YES</button>
-        <button onClick={isRealUserResignHandler}>NO</button>
+        <button onClick={isRealUserResignHandler} className='nobutton'>
+          NO
+        </button>
       </RealLeaveButtonWrap>
     </RealLeavModalWrap>
   );
