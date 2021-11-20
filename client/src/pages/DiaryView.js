@@ -14,6 +14,7 @@ import S3 from 'react-aws-s3';
 import { v4 as uuidv4 } from 'uuid';
 import dotenv from 'dotenv';
 import Loader from '../components/Loader';
+import YesNoModal from '../components/Modal/YesNoModal';
 
 dotenv.config();
 
@@ -207,6 +208,19 @@ const LoaderBackDrop = styled.div`
   align-items: center;
 `;
 
+const ModalBackDrop = styled.div`
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
+  background-color: rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 const DiaryView = () => {
   const [diaryInfo, setDiaryInfo] = useState([]);
   const [isEdit, setIsEdit] = useState(false);
@@ -218,6 +232,7 @@ const DiaryView = () => {
   const [tags, setTags] = useState([]);
   const [originImg, setOriginImg] = useState('');
   const [isLoading, setisLoading] = useState(true);
+  const [isDelete, setIsDelete] = useState(false);
   const history = useNavigate();
   const location = useLocation();
   const s3config = {
@@ -388,6 +403,10 @@ const DiaryView = () => {
     window.location.replace(MAIN);
   };
 
+  const isDeleteHandler = () => {
+    setIsDelete(!isDelete);
+  };
+
   return (
     <DiaryViewWrap>
       <Header />
@@ -448,7 +467,7 @@ const DiaryView = () => {
                   <div>
                     <h3>{diaryInfo.title}</h3>
                     <div>
-                      <button onClick={DeleteDiaryHandler}>
+                      <button onClick={isDeleteHandler}>
                         <BsTrash />
                       </button>
                       <button onClick={isEditHanlder}>
@@ -483,6 +502,12 @@ const DiaryView = () => {
             </DiaryWrap>
           )}
         </>
+      )}
+      {/* Modal */}
+      {isDelete && (
+        <ModalBackDrop onClick={isDeleteHandler}>
+          <YesNoModal NO={isDeleteHandler} YES={DeleteDiaryHandler} MESSAGE={'게시글을 삭제하면 되돌릴 수 없습니다.'} MESSAGE2={'정말 삭제하시겠습니까?'} />
+        </ModalBackDrop>
       )}
     </DiaryViewWrap>
   );
