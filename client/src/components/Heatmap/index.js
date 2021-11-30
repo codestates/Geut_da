@@ -1,8 +1,8 @@
-import CalendarHeatmap from 'react-calendar-heatmap';
-import ReactTooltip from 'react-tooltip';
+import CalendarHeatmap from "react-calendar-heatmap";
+import ReactTooltip from "react-tooltip";
 
-import styled from 'styled-components/macro';
-import './react-calendar-heatmap.css';
+import styled from "styled-components/macro";
+import "./react-calendar-heatmap.css";
 
 const now = new Date();
 const year = now.getFullYear();
@@ -33,7 +33,7 @@ const Heatmap = ({
           values={totalByDay || []}
           classForValue={(value) => {
             if (!value) {
-              return 'color-empty';
+              return "color-empty";
             }
             return value.count < 5
               ? `color-github-${value.count}`
@@ -42,11 +42,11 @@ const Heatmap = ({
           tooltipDataAttrs={(value) => {
             if (value.date && value.count) {
               return {
-                'data-tip': `${value.date}일 ${value.count}장`,
+                "data-tip": `${value.date}일 ${value.count}장`,
               };
             }
             return {
-              'data-tip': `일기가 없네요`,
+              "data-tip": `일기가 없네요`,
             };
           }}
           showWeekdayLabels={true}

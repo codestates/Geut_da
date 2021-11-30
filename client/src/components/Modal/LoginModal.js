@@ -1,33 +1,36 @@
-import styled from 'styled-components';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import { useSetRecoilState } from 'recoil';
-import IsLoginState from '../../states/IsLoginState';
+import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useSetRecoilState } from "recoil";
+import IsLoginState from "../../states/IsLoginState";
+
+import instance from "../../util/axios";
 
 const LoginModalWrap = styled.div`
   display: flex;
   position: relative;
   width: 70vw;
   height: 70vh;
+  min-height: 25rem;
   padding: 3rem 3rem 3rem 0;
   background-color: #ffffff;
   border-radius: 1rem;
   overflow: hidden;
+`;
 
-  .closeButton {
-    width: 3rem;
-    height: 3rem;
-    position: absolute;
-    top: 0;
-    right: 0;
-    border: none;
-    color: #646464;
-    background: none;
-    font-weight: 700;
-    font-size: 1.5em;
-  }
-  .closeButton:hover {
+const CloseButton = styled.button`
+  width: 3rem;
+  height: 3rem;
+  position: absolute;
+  top: 0;
+  right: 0;
+  border: none;
+  color: #646464;
+  background: none;
+  font-weight: 700;
+  font-size: 1.5em;
+
+  &:hover {
     cursor: pointer;
   }
 `;
@@ -138,24 +141,24 @@ const LoginModalLinkWrap = styled.div`
   }
 `;
 
+//ID, Password 유효성 검사 정규표현식
+const emailExp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const pwdExp = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,20}$/;
+
 const LoginModal = ({ LoginModalHandler, SignupModalHandler }) => {
   const [loginInputInfo, setLoginInputInfo] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
 
   const [loginMessage, setLoginMessage] = useState(false);
   const LoginStateHandler = useSetRecoilState(IsLoginState);
   const history = useNavigate();
 
-  //ID, Password 유효성 검사 정규표현식
-  const emailExp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  let pwdExp = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,20}$/;
-
   const InputValueChangeHandler = (event) => {
-    if (event.target.type === 'email') {
+    if (event.target.type === "email") {
       setLoginInputInfo({ ...loginInputInfo, email: event.target.value });
-    } else if (event.target.type === 'password') {
+    } else if (event.target.type === "password") {
       setLoginInputInfo({ ...loginInputInfo, password: event.target.value });
     }
   };
@@ -166,30 +169,22 @@ const LoginModal = ({ LoginModalHandler, SignupModalHandler }) => {
   };
 
   const LogInReqHandler = (event) => {
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-
-    if (emailExp.test(loginInputInfo.email) && pwdExp.test(loginInputInfo.password)) {
-      axios
-        .post(
-          'http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/users/login',
-          {
-            email: loginInputInfo.email,
-            password: loginInputInfo.password,
-          },
-          config
-        )
+    if (
+      emailExp.test(loginInputInfo.email) &&
+      pwdExp.test(loginInputInfo.password)
+    ) {
+      instance
+        .post("/users/login", {
+          ...loginInputInfo,
+        })
         .then((res) => {
           // console.log(res);
           const userInfo = res.data;
-          localStorage.setItem('userInfo', JSON.stringify(userInfo));
+          localStorage.setItem("userInfo", JSON.stringify(userInfo));
           LoginStateHandler(true);
           setLoginMessage(false);
-          setLoginInputInfo({ email: '', password: '' });
-          history('/main');
+          setLoginInputInfo({ email: "", password: "" });
+          history("/main");
         })
         .catch((err) => {
           console.log(err);
@@ -202,7 +197,7 @@ const LoginModal = ({ LoginModalHandler, SignupModalHandler }) => {
   };
 
   const LogInReqEnterHandler = (event) => {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       LogInReqHandler(loginInputInfo);
     }
   };
@@ -214,20 +209,30 @@ const LoginModal = ({ LoginModalHandler, SignupModalHandler }) => {
   return (
     <LoginModalWrap onClick={(e) => e.stopPropagation()}>
       <LoginModalImg>
-        <img src='/images/human.png' alt='일러스트 이미지' />
+        <img src="/images/human.png" alt="일러스트 이미지" />
       </LoginModalImg>
-      <button onClick={LoginModalCloseHandler} className={'closeButton'}>
-        &times;
-      </button>
+      <CloseButton onClick={LoginModalCloseHandler}>&times;</CloseButton>
       <LoginModalContentWrap>
         <LoginModalSubContentWrap>
           <LoginModalLogoWrap>
-            <img src='/images/geutda_logo.svg' alt='Logo' />
+            <img src="/images/geutda_logo.svg" alt="Logo" />
           </LoginModalLogoWrap>
           <LoginModalInputWrap>
             <h3>Login</h3>
-            <input type='email' placeholder='Email' value={loginInputInfo.email} onChange={InputValueChangeHandler} onKeyPress={LogInReqEnterHandler} />
-            <input type='password' placeholder='password' value={loginInputInfo.password} onChange={InputValueChangeHandler} onKeyUp={LogInReqEnterHandler} />
+            <input
+              type="email"
+              placeholder="Email"
+              value={loginInputInfo.email}
+              onChange={InputValueChangeHandler}
+              onKeyPress={LogInReqEnterHandler}
+            />
+            <input
+              type="password"
+              placeholder="password"
+              value={loginInputInfo.password}
+              onChange={InputValueChangeHandler}
+              onKeyUp={LogInReqEnterHandler}
+            />
             {loginMessage ? (
               <span>
                 &#42;아이디 또는 비밀번호가 잘못 입력 되었습니다.

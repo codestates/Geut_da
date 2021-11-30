@@ -1,13 +1,14 @@
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import axios from 'axios';
-import styled from 'styled-components/macro';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import Diary from '../components/Diary';
-import HashTags from '../components/HashTags';
-import Loader from '../components/Loader';
-import { BsPlusLg } from 'react-icons/bs';
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import styled from "styled-components/macro";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import Diary from "../components/Diary";
+import HashTags from "../components/HashTags";
+import Loader from "../components/Loader";
+import { BsPlusLg } from "react-icons/bs";
+
+import instance from "../util/axios";
 
 const MainWrap = styled.div`
   padding-bottom: 22vh;
@@ -27,7 +28,7 @@ const Search = styled.div`
   > div {
     font-weight: bold;
   }
-  > input[type='month'] {
+  > input[type="month"] {
     margin: 0;
     padding: 0 0 0.1rem;
     font-family: sans-serif;
@@ -37,7 +38,7 @@ const Search = styled.div`
     border: none;
     border-bottom: 1px solid #ccc;
   }
-  > input[type='month']:focus {
+  > input[type="month"]:focus {
     outline: none;
   }
   input::-webkit-calendar-picker-indicator {
@@ -135,22 +136,18 @@ const Main = () => {
   const [diaries, setDiaries] = useState([]);
   const [tags, setTags] = useState([]);
   const [searchTag, setSearchTag] = useState(null);
-  const [searchMonth, setSearchMonth] = useState(new Date().toISOString().slice(0, 7));
-
-  const config = {
-    headers: {
-      Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}`,
-    },
-  };
+  const [searchMonth, setSearchMonth] = useState(
+    new Date().toISOString().slice(0, 7)
+  );
 
   useEffect(() => {
     // 현재 년월 일기목록 요청
-    axios
-      .get('http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/contents/by-month', config)
+    instance
+      .get("/contents/by-month")
       .then((res) => {
         setDiaries(res.data);
-        axios
-          .get('http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/contents/hashtags', config)
+        instance
+          .get("/contents/hashtags")
           .then((res) => {
             setTags(res.data);
             setIsLoading(false);
@@ -170,11 +167,10 @@ const Main = () => {
     const data = event ? event.target.value : searchMonth;
     setSearchMonth(data);
     setSearchTag(null);
-    const [year, month] = data.split('-');
+    const [year, month] = data.split("-");
 
-    axios
-      .get('http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/contents/by-month', {
-        ...config,
+    instance
+      .get("/contents/by-month", {
         params: { year: year, month: month },
       })
       .then((res) => {
@@ -191,9 +187,8 @@ const Main = () => {
     setSearchTag(tag);
     setSearchMonth(new Date().toISOString().slice(0, 7));
 
-    axios
-      .get('http://ec2-3-38-36-59.ap-northeast-2.compute.amazonaws.com:5000/api/contents/by-hashtag', {
-        ...config,
+    instance
+      .get("/contents/by-hashtag", {
         params: { hashtag: tag },
       })
       .then((res) => {
@@ -215,14 +210,20 @@ const Main = () => {
       <Header />
       {/* dialog 라이브러리 연결하기, 월별 필터링 구현하기 */}
       <Search>
-        <input type='month' id='calender' name='calender' value={searchMonth} onChange={searchMonthHandler} />
+        <input
+          type="month"
+          id="calender"
+          name="calender"
+          value={searchMonth}
+          onChange={searchMonthHandler}
+        />
         <div>
           {searchTag}
           {searchTag && <span onClick={searchTagResetHandler}>&times;</span>}
         </div>
       </Search>
       <AddBtn>
-        <Link to='/main/newdiary'>
+        <Link to="/main/newdiary">
           <BsPlusLg />
         </Link>
       </AddBtn>
@@ -245,7 +246,7 @@ const Main = () => {
                 return (
                   // https://rrecoder.tistory.com/101
                   <li key={diary._id}>
-                    <Link to='/main/diaryview' state={{ _id: diary._id }}>
+                    <Link to="/main/diaryview" state={{ _id: diary._id }}>
                       <Diary diary={diary} />
                     </Link>
                   </li>

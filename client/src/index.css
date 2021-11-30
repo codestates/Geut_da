@@ -1,19 +1,19 @@
 /* 웰컴체 폰트 */
 @font-face {
-  font-family: 'OTWelcome';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2110@1.0/OTWelcomeBA.woff2')
-    format('woff2');
+  font-family: "OTWelcome";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2110@1.0/OTWelcomeBA.woff2")
+    format("woff2");
   font-weight: bold;
   font-style: normal;
 }
 @font-face {
-  font-family: 'OTWelcome';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2110@1.0/OTWelcomeRA.woff2')
-    format('woff2');
+  font-family: "OTWelcome";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2110@1.0/OTWelcomeRA.woff2")
+    format("woff2");
   font-weight: normal;
   font-style: normal;
 }
-@import url('https://fonts.googleapis.com/css2?family=Racing+Sans+One&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Racing+Sans+One&display=swap");
 
 /* Reset CSS */
 * {
@@ -52,7 +52,7 @@ body {
   min-height: 100vh;
   margin: 0 auto;
   padding-top: 10vh;
-  font-family: 'OTWelcome', serif;
+  font-family: "OTWelcome", serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--color-bg);
@@ -66,16 +66,16 @@ body::-webkit-scrollbar {
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
 
-input[type='email'],
-input[type='text'],
+input[type="email"],
+input[type="text"],
 button,
 span,
 textarea {
-  font-family: 'OTWelcome', serif;
+  font-family: "OTWelcome", serif;
 }
 
 header {
