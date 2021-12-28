@@ -51,6 +51,9 @@
 ## 배포 링크
 http://www.geutda.site
 
+## WIKI
+https://github.com/codestates/Geut_da/wiki
+
 ##  사용한 기술 스택
 <img src='https://user-images.githubusercontent.com/85682854/142469814-8288bfea-d501-48d0-b2d5-c3b562062910.png' width='48%' />
 
