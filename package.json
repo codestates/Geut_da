@@ -33,7 +33,7 @@
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.34",
-    "mongoose": "^6.0.12",
+    "mongoose": "^6.11.3",
     "validator": "^13.7.0"
   },
   "devDependencies": {
